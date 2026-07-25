@@ -1,0 +1,561 @@
+# Modificado por josejp2424: catálogo revisado para la interfaz GTK3 y las funciones nuevas.
+# ROX-Filer 2.12 GTK3 translation
+# GTK3 port maintained by josejp2424
+msgid ""
+msgstr "Project-Id-Version: ROX-Filer 2.12 GTK3\nLanguage: ar\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+
+msgid "\nProcess terminated.\n"
+msgstr "\nتم إنهاء العملية.\n"
+
+msgid "'\nDone\n"
+msgstr "'\nتم\n"
+
+msgid "<dir>"
+msgstr "<مجلد>"
+
+msgid "?'%s' already exists - %s?"
+msgstr "?'%s' موجود بالفعل - هل تريد %s؟"
+
+msgid "?Another search?"
+msgstr "?بحث آخر؟"
+
+msgid "?Copy %s as %s?"
+msgstr "?نسخ %s باسم %s؟"
+
+msgid "?Delete %s'%s'?"
+msgstr "?حذف %s'%s'؟"
+
+msgid "?Link %s as %s?"
+msgstr "?إنشاء رابط لـ %s باسم %s؟"
+
+msgid "?Mount %s?"
+msgstr "?ضم %s؟"
+
+msgid "?Move %s as %s?"
+msgstr "?نقل %s باسم %s؟"
+
+msgid "?Unmount %s?"
+msgstr "?إلغاء ضم %s؟"
+
+msgid "About ROX-Filer..."
+msgstr "حول ROX-Filer..."
+
+msgid "Automatic"
+msgstr "تلقائي"
+
+msgid "Bigger Icons"
+msgstr "أيقونات أكبر"
+
+msgid "Blank file"
+msgstr "ملف فارغ"
+
+msgid "Bookmarks"
+msgstr "العلامات"
+
+msgid "Brief"
+msgstr "مختصر"
+
+msgid "Clear Selection"
+msgstr "مسح التحديد"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Close Window"
+msgstr "إغلاق النافذة"
+
+msgid "Command:"
+msgstr "الأمر:"
+
+msgid "Copy"
+msgstr "نسخ"
+
+msgid "Count"
+msgstr "حساب"
+
+msgid "Create"
+msgstr "إنشاء"
+
+msgid "Customise Menu..."
+msgstr "تخصيص القائمة..."
+
+msgid "Cut"
+msgstr "قص"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Directory"
+msgstr "مجلد"
+
+msgid "Dirs"
+msgstr "مجلدات"
+
+msgid "Disk Usage"
+msgstr "استخدام القرص"
+
+msgid "Display"
+msgstr "عرض"
+
+msgid "Don't confirm every operation"
+msgstr "عدم تأكيد كل عملية"
+
+msgid "Duplicate"
+msgstr "تكرار"
+
+msgid "Duplicate..."
+msgstr "تكرار..."
+
+msgid "ERROR"
+msgstr "خطأ"
+
+msgid "ERROR reading"
+msgstr "خطأ في القراءة"
+
+msgid "Edit Item"
+msgstr "تحرير العنصر"
+
+msgid "Eject"
+msgstr "إخراج"
+
+msgid "Enter Path..."
+msgstr "إدخال مسار..."
+
+msgid "Expression:"
+msgstr "التعبير:"
+
+msgid "Extended attributes..."
+msgstr "السمات الممتدة..."
+
+msgid "Fast and lightweight file manager, ported to GTK3."
+msgstr "مدير ملفات سريع وخفيف، منقول إلى GTK3."
+
+msgid "File"
+msgstr "ملف"
+
+msgid "Filter Directories With Files"
+msgstr "تصفية المجلدات مع الملفات"
+
+msgid "Filter Files..."
+msgstr "تصفية الملفات..."
+
+msgid "Find"
+msgstr "بحث"
+
+msgid "Follow Symbolic Links"
+msgstr "اتباع الروابط الرمزية"
+
+msgid "Force"
+msgstr "فرض"
+
+msgid "GTK3 port and new features: josejp2424"
+msgstr "نقل GTK3 والميزات الجديدة: josejp2424"
+
+msgid "Help"
+msgstr "مساعدة"
+
+msgid "Hidden"
+msgstr "مخفي"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Home Directory"
+msgstr "المجلد الشخصي"
+
+msgid "Icons View"
+msgstr "عرض الأيقونات"
+
+msgid "Icons, With..."
+msgstr "الأيقونات، مع..."
+
+msgid "Ignore Older"
+msgstr "تجاهل الأقدم"
+
+msgid "Invert Selection"
+msgstr "عكس التحديد"
+
+msgid "Item no longer exists!"
+msgstr "العنصر لم يعد موجوداً!"
+
+msgid "Link"
+msgstr "ربط"
+
+msgid "Link..."
+msgstr "إنشاء رابط..."
+
+msgid "List View"
+msgstr "عرض القائمة"
+
+msgid "Locked"
+msgstr "مقفل"
+
+msgid "Look Inside"
+msgstr "عرض المحتويات"
+
+msgid "Maintainer of this GTK3 version: josejp2424"
+msgstr "مشرف إصدار GTK3 هذا: josejp2424"
+
+msgid "Manual"
+msgstr "الدليل"
+
+msgid "Merge"
+msgstr "دمج"
+
+msgid "Mount / Unmount"
+msgstr "ضم / إلغاء الضم"
+
+msgid "Move"
+msgstr "نقل"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "New Window"
+msgstr "نافذة جديدة"
+
+msgid "Newer"
+msgstr "الأحدث"
+
+msgid "No"
+msgstr "لا"
+
+msgid "Nothing"
+msgstr "لا شيء"
+
+msgid "Open As Text"
+msgstr "فتح كنص"
+
+msgid "Open With..."
+msgstr "فتح باستخدام..."
+
+msgid "Open unmounted"
+msgstr "فتح دون ضم"
+
+msgid "Options..."
+msgstr "الخيارات..."
+
+msgid "Original ROX Desktop website"
+msgstr "موقع ROX Desktop الأصلي"
+
+msgid "Original author: Thomas Leonard"
+msgstr "المؤلف الأصلي: Thomas Leonard"
+
+msgid "Original contributors: ROX Desktop contributors"
+msgstr "المساهمون الأصليون: مساهمو ROX Desktop"
+
+msgid "Parent, New Window"
+msgstr "المجلد الأب، نافذة جديدة"
+
+msgid "Parent, Same Window"
+msgstr "المجلد الأب، النافذة نفسها"
+
+msgid "Paste"
+msgstr "لصق"
+
+msgid "Permissions"
+msgstr "الصلاحيات"
+
+msgid "Properties"
+msgstr "الخصائص"
+
+msgid "Quiet"
+msgstr "صامت"
+
+msgid "ROX-Filer"
+msgstr "ROX-Filer"
+
+msgid "Recurse"
+msgstr "تكراري"
+
+msgid "Refresh"
+msgstr "تحديث"
+
+msgid "Remove Item(s)"
+msgstr "إزالة العناصر"
+
+msgid "Rename"
+msgstr "إعادة تسمية"
+
+msgid "Rename..."
+msgstr "إعادة تسمية..."
+
+msgid "Resize Window"
+msgstr "تغيير حجم النافذة"
+
+msgid "Reversed"
+msgstr "ترتيب معكوس"
+
+msgid "Save Current Display Settings..."
+msgstr "حفظ إعدادات العرض الحالية..."
+
+msgid "Scan"
+msgstr "تحديث"
+
+msgid "Select"
+msgstr "تحديد"
+
+msgid "Select All"
+msgstr "تحديد الكل"
+
+msgid "Select If..."
+msgstr "تحديد بشرط..."
+
+msgid "Select all/invert selection"
+msgstr "تحديد الكل/عكس التحديد"
+
+msgid "Select by Name..."
+msgstr "تحديد حسب الاسم..."
+
+msgid "Set Icon..."
+msgstr "تعيين الأيقونة..."
+
+msgid "Set Run Action..."
+msgstr "تعيين إجراء التشغيل..."
+
+msgid "Set Type..."
+msgstr "تعيين النوع..."
+
+msgid "Set keyboard shortcuts"
+msgstr "تعيين اختصارات لوحة المفاتيح"
+
+msgid "Set type"
+msgstr "تعيين النوع"
+
+msgid "Shell Command..."
+msgstr "أمر الصدفة..."
+
+msgid "Shift Open"
+msgstr "فتح بديل"
+
+msgid "Show Bookmarks"
+msgstr "إظهار العلامات"
+
+msgid "Show Help Files"
+msgstr "إظهار ملفات المساعدة"
+
+msgid "Show Hidden"
+msgstr "إظهار المخفي"
+
+msgid "Show Location"
+msgstr "إظهار الموقع"
+
+msgid "Show Log"
+msgstr "إظهار السجل"
+
+msgid "Show ROX-Filer help"
+msgstr "إظهار مساعدة ROX-Filer"
+
+msgid "Show Target"
+msgstr "إظهار الهدف"
+
+msgid "Show Thumbnails"
+msgstr "إظهار المصغرات"
+
+msgid "Size"
+msgstr "الحجم"
+
+msgid "Sizes"
+msgstr "الأحجام"
+
+msgid "Smaller Icons"
+msgstr "أيقونات أصغر"
+
+msgid "Sort"
+msgstr "ترتيب"
+
+msgid "Sort by Date (atime)"
+msgstr "ترتيب حسب تاريخ الوصول"
+
+msgid "Sort by Date (ctime)"
+msgstr "ترتيب حسب تاريخ التغيير"
+
+msgid "Sort by Date (mtime)"
+msgstr "ترتيب حسب تاريخ التعديل"
+
+msgid "Sort by Group"
+msgstr "ترتيب حسب المجموعة"
+
+msgid "Sort by Name"
+msgstr "ترتيب حسب الاسم"
+
+msgid "Sort by Owner"
+msgstr "ترتيب حسب المالك"
+
+msgid "Sort by Size"
+msgstr "ترتيب حسب الحجم"
+
+msgid "Sort by Type"
+msgstr "ترتيب حسب النوع"
+
+msgid "Sort by date"
+msgstr "ترتيب حسب التاريخ"
+
+msgid "Sort by group"
+msgstr "ترتيب حسب المجموعة"
+
+msgid "Sort by name"
+msgstr "ترتيب حسب الاسم"
+
+msgid "Sort by owner"
+msgstr "ترتيب حسب المالك"
+
+msgid "Sort by size"
+msgstr "ترتيب حسب الحجم"
+
+msgid "Sort by type"
+msgstr "ترتيب حسب النوع"
+
+msgid "Switch to Terminal"
+msgstr "التبديل إلى الطرفية"
+
+msgid "Symlink"
+msgstr "رابط رمزي"
+
+msgid "Terminal Here"
+msgstr "طرفية هنا"
+
+msgid "The clipboard does not contain a file list."
+msgstr "لا تحتوي الحافظة على قائمة ملفات."
+
+msgid "The clipboard is empty."
+msgstr "الحافظة فارغة."
+
+msgid "There was one error.\n"
+msgstr "حدث خطأ واحد.\n"
+
+msgid "There were %d errors.\n"
+msgstr "حدثت %d أخطاء.\n"
+
+msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+msgstr "هذا البرنامج حر؛ يمكنك إعادة توزيعه و/أو تعديله وفق شروط رخصة جنو العمومية كما نشرتها مؤسسة البرمجيات الحرة، إما الإصدار 2 من الرخصة أو أي إصدار لاحق حسب اختيارك."
+
+msgid "Times"
+msgstr "التواريخ"
+
+msgid "Type:"
+msgstr "النوع:"
+
+msgid "Types"
+msgstr "الأنواع"
+
+msgid "Unmount"
+msgstr "إلغاء الضم"
+
+msgid "Up"
+msgstr "أعلى"
+
+msgid "WRITE-PROTECTED "
+msgstr "محمي من الكتابة "
+
+msgid "Window"
+msgstr "نافذة"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "_Cancel"
+msgstr "إ_لغاء"
+
+msgid "_Close"
+msgstr "إ_غلاق"
+
+msgid "_No"
+msgstr "_لا"
+
+msgid "_OK"
+msgstr "_موافق"
+
+msgid "_Quiet"
+msgstr "_صامت"
+
+msgid "_Relative link"
+msgstr "رابط _نسبي"
+
+msgid "_Replace"
+msgstr "ا_ستبدال"
+
+msgid "_Yes"
+msgstr "_نعم"
+
+msgid "ascending"
+msgstr "تصاعدي"
+
+msgid "descending"
+msgstr "تنازلي"
+
+msgid "directories"
+msgstr "مجلدات"
+
+msgid "directory"
+msgstr "مجلد"
+
+msgid "file"
+msgstr "ملف"
+
+msgid "files"
+msgstr "ملفات"
+
+msgid "item"
+msgstr "عنصر"
+
+msgid "items"
+msgstr "عناصر"
+
+msgid "merge contents"
+msgstr "دمج المحتويات"
+
+msgid "overwrite"
+msgstr "الاستبدال"
+
+# ROX-Filer 2.12 GTK3 r5 terminal integration
+
+#: menu.c
+msgid "Open Terminal Here"
+msgstr "فتح الطرفية هنا"
+
+#: menu.c
+msgid "Run in Terminal"
+msgstr "تشغيل في الطرفية"
+
+#: menu.c
+msgid "Select a single folder to open a terminal there."
+msgstr "حدّد مجلداً واحداً لفتح الطرفية داخله."
+
+#: menu.c
+msgid "Select a single executable file or script to run in a terminal."
+msgstr "حدّد ملفاً تنفيذياً واحداً أو برنامجاً نصياً لتشغيله في الطرفية."
+
+#: menu.c
+msgid "The selected item is not a folder."
+msgstr "العنصر المحدد ليس مجلداً."
+
+#: menu.c
+msgid "The selected item cannot be run in a terminal."
+msgstr "لا يمكن تشغيل العنصر المحدد في الطرفية."
+
+#: menu.c
+msgid "The selected AppImage is not executable. Enable its execute permission first."
+msgstr "ملف AppImage المحدد غير قابل للتنفيذ. فعّل إذن التنفيذ أولاً."
+
+#: menu.c
+msgid "Python 3 was not found. Install python3 or make the script executable with a valid shebang."
+msgstr "لم يتم العثور على Python 3. ثبّت python3 أو اجعل البرنامج النصي قابلاً للتنفيذ مع سطر shebang صالح."
+
+#: menu.c
+msgid "Failed to parse terminal command '%s':\n%s"
+msgstr "فشل تحليل أمر الطرفية '%s':\n%s"
+
+#: menu.c
+msgid "Terminal command is empty."
+msgstr "أمر الطرفية فارغ."
+
+#: menu.c
+msgid "Script completed. Press RETURN to close the terminal."
+msgstr "اكتمل تنفيذ البرنامج. اضغط RETURN لإغلاق الطرفية."

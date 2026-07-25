@@ -1,0 +1,107 @@
+ROX-Filer 2.12 GTK3 r8 - 2026-07-25
+------------------------------------------
+- Added consistent source attribution comments to GTK3 port blocks and new
+  features using "Agregado por josejp2424" and "Modificado por josejp2424".
+- Added file-level attribution notices only to files containing GTK3 port
+  changes, while preserving the original copyright and GPL notices.
+- Marked the action completion protocol, terminal integration, native About
+  dialog, 600x400 geometry, scrollable Options window and icon-theme support.
+- Added syntax-appropriate attribution comments to shell, Autoconf, Makefile,
+  XML, CSS and requested translation catalogues.
+
+ROX-Filer 2.12 GTK3 r7 - 2026-07-25
+------------------------------------------
+- Set the Options window initial geometry to 600x400 pixels.
+- Added independent scrolling to every Options page so large sections no
+  longer force the dialog to span almost the full monitor width.
+- Added a compact scrollable section tree on the left side of Options.
+- Removed the Help button from the main filer toolbar, including its callback
+  and its entry in the toolbar customisation list.
+
+ROX-Filer 2.12 GTK3 - source revision r6
+
+- Replaced the historical images/application.png, dirs.png, iconified.png, mount, mounted, select, details, xattr and symlink resources with icons from the active GTK3 icon theme.
+- Kept only images/rox-show-hidden.png as a fallback when the current theme does not provide view-hidden-files.
+- Added compatibility aliases for historical ROX image names and symbolic icon variants.
+- Removed Help, Show Help Files and Manual from filer, desktop-icon and AppDir contextual menus.
+- Kept the native About ROX-Filer dialog as a direct contextual entry.
+- Retained the real 600 x 400 initial filer geometry and terminal integration from revision r5.
+
+ROX-Filer 2.12 GTK3 - CHANGELOG
+=================================
+
+Version 2.12 GTK3 (2026-07-25)
+-------------------------------
+
+Project and credits
+* Based on ROX-Filer 2.11 by Thomas Leonard and the ROX Desktop contributors.
+* Original licence retained: GNU General Public License, version 2 or later.
+* GTK3 port, compatibility work and new features by josejp2424.
+* This GTK3 version is maintained by josejp2424.
+
+GTK3 port
+* Revision r3 attempted to set a 400 x 400 default-size hint, but the initial GTK3 auto-resizer could still overwrite it before mapping.
+* Revision r4 replaced that incomplete approach with a real post-map 500 x 500 resize.
+* Revision r5 changes the standard post-map geometry to 600 x 400 pixels.
+* Saved per-directory window geometry continues to override the standard size.
+* The 600 x 400 value is only an initial size and does not restrict manual resizing.
+* Ported the filer interface from GTK2-era APIs to GTK3 public APIs.
+* Reworked collection drawing with Cairo and a GTK3 GtkDrawingArea.
+* Restored pointer input, selection, double-click, drag and context menus.
+* Reworked scrolling so Collection, GtkViewport and the scrollbar share a valid GtkAdjustment.
+* Removed fixed interface colours and allowed the active GTK3 theme to style filer views.
+* The system theme is obtained normally by GTK3, including ~/.config/gtk-3.0/settings.ini.
+* Updated menu, icon, toolbar, dialog, grid, clipboard and window APIs for GTK3.
+* Kept X11-specific ROX desktop, pinboard and panel behaviour through public GDK-X11 APIs.
+
+File operations
+* Added an explicit operation-complete protocol message between action child processes and the GTK interface.
+* Action windows no longer depend only on a pipe hang-up notification to close.
+* Fixed the GTK3 GIO pipe watcher when G_IO_IN and G_IO_HUP arrive together.
+* Buffered child messages are now drained before the watch is removed, so the final completion message is not lost.
+* Fixed copy, overwrite and recursive-delete dialogs remaining open after the filesystem operation had completed.
+* Added safe G_IO_HUP, G_IO_ERR and G_IO_NVAL fallback handling after pending input has been consumed.
+* Retained the existing error report window when an operation has real errors.
+
+Terminal integration
+* Added "Open Terminal Here" to the selected-item context menu; it is enabled for exactly one selected folder.
+* F4 and the Window menu also open inside a selected folder, otherwise they use the current filer directory.
+* Added "Run in Terminal" for executable binaries, executable scripts, .sh files, .py/.pyw files and AppImages.
+* Executable items are launched directly, shell scripts use /bin/sh and Python scripts use python3.
+* AppImages without execute permission show a translated warning and are never modified silently.
+* The configured terminal command is parsed safely and receives separate arguments through -e.
+* The terminal remains open after completion until RETURN is pressed.
+* Both context entries use the standard utilities-terminal icon from the active icon theme.
+
+Icon-theme integration
+* Toolbar, menu, mount, symlink, extended-attribute, AppDir, directory and iconified-window graphics now come from the active GTK3 icon theme.
+* Historical bundled resources map to folder, application-x-executable, view-list, edit-select-all, drive-harddisk, media-eject, document-properties and emblem-symbolic-link.
+* Symbolic variants are selected automatically when a theme does not provide the regular icon name.
+* view-hidden-files is used when available; images/rox-show-hidden.png is the only retained compatibility image.
+* Removed the other nine obsolete PNG resources from ROX-Filer/images.
+
+Context menus
+* Removed the Help branch, Show Help Files and Manual from the main filer context menu.
+* Removed Show Help Files and Manual from pinboard and panel icon context menus.
+* Removed the automatic Help item from application-directory contextual menus.
+* Kept About ROX-Filer as a direct entry backed by the native GtkAboutDialog.
+* The Help directory remains in the source because it contains the original manual and GPL licence text.
+
+Internationalisation
+* Preserved the original translations for German, Spanish, French, Italian, Portuguese, Japanese, Hungarian, Russian and Chinese.
+* Added Catalan and Arabic catalogues for the principal interface, menus and file-operation dialogs.
+* All terminal integration labels, errors and completion text are translated in every requested catalogue.
+* Bundled compiled message catalogues so translations work without development tools.
+* The build script refreshes the selected catalogues when msgfmt and iconv are available.
+* Locale detection now respects LANGUAGE, LC_ALL, LC_MESSAGES and LANG.
+
+About dialog and metadata
+* Version displayed as ROX-Filer 2.12 GTK3.
+* Replaced the external AppInfo-based About window with a native GtkAboutDialog in the source.
+* Moved About ROX-Filer out of the Help submenu.
+* Preserved the original author, contributors and GPL licence information.
+* Added josejp2424 as GTK3 port author, new-feature contributor and maintainer of this version.
+
+Source cleanup
+* Removed the individual STEP, STATUS, compile-fix and verification documents.
+* Consolidated the port history into this single CHANGELOG file.

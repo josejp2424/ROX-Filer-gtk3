@@ -1,0 +1,561 @@
+# Modificado por josejp2424: catálogo revisado para la interfaz GTK3 y las funciones nuevas.
+# ROX-Filer 2.12 GTK3 translation
+# GTK3 port maintained by josejp2424
+msgid ""
+msgstr "Project-Id-Version: ROX-Filer 2.12 GTK3\nLanguage: ca\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "\nProcess terminated.\n"
+msgstr "\nProcés finalitzat.\n"
+
+msgid "'\nDone\n"
+msgstr "'\nFet\n"
+
+msgid "<dir>"
+msgstr "<directori>"
+
+msgid "?'%s' already exists - %s?"
+msgstr "?'%s' ja existeix: voleu %s?"
+
+msgid "?Another search?"
+msgstr "?Voleu fer una altra cerca?"
+
+msgid "?Copy %s as %s?"
+msgstr "?Voleu copiar %s com a %s?"
+
+msgid "?Delete %s'%s'?"
+msgstr "?Voleu suprimir %s'%s'?"
+
+msgid "?Link %s as %s?"
+msgstr "?Voleu enllaçar %s com a %s?"
+
+msgid "?Mount %s?"
+msgstr "?Voleu muntar %s?"
+
+msgid "?Move %s as %s?"
+msgstr "?Voleu moure %s com a %s?"
+
+msgid "?Unmount %s?"
+msgstr "?Voleu desmuntar %s?"
+
+msgid "About ROX-Filer..."
+msgstr "Quant al ROX-Filer..."
+
+msgid "Automatic"
+msgstr "Automàtic"
+
+msgid "Bigger Icons"
+msgstr "Icones més grans"
+
+msgid "Blank file"
+msgstr "Fitxer buit"
+
+msgid "Bookmarks"
+msgstr "Adreces d'interès"
+
+msgid "Brief"
+msgstr "Breu"
+
+msgid "Clear Selection"
+msgstr "Neteja la selecció"
+
+msgid "Close"
+msgstr "Tanca"
+
+msgid "Close Window"
+msgstr "Tanca la finestra"
+
+msgid "Command:"
+msgstr "Ordre:"
+
+msgid "Copy"
+msgstr "Copia"
+
+msgid "Count"
+msgstr "Compta"
+
+msgid "Create"
+msgstr "Crea"
+
+msgid "Customise Menu..."
+msgstr "Personalitza el menú..."
+
+msgid "Cut"
+msgstr "Retalla"
+
+msgid "Delete"
+msgstr "Suprimeix"
+
+msgid "Details"
+msgstr "Detalls"
+
+msgid "Directory"
+msgstr "Directori"
+
+msgid "Dirs"
+msgstr "Directoris"
+
+msgid "Disk Usage"
+msgstr "Ús del disc"
+
+msgid "Display"
+msgstr "Visualització"
+
+msgid "Don't confirm every operation"
+msgstr "No confirmis cada operació"
+
+msgid "Duplicate"
+msgstr "Duplica"
+
+msgid "Duplicate..."
+msgstr "Duplica..."
+
+msgid "ERROR"
+msgstr "ERROR"
+
+msgid "ERROR reading"
+msgstr "ERROR en llegir"
+
+msgid "Edit Item"
+msgstr "Edita l'element"
+
+msgid "Eject"
+msgstr "Expulsa"
+
+msgid "Enter Path..."
+msgstr "Introdueix una ruta..."
+
+msgid "Expression:"
+msgstr "Expressió:"
+
+msgid "Extended attributes..."
+msgstr "Atributs ampliats..."
+
+msgid "Fast and lightweight file manager, ported to GTK3."
+msgstr "Gestor de fitxers ràpid i lleuger, portat a GTK3."
+
+msgid "File"
+msgstr "Fitxer"
+
+msgid "Filter Directories With Files"
+msgstr "Filtra directoris amb fitxers"
+
+msgid "Filter Files..."
+msgstr "Filtra fitxers..."
+
+msgid "Find"
+msgstr "Cerca"
+
+msgid "Follow Symbolic Links"
+msgstr "Segueix els enllaços simbòlics"
+
+msgid "Force"
+msgstr "Força"
+
+msgid "GTK3 port and new features: josejp2424"
+msgstr "Port GTK3 i noves funcions: josejp2424"
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Hidden"
+msgstr "Ocults"
+
+msgid "Home"
+msgstr "Inici"
+
+msgid "Home Directory"
+msgstr "Directori personal"
+
+msgid "Icons View"
+msgstr "Vista d'icones"
+
+msgid "Icons, With..."
+msgstr "Icones, amb..."
+
+msgid "Ignore Older"
+msgstr "Ignora els més antics"
+
+msgid "Invert Selection"
+msgstr "Inverteix la selecció"
+
+msgid "Item no longer exists!"
+msgstr "L'element ja no existeix!"
+
+msgid "Link"
+msgstr "Enllaça"
+
+msgid "Link..."
+msgstr "Enllaça..."
+
+msgid "List View"
+msgstr "Vista de llista"
+
+msgid "Locked"
+msgstr "Bloquejat"
+
+msgid "Look Inside"
+msgstr "Mira a dins"
+
+msgid "Maintainer of this GTK3 version: josejp2424"
+msgstr "Mantenidor d'aquesta versió GTK3: josejp2424"
+
+msgid "Manual"
+msgstr "Manual"
+
+msgid "Merge"
+msgstr "Fusiona"
+
+msgid "Mount / Unmount"
+msgstr "Munta / desmunta"
+
+msgid "Move"
+msgstr "Mou"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New"
+msgstr "Nou"
+
+msgid "New Window"
+msgstr "Finestra nova"
+
+msgid "Newer"
+msgstr "Més nou"
+
+msgid "No"
+msgstr "No"
+
+msgid "Nothing"
+msgstr "Res"
+
+msgid "Open As Text"
+msgstr "Obre com a text"
+
+msgid "Open With..."
+msgstr "Obre amb..."
+
+msgid "Open unmounted"
+msgstr "Obre sense muntar"
+
+msgid "Options..."
+msgstr "Opcions..."
+
+msgid "Original ROX Desktop website"
+msgstr "Lloc web original del ROX Desktop"
+
+msgid "Original author: Thomas Leonard"
+msgstr "Autor original: Thomas Leonard"
+
+msgid "Original contributors: ROX Desktop contributors"
+msgstr "Col·laboradors originals: col·laboradors del ROX Desktop"
+
+msgid "Parent, New Window"
+msgstr "Directori pare, finestra nova"
+
+msgid "Parent, Same Window"
+msgstr "Directori pare, mateixa finestra"
+
+msgid "Paste"
+msgstr "Enganxa"
+
+msgid "Permissions"
+msgstr "Permisos"
+
+msgid "Properties"
+msgstr "Propietats"
+
+msgid "Quiet"
+msgstr "Silenciós"
+
+msgid "ROX-Filer"
+msgstr "ROX-Filer"
+
+msgid "Recurse"
+msgstr "Recursiu"
+
+msgid "Refresh"
+msgstr "Actualitza"
+
+msgid "Remove Item(s)"
+msgstr "Suprimeix els elements"
+
+msgid "Rename"
+msgstr "Canvia el nom"
+
+msgid "Rename..."
+msgstr "Canvia el nom..."
+
+msgid "Resize Window"
+msgstr "Redimensiona la finestra"
+
+msgid "Reversed"
+msgstr "Ordre invers"
+
+msgid "Save Current Display Settings..."
+msgstr "Desa la configuració de visualització actual..."
+
+msgid "Scan"
+msgstr "Actualitza"
+
+msgid "Select"
+msgstr "Selecciona"
+
+msgid "Select All"
+msgstr "Selecciona-ho tot"
+
+msgid "Select If..."
+msgstr "Selecciona si..."
+
+msgid "Select all/invert selection"
+msgstr "Selecciona-ho tot/inverteix la selecció"
+
+msgid "Select by Name..."
+msgstr "Selecciona per nom..."
+
+msgid "Set Icon..."
+msgstr "Defineix la icona..."
+
+msgid "Set Run Action..."
+msgstr "Defineix l'acció d'execució..."
+
+msgid "Set Type..."
+msgstr "Defineix el tipus..."
+
+msgid "Set keyboard shortcuts"
+msgstr "Defineix les dreceres de teclat"
+
+msgid "Set type"
+msgstr "Defineix el tipus"
+
+msgid "Shell Command..."
+msgstr "Ordre de l'intèrpret..."
+
+msgid "Shift Open"
+msgstr "Obertura alternativa"
+
+msgid "Show Bookmarks"
+msgstr "Mostra les adreces d'interès"
+
+msgid "Show Help Files"
+msgstr "Mostra els fitxers d'ajuda"
+
+msgid "Show Hidden"
+msgstr "Mostra els ocults"
+
+msgid "Show Location"
+msgstr "Mostra la ubicació"
+
+msgid "Show Log"
+msgstr "Mostra el registre"
+
+msgid "Show ROX-Filer help"
+msgstr "Mostra l'ajuda del ROX-Filer"
+
+msgid "Show Target"
+msgstr "Mostra la destinació"
+
+msgid "Show Thumbnails"
+msgstr "Mostra miniatures"
+
+msgid "Size"
+msgstr "Mida"
+
+msgid "Sizes"
+msgstr "Mides"
+
+msgid "Smaller Icons"
+msgstr "Icones més petites"
+
+msgid "Sort"
+msgstr "Ordena"
+
+msgid "Sort by Date (atime)"
+msgstr "Ordena per data d'accés"
+
+msgid "Sort by Date (ctime)"
+msgstr "Ordena per data de canvi"
+
+msgid "Sort by Date (mtime)"
+msgstr "Ordena per data de modificació"
+
+msgid "Sort by Group"
+msgstr "Ordena per grup"
+
+msgid "Sort by Name"
+msgstr "Ordena per nom"
+
+msgid "Sort by Owner"
+msgstr "Ordena per propietari"
+
+msgid "Sort by Size"
+msgstr "Ordena per mida"
+
+msgid "Sort by Type"
+msgstr "Ordena per tipus"
+
+msgid "Sort by date"
+msgstr "Ordena per data"
+
+msgid "Sort by group"
+msgstr "Ordena per grup"
+
+msgid "Sort by name"
+msgstr "Ordena per nom"
+
+msgid "Sort by owner"
+msgstr "Ordena per propietari"
+
+msgid "Sort by size"
+msgstr "Ordena per mida"
+
+msgid "Sort by type"
+msgstr "Ordena per tipus"
+
+msgid "Switch to Terminal"
+msgstr "Canvia al terminal"
+
+msgid "Symlink"
+msgstr "Enllaç simbòlic"
+
+msgid "Terminal Here"
+msgstr "Terminal aquí"
+
+msgid "The clipboard does not contain a file list."
+msgstr "El porta-retalls no conté cap llista de fitxers."
+
+msgid "The clipboard is empty."
+msgstr "El porta-retalls és buit."
+
+msgid "There was one error.\n"
+msgstr "Hi ha hagut un error.\n"
+
+msgid "There were %d errors.\n"
+msgstr "Hi ha hagut %d errors.\n"
+
+msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+msgstr "Aquest programa és programari lliure; el podeu redistribuir i/o modificar sota els termes de la Llicència Pública General GNU publicada per la Free Software Foundation, ja sigui la versió 2 de la llicència o, si ho preferiu, qualsevol versió posterior."
+
+msgid "Times"
+msgstr "Dates"
+
+msgid "Type:"
+msgstr "Tipus:"
+
+msgid "Types"
+msgstr "Tipus"
+
+msgid "Unmount"
+msgstr "Desmunta"
+
+msgid "Up"
+msgstr "Amunt"
+
+msgid "WRITE-PROTECTED "
+msgstr "PROTEGIT CONTRA ESCRIPTURA "
+
+msgid "Window"
+msgstr "Finestra"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "_Cancel"
+msgstr "_Cancel·la"
+
+msgid "_Close"
+msgstr "_Tanca"
+
+msgid "_No"
+msgstr "_No"
+
+msgid "_OK"
+msgstr "_D'acord"
+
+msgid "_Quiet"
+msgstr "_Silenciós"
+
+msgid "_Relative link"
+msgstr "Enllaç _relatiu"
+
+msgid "_Replace"
+msgstr "_Substitueix"
+
+msgid "_Yes"
+msgstr "_Sí"
+
+msgid "ascending"
+msgstr "ascendent"
+
+msgid "descending"
+msgstr "descendent"
+
+msgid "directories"
+msgstr "directoris"
+
+msgid "directory"
+msgstr "directori"
+
+msgid "file"
+msgstr "fitxer"
+
+msgid "files"
+msgstr "fitxers"
+
+msgid "item"
+msgstr "element"
+
+msgid "items"
+msgstr "elements"
+
+msgid "merge contents"
+msgstr "fusiona el contingut"
+
+msgid "overwrite"
+msgstr "sobreescriu"
+
+# ROX-Filer 2.12 GTK3 r5 terminal integration
+
+#: menu.c
+msgid "Open Terminal Here"
+msgstr "Obre el terminal aquí"
+
+#: menu.c
+msgid "Run in Terminal"
+msgstr "Executa en un terminal"
+
+#: menu.c
+msgid "Select a single folder to open a terminal there."
+msgstr "Seleccioneu una sola carpeta per obrir-hi un terminal."
+
+#: menu.c
+msgid "Select a single executable file or script to run in a terminal."
+msgstr "Seleccioneu un sol fitxer executable o script per executar-lo en un terminal."
+
+#: menu.c
+msgid "The selected item is not a folder."
+msgstr "L'element seleccionat no és una carpeta."
+
+#: menu.c
+msgid "The selected item cannot be run in a terminal."
+msgstr "L'element seleccionat no es pot executar en un terminal."
+
+#: menu.c
+msgid "The selected AppImage is not executable. Enable its execute permission first."
+msgstr "L'AppImage seleccionada no és executable. Activeu primer el permís d'execució."
+
+#: menu.c
+msgid "Python 3 was not found. Install python3 or make the script executable with a valid shebang."
+msgstr "No s'ha trobat Python 3. Instal·leu python3 o feu que l'script sigui executable amb un shebang vàlid."
+
+#: menu.c
+msgid "Failed to parse terminal command '%s':\n%s"
+msgstr "No s'ha pogut analitzar l'ordre del terminal '%s':\n%s"
+
+#: menu.c
+msgid "Terminal command is empty."
+msgstr "L'ordre del terminal és buida."
+
+#: menu.c
+msgid "Script completed. Press RETURN to close the terminal."
+msgstr "L'script ha finalitzat. Premeu RETURN per tancar el terminal."
