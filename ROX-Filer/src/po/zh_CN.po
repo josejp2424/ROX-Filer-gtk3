@@ -4929,8 +4929,8 @@ msgid "Original ROX Desktop website"
 msgstr "ROX Desktop 原始网站"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "本程序是自由软件；您可以按照自由软件基金会发布的 GNU 通用公共许可证第 2 版或（由您选择）任何更新版本的条款重新发布和/或修改本程序。"
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "本程序是自由软件；您可以按照自由软件基金会发布的 GNU 通用公共许可证第 3 版或（由您选择）任何更新版本的条款重新发布和/或修改本程序。"
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -4977,3 +4977,47 @@ msgstr "终端命令为空。"
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "脚本已完成。按 RETURN 关闭终端。"
+
+#: drives.c
+msgid "Partitions"
+msgstr "分区"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "显示分区、挂载并打开其内容"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "未找到可用分区"
+
+#: drives.c
+msgid "Mounted"
+msgstr "已挂载"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "未挂载"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "列出分区需要 lsblk 命令。"
+
+#: drives.c
+msgid "Volume %s"
+msgstr "卷 %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "挂载命令失败。"
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "无法挂载“%s”。"
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "无法挂载该分区。"
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "分区“%s”已挂载，但找不到其挂载点。"

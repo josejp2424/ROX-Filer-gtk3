@@ -104,7 +104,9 @@ static void display_set_actual_size_real(FilerWindow *filer_window);
 void display_init()
 {
 	option_add_int(&o_display_caps_first, "display_caps_first", FALSE);
-	option_add_int(&o_display_dirs_first, "display_dirs_first", FALSE);
+	/* Modificado por josejp2424: las carpetas se muestran primero de forma
+	 * permanente; la opción histórica se conserva sólo para leer configuraciones. */
+	option_add_int(&o_display_dirs_first, "display_dirs_first", TRUE);
 
 	option_add_int(&o_display_inherit_options,
 		       "display_inherit_options", FALSE);
@@ -271,13 +273,15 @@ void draw_small_icon(cairo_t *cr, const GdkRectangle *area,
 #define IS_A_DIR(item) (item->base_type == TYPE_DIRECTORY && \
 			!(item->flags & ITEM_FLAG_APPDIR))
 
+/* Modificado por josejp2424: las carpetas normales forman siempre el
+ * primer grupo. La preferencia histórica ya no puede desactivar esta regla. */
 #define SORT_DIRS	\
-	if (o_display_dirs_first.int_value) {	\
+	do {	\
 		gboolean id1 = IS_A_DIR(i1);	\
 		gboolean id2 = IS_A_DIR(i2);	\
 		if (id1 && !id2) return -1;				\
 		if (id2 && !id1) return 1;				\
-	}
+	} while (0)
 
 int sort_by_name(const void *item1, const void *item2)
 {
@@ -411,6 +415,15 @@ int sort_by_size(const void *item1, const void *item2)
 void display_set_sort_type(FilerWindow *filer_window, SortType sort_type,
 			   GtkSortType order)
 {
+	/* Modificado por josejp2424 (2026): usar un orden único y estable.
+	 * Las carpetas se muestran primero y todos los demás archivos después,
+	 * ordenados por nombre. Se ignoran criterios históricos que podían dejar
+	 * la colección incremental desincronizada y ocultar elementos de la vista. */
+	(void) sort_type;
+	(void) order;
+	sort_type = SORT_NAME;
+	order = GTK_SORT_ASCENDING;
+
 	if (filer_window->sort_type == sort_type &&
 	    filer_window->sort_order == order)
 		return;
@@ -609,8 +622,7 @@ static void options_changed(void)
 		FilerWindow *filer_window = (FilerWindow *) next->data;
 		int flags = 0;
 
-		if (o_display_dirs_first.has_changed ||
-		    o_display_caps_first.has_changed)
+		if (o_display_caps_first.has_changed)
 			view_sort(VIEW(filer_window->view));
 
 		if (o_display_show_headers.has_changed)

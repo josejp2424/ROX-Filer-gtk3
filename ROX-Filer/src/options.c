@@ -323,7 +323,7 @@ GtkWidget *options_show(void)
 	/* Enforce the requested compact initial geometry after all option
 	 * widgets have been realised.  The scrollable pages prevent their
 	 * natural requisition from expanding the window again. */
-	gtk_window_resize(GTK_WINDOW(window), 600, 400);
+	gtk_window_resize(GTK_WINDOW(window), 640, 400);
 
 	return window;
 }
@@ -930,7 +930,7 @@ static GtkWidget *build_window_frame(GtkTreeView **tree_view)
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(window), _("Options"));
-	gtk_window_set_default_size(GTK_WINDOW(window), 600, 400);
+	gtk_window_set_default_size(GTK_WINDOW(window), 640, 400);
 	gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
 	g_signal_connect(window, "destroy",
 			G_CALLBACK(options_destroyed), NULL);
@@ -966,7 +966,7 @@ static GtkWidget *build_window_frame(GtkTreeView **tree_view)
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tv), -1,
 			NULL, gtk_cell_renderer_text_new(), "text", 0, NULL);
 
-	/* Modificado por josejp2424: panel de categorías compacto para 600x400. */
+	/* Modificado por josejp2424: panel de categorías compacto para 640x400. */
 	/* Keep the section list compact and scroll it when required. */
 	tree_scroll = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(tree_scroll),

@@ -17,20 +17,20 @@
   <About xml:lang="ca">
     <Purpose>Gestor de fitxers</Purpose>
     <Authors>Thomas Leonard i col·laboradors; port GTK3 i noves funcions per josejp2424; manteniment GTK3 per josejp2424</Authors>
-    <License>Llicència Pública General GNU, versió 2 o posterior</License>
+    <License>Llicència Pública General GNU, versió 3 o posterior</License>
     <Homepage>http://rox.sourceforge.net</Homepage>
   </About>
   <About xml:lang="ar">
     <Purpose>مدير ملفات</Purpose>
     <Authors>Thomas Leonard والمساهمون؛ نقل GTK3 والميزات الجديدة بواسطة josejp2424؛ صيانة إصدار GTK3 بواسطة josejp2424</Authors>
-    <License>رخصة جنو العمومية، الإصدار 2 أو أي إصدار لاحق</License>
+    <License>رخصة جنو العمومية، الإصدار 3 أو أي إصدار لاحق</License>
     <Homepage>http://rox.sourceforge.net</Homepage>
   </About>
   <About xml:lang="en">
     <Purpose>File manager</Purpose>
     <Version>2.12-gtk3</Version>
     <Authors>Thomas Leonard and contributors; GTK3 port and new features by josejp2424; GTK3 version maintained by josejp2424</Authors>
-    <License>GNU General Public License</License>
+    <License>GNU General Public License, version 3 or later</License>
     <Homepage>http://rox.sourceforge.net</Homepage>
   </About>
   <About xml:lang="es">

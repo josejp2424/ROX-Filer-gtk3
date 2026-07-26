@@ -5220,8 +5220,8 @@ msgid "Original ROX Desktop website"
 msgstr "Sitio web original de ROX Desktop"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "Este programa es software libre; puede redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Free Software Foundation, ya sea la versión 2 de la licencia o, a su elección, cualquier versión posterior."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "Este programa es software libre; puede redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Free Software Foundation, ya sea la versión 3 de la licencia o, a su elección, cualquier versión posterior."
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -5268,3 +5268,47 @@ msgstr "El comando de terminal está vacío."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "El script ha finalizado. Pulse RETURN para cerrar la terminal."
+
+#: drives.c
+msgid "Partitions"
+msgstr "Particiones"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "Mostrar particiones, montarlas y abrir su contenido"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "No se encontraron particiones utilizables"
+
+#: drives.c
+msgid "Mounted"
+msgstr "Montada"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "Sin montar"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "Se necesita el comando lsblk para mostrar las particiones."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "Volumen %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "Falló el comando de montaje."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "No se pudo montar «%s»."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "No se pudo montar la partición."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "La partición «%s» se montó, pero no se encontró su punto de montaje."

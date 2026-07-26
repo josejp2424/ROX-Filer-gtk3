@@ -5386,8 +5386,8 @@ msgid "Original ROX Desktop website"
 msgstr "A ROX Desktop eredeti webhelye"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "Ez a program szabad szoftver; terjeszthető és/vagy módosítható a Free Software Foundation által kiadott GNU General Public License 2-es vagy bármely későbbi változatának feltételei szerint."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "Ez a program szabad szoftver; terjeszthető és/vagy módosítható a Free Software Foundation által kiadott GNU General Public License 3-as vagy bármely későbbi változatának feltételei szerint."
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -5434,3 +5434,47 @@ msgstr "A terminálparancs üres."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "A parancsfájl befejeződött. A terminál bezárásához nyomja meg a RETURN billentyűt."
+
+#: drives.c
+msgid "Partitions"
+msgstr "Partíciók"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "Partíciók megjelenítése, csatolása és tartalmuk megnyitása"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "Nem található használható partíció"
+
+#: drives.c
+msgid "Mounted"
+msgstr "Csatolva"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "Nincs csatolva"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "A partíciók felsorolásához szükség van az lsblk parancsra."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "%s kötet"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "A csatolási parancs sikertelen."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "A(z) „%s” nem csatolható."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "A partíció nem csatolható."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "A(z) „%s” partíció csatolva lett, de a csatolási pont nem található."

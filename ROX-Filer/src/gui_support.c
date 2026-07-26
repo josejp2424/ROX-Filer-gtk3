@@ -84,6 +84,60 @@ static GtkWidget *tip_widget = NULL;
 static time_t tip_time = 0; 	/* Time tip widget last closed */
 static gint tip_timeout = 0;	/* When primed */
 
+#define ROX_STANDARD_MIN_WIDTH  640
+#define ROX_STANDARD_MIN_HEIGHT 400
+
+/* Agregado por josejp2424: todas las ventanas normales de la interfaz usan
+ * un mínimo legible de 640x400. Se excluyen paneles, pinboard, menús, tooltips
+ * y otras superficies especiales del escritorio. */
+static gboolean standard_window_map_hook(GSignalInvocationHint *hint,
+		guint n_param_values, const GValue *param_values, gpointer data)
+{
+	GtkWidget *widget;
+	GtkWindow *window;
+	GdkWindowTypeHint type_hint;
+	GdkGeometry geometry;
+	gint width;
+	gint height;
+
+	(void) hint;
+	(void) data;
+	if (n_param_values < 1)
+		return TRUE;
+
+	widget = g_value_get_object(&param_values[0]);
+	if (!GTK_IS_WINDOW(widget))
+		return TRUE;
+
+	window = GTK_WINDOW(widget);
+	if (gtk_window_get_window_type(window) != GTK_WINDOW_TOPLEVEL ||
+	    g_object_get_data(G_OBJECT(window), "rox-standard-size-exempt"))
+		return TRUE;
+
+	type_hint = gtk_window_get_type_hint(window);
+	if (type_hint == GDK_WINDOW_TYPE_HINT_DESKTOP ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_DOCK ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_MENU ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_DND ||
+	    type_hint == GDK_WINDOW_TYPE_HINT_COMBO)
+		return TRUE;
+
+	memset(&geometry, 0, sizeof(geometry));
+	geometry.min_width = ROX_STANDARD_MIN_WIDTH;
+	geometry.min_height = ROX_STANDARD_MIN_HEIGHT;
+	gtk_window_set_geometry_hints(window, NULL, &geometry, GDK_HINT_MIN_SIZE);
+
+	gtk_window_get_size(window, &width, &height);
+	if (width < ROX_STANDARD_MIN_WIDTH || height < ROX_STANDARD_MIN_HEIGHT)
+		gtk_window_resize(window, MAX(width, ROX_STANDARD_MIN_WIDTH),
+			MAX(height, ROX_STANDARD_MIN_HEIGHT));
+
+	return TRUE;
+}
+
 /* Static prototypes */
 static void run_error_info_dialog(GtkMessageType type, const char *message,
 				  va_list args);
@@ -219,6 +273,15 @@ void gui_support_init()
                                                      FALSE);
 
 	gui_store_screen_geometry(gdk_screen_get_default());
+
+	/* Agregado por josejp2424: aplicar el mínimo 640x400 a cualquier
+	 * GtkWindow normal creado por ROX-Filer, incluidos diálogos posteriores. */
+	{
+		guint map_signal = g_signal_lookup("map", GTK_TYPE_WIDGET);
+		if (map_signal)
+			g_signal_add_emission_hook(map_signal, 0,
+				standard_window_map_hook, NULL, NULL);
+	}
 
 	/* Work around the scrollbar placement bug */
 	klass = g_type_class_ref(gtk_scrolled_window_get_type());

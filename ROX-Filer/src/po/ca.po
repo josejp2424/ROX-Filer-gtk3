@@ -433,8 +433,8 @@ msgstr "Hi ha hagut un error.\n"
 msgid "There were %d errors.\n"
 msgstr "Hi ha hagut %d errors.\n"
 
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "Aquest programa és programari lliure; el podeu redistribuir i/o modificar sota els termes de la Llicència Pública General GNU publicada per la Free Software Foundation, ja sigui la versió 2 de la llicència o, si ho preferiu, qualsevol versió posterior."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "Aquest programa és programari lliure; el podeu redistribuir i/o modificar sota els termes de la Llicència Pública General GNU publicada per la Free Software Foundation, ja sigui la versió 3 de la llicència o, si ho preferiu, qualsevol versió posterior."
 
 msgid "Times"
 msgstr "Dates"
@@ -559,3 +559,47 @@ msgstr "L'ordre del terminal és buida."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "L'script ha finalitzat. Premeu RETURN per tancar el terminal."
+
+#: drives.c
+msgid "Partitions"
+msgstr "Particions"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "Mostra les particions, munta-les i obre’n el contingut"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "No s'han trobat particions utilitzables"
+
+#: drives.c
+msgid "Mounted"
+msgstr "Muntada"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "No muntada"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "Cal l’ordre lsblk per llistar les particions."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "Volum %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "Ha fallat l’ordre de muntatge."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "No s'ha pogut muntar «%s»."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "No s'ha pogut muntar la partició."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "La partició «%s» s'ha muntat, però no se n'ha trobat el punt de muntatge."

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec gdebi-gtk "$1"

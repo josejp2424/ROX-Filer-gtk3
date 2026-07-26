@@ -2508,9 +2508,9 @@ static void show_rox_about_dialog(void)
 			"GTK3 port and additions (C) 2026 josejp2424",
 		"authors", authors,
 		"license",
-			_("This program is free software; you can redistribute it and/or "
-			  "modify it under the terms of the GNU General Public License "
-			  "as published by the Free Software Foundation; either version 2 "
+			_("This modified GTK3 version is free software; you can redistribute it "
+			  "and/or modify it under the terms of the GNU General Public License "
+			  "as published by the Free Software Foundation; either version 3 "
 			  "of the License, or (at your option) any later version."),
 		"wrap-license", TRUE,
 		"website", "http://rox.sourceforge.net",

@@ -5421,8 +5421,8 @@ msgid "Original ROX Desktop website"
 msgstr "Исходный сайт ROX Desktop"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "Эта программа является свободным программным обеспечением; вы можете распространять и/или изменять её на условиях GNU General Public License, опубликованной Free Software Foundation, версии 2 либо, по вашему выбору, любой более поздней версии."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "Эта программа является свободным программным обеспечением; вы можете распространять и/или изменять её на условиях GNU General Public License, опубликованной Free Software Foundation, версии 3 либо, по вашему выбору, любой более поздней версии."
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -5469,3 +5469,47 @@ msgstr "Команда терминала пуста."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "Скрипт завершён. Нажмите RETURN, чтобы закрыть терминал."
+
+#: drives.c
+msgid "Partitions"
+msgstr "Разделы"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "Показать разделы, подключить их и открыть содержимое"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "Подходящие разделы не найдены"
+
+#: drives.c
+msgid "Mounted"
+msgstr "Подключён"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "Не подключён"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "Для отображения разделов требуется команда lsblk."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "Том %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "Команда подключения завершилась ошибкой."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "Не удалось подключить «%s»."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "Не удалось подключить раздел."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "Раздел «%s» подключён, но его точка монтирования не найдена."

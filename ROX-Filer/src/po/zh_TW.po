@@ -4933,8 +4933,8 @@ msgid "Original ROX Desktop website"
 msgstr "ROX Desktop 原始網站"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "本程式是自由軟體；您可以依照自由軟體基金會發布的 GNU 通用公共授權條款第 2 版或（由您選擇）任何更新版本重新散布及/或修改本程式。"
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "本程式是自由軟體；您可以依照自由軟體基金會發布的 GNU 通用公共授權條款第 3 版或（由您選擇）任何更新版本重新散布及/或修改本程式。"
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -4981,3 +4981,47 @@ msgstr "終端機命令是空的。"
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "指令稿已完成。按 RETURN 關閉終端機。"
+
+#: drives.c
+msgid "Partitions"
+msgstr "分割區"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "顯示分割區、掛載並開啟其內容"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "找不到可用的分割區"
+
+#: drives.c
+msgid "Mounted"
+msgstr "已掛載"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "未掛載"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "列出分割區需要 lsblk 指令。"
+
+#: drives.c
+msgid "Volume %s"
+msgstr "磁碟區 %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "掛載指令失敗。"
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "無法掛載「%s」。"
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "無法掛載此分割區。"
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "分割區「%s」已掛載，但找不到其掛載點。"

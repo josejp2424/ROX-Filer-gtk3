@@ -5455,8 +5455,8 @@ msgid "Original ROX Desktop website"
 msgstr "Ursprüngliche ROX-Desktop-Webseite"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "Dieses Programm ist freie Software; Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder verändern; entweder gemäß Version 2 der Lizenz oder (nach Ihrer Wahl) jeder späteren Version."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "Dieses Programm ist freie Software; Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder verändern; entweder gemäß Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren Version."
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -5503,3 +5503,47 @@ msgstr "Der Terminalbefehl ist leer."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "Das Skript wurde beendet. Drücken Sie RETURN, um das Terminal zu schließen."
+
+#: drives.c
+msgid "Partitions"
+msgstr "Partitionen"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "Partitionen anzeigen, einhängen und ihren Inhalt öffnen"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "Keine verwendbaren Partitionen gefunden"
+
+#: drives.c
+msgid "Mounted"
+msgstr "Eingehängt"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "Nicht eingehängt"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "Der Befehl lsblk wird benötigt, um Partitionen aufzulisten."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "Datenträger %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "Der Einhängebefehl ist fehlgeschlagen."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "„%s“ konnte nicht eingehängt werden."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "Die Partition konnte nicht eingehängt werden."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "Die Partition „%s“ wurde eingehängt, aber ihr Einhängepunkt wurde nicht gefunden."

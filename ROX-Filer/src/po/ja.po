@@ -5228,8 +5228,8 @@ msgid "Original ROX Desktop website"
 msgstr "ROX Desktopの元のウェブサイト"
 
 # ROX-Filer 2.12 GTK3
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "このプログラムは自由ソフトウェアです。Free Software Foundation が公開する GNU General Public License のバージョン2、または希望によりそれ以降のバージョンの条件に従って、再配布および変更できます。"
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "このプログラムは自由ソフトウェアです。Free Software Foundation が公開する GNU General Public License のバージョン3、または希望によりそれ以降のバージョンの条件に従って、再配布および変更できます。"
 
 # ROX-Filer 2.12 GTK3 r5 terminal integration
 
@@ -5276,3 +5276,47 @@ msgstr "端末コマンドが空です。"
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "スクリプトが完了しました。RETURNキーを押すと端末を閉じます。"
+
+#: drives.c
+msgid "Partitions"
+msgstr "パーティション"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "パーティションを表示し、マウントして内容を開きます"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "使用可能なパーティションが見つかりません"
+
+#: drives.c
+msgid "Mounted"
+msgstr "マウント済み"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "未マウント"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "パーティションの一覧表示には lsblk コマンドが必要です。"
+
+#: drives.c
+msgid "Volume %s"
+msgstr "ボリューム %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "マウントコマンドに失敗しました。"
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "「%s」をマウントできませんでした。"
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "パーティションをマウントできませんでした。"
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "パーティション「%s」はマウントされましたが、マウントポイントが見つかりません。"

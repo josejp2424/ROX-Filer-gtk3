@@ -36,6 +36,7 @@
 #include "main.h"
 #include "menu.h"
 #include "dnd.h"
+#include "drives.h"
 #include "filer.h"
 #include "display.h"
 #include "pixmaps.h"
@@ -88,13 +89,9 @@ static void toolbar_details_clicked(GtkWidget *widget,
 				    FilerWindow *filer_window);
 static void toolbar_hidden_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
-static void toolbar_dirs_clicked(GtkWidget *widget,
-				   FilerWindow *filer_window);
 static void toolbar_select_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
 static void toolbar_new_clicked(GtkWidget *widget,
-				   FilerWindow *filer_window);
-static void toolbar_sort_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
 static GtkWidget *add_button(GtkWidget *bar, Tool *tool,
 				FilerWindow *filer_window);
@@ -154,19 +151,13 @@ static Tool all_tools[] = {
 	 toolbar_details_clicked, DROP_NONE, TRUE,
 	 FALSE},
 
-	{N_("Sort"), ROX_ICON_SORT_ASCENDING, N_("Change sort criteria"),
-	 toolbar_sort_clicked, DROP_NONE, FALSE,
-	 FALSE},
+	/* Modificado por josejp2424 (2026): se retiró Ordenar de la barra.
+	 * ROX usa ahora un orden estable: carpetas primero y archivos después. */
 
 	{N_("Hidden"), ROX_ICON_SHOW_HIDDEN, N_("Left: Show/hide hidden files\n"
 						 "Center: Reset to defaults\n"
 						 "Right: Show/hide thumbnails"),
 	 toolbar_hidden_clicked, DROP_NONE, TRUE,
-	 FALSE},
-
-	{N_("Dirs"), ROX_ICON_DIRECTORY, N_("Left: Show dirs only\n"
-										 "Right: Show files only"),
-	 toolbar_dirs_clicked, DROP_NONE, FALSE,
 	 FALSE},
 
 	{N_("Select"), ROX_ICON_SELECT, N_("Select all/invert selection"),
@@ -436,60 +427,8 @@ static void toolbar_size_clicked(GtkWidget *widget, FilerWindow *filer_window)
 	gdk_event_free((GdkEvent *) bev);
 }
 
-static void toolbar_sort_clicked(GtkWidget *widget,
-				    FilerWindow *filer_window)
-{
-	GdkEventButton	*bev;
-	int i, current, next, next_wrapped;
-	gboolean adjust;
-	GtkSortType dir;
-	gchar *tip;
-
-	static const SortType sorts[]={
-		SORT_NAME, SORT_TYPE, SORT_DATEC, SORT_SIZE,
-		SORT_OWNER, SORT_GROUP,
-	};
-	static const char *sort_names[] = {
-		N_("Sort by name"), N_("Sort by type"), N_("Sort by date"),
-		N_("Sort by size"), N_("Sort by owner"), N_("Sort by group"),
-	};
-
-	bev = (GdkEventButton *) get_current_event(GDK_BUTTON_RELEASE);
-	adjust = (bev->button != 1) && bev->type == GDK_BUTTON_RELEASE;
-	gdk_event_free((GdkEvent *) bev);
-
-	current = -1;
-	dir = filer_window->sort_order;
-	for (i=0; i < G_N_ELEMENTS(sort_names); i++)
-	{
-		if (filer_window->sort_type == sorts[i])
-		{
-			current = i;
-			break;
-		}
-	}
-
-	if (current == -1)
-		next = 0;
-	else if (adjust)
-		next = current - 1;
-	else
-		next = current + 1;
-
-	next_wrapped = next % G_N_ELEMENTS(sorts);
-
-	if (next_wrapped != next)
-		dir = (dir == GTK_SORT_ASCENDING)
-			? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING;
-
-	display_set_sort_type(filer_window, sorts[next_wrapped], dir);
- 	tip = g_strconcat(_(sort_names[next_wrapped]), ", ",
-			dir == GTK_SORT_ASCENDING
-				? _("ascending") : _("descending"),
-			NULL);
-	tooltip_show(tip);
-	g_free(tip);
-}
+/* Modificado por josejp2424 (2026): se eliminó el callback de
+ * ordenación de la barra. La vista usa carpetas primero y nombre ascendente. */
 
 static void toolbar_details_clicked(GtkWidget *widget,
 				    FilerWindow *filer_window)
@@ -565,31 +504,8 @@ static void toolbar_hidden_clicked(GtkWidget *widget,
 	}
 }
 
-static void toolbar_dirs_clicked(GtkWidget *widget,
-				   FilerWindow *filer_window)
-{
-	GdkEvent *event = get_current_event(GDK_BUTTON_RELEASE);
-	if (event->type == GDK_BUTTON_RELEASE)
-	{
-		switch (((GdkEventButton *) event)->button)
-		{
-			case 1:
-				filer_window->dirs_only = !filer_window->dirs_only;
-				filer_window->files_only = FALSE;
-				break;
-			case 2:
-				filer_window->dirs_only = FALSE;
-				filer_window->files_only = FALSE;
-				break;
-			default:
-				filer_window->dirs_only = FALSE;
-				filer_window->files_only = !filer_window->files_only;
-		}
-		display_update_hidden(filer_window);
-	}
-	gdk_event_free(event);
-}
-
+/* Modificado por josejp2424: se eliminó el filtro Dirs/Files de la barra,
+ * ya que podía ocultar archivos normales accidentalmente. */
 static gboolean invert_cb(ViewIter *iter, gpointer data)
 {
 	return !view_get_selected((ViewIface *) data, iter);
@@ -648,6 +564,26 @@ static GtkWidget *create_toolbar(FilerWindow *filer_window)
 		gtk_toolbar_set_style(GTK_TOOLBAR(bar), GTK_TOOLBAR_BOTH);
 
 	width=0;
+
+	/* Modificado por josejp2424 (2026): Particiones es una herramienta
+	 * permanente y ocupa siempre el primer lugar de la barra, antes de Subir.
+	 * No forma parte de all_tools, por lo que no aparece en la personalización
+	 * y no puede ocultarse ni cambiarse de posición desde las opciones. */
+	if (filer_window)
+	{
+		GtkToolItem *drive_item = drives_toolbar_button_new(filer_window);
+		GtkToolItem *separator = gtk_separator_tool_item_new();
+		GtkRequisition drive_req;
+
+		gtk_toolbar_insert(GTK_TOOLBAR(bar), drive_item, -1);
+		gtk_separator_tool_item_set_draw(
+			GTK_SEPARATOR_TOOL_ITEM(separator), TRUE);
+		gtk_toolbar_insert(GTK_TOOLBAR(bar), separator, -1);
+		gtk_widget_get_preferred_size(GTK_WIDGET(drive_item), NULL,
+			&drive_req);
+		width += drive_req.width;
+	}
+
 	for (i = 0; i < sizeof(all_tools) / sizeof(*all_tools); i++)
 	{
 		Tool	*tool = &all_tools[i];

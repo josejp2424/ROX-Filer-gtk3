@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Modificado por josejp2424: compilación GTK3, limpieza del binario anterior
 # y actualización de los catálogos de idiomas incluidos.
 
@@ -41,7 +42,7 @@ case $1 in
 		[ ! -d "$BUILDDIR" ] && mkdir "$BUILDDIR"
 		rm -f "$BUILDDIR/config.cache"
 		rm -f "$APP_DIR/ROX-Filer" "$APP_DIR/ROX-Filer.dbg"
-		rm -f "$APP_DIR/src/config.h"	
+		rm -f "$APP_DIR/src/config.h"	# (for upgrading)
 		if cd "$BUILDDIR" && "$APP_DIR/src/configure" "$@" \
 			&& $MAKE clean && $MAKE; then
 			if command -v msgfmt >/dev/null 2>&1 && command -v iconv >/dev/null 2>&1; then

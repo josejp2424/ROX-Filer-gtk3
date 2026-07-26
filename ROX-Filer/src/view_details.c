@@ -1388,10 +1388,21 @@ static gint wrap_sort(gconstpointer a, gconstpointer b,
 	ViewItem *ia = *(ViewItem **) a;
 	ViewItem *ib = *(ViewItem **) b;
 
-	if (view_details->filer_window->sort_order == GTK_SORT_ASCENDING)
-		return view_details->sort_fn(ia->item, ib->item);
-	else
-		return -view_details->sort_fn(ia->item, ib->item);
+	/* Modificado por josejp2424: las carpetas normales permanecen siempre
+	 * primero, incluso al invertir el criterio de ordenación. */
+	{
+		gboolean da = ia->item->base_type == TYPE_DIRECTORY &&
+			!(ia->item->flags & ITEM_FLAG_APPDIR);
+		gboolean db = ib->item->base_type == TYPE_DIRECTORY &&
+			!(ib->item->flags & ITEM_FLAG_APPDIR);
+		int result;
+
+		if (da != db)
+			return da ? -1 : 1;
+		result = view_details->sort_fn(ia->item, ib->item);
+		return view_details->filer_window->sort_order == GTK_SORT_ASCENDING
+			? result : -result;
+	}
 }
 
 static void resort(ViewDetails *view_details)

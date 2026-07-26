@@ -271,7 +271,7 @@ static gboolean if_deleted(gpointer item, gpointer removed)
  * minimum size; the user can resize the window normally.
  */
 /* Agregado por josejp2424: geometría inicial estándar para GTK3. */
-#define DEFAULT_FILER_WIDTH  600
+#define DEFAULT_FILER_WIDTH  640
 #define DEFAULT_FILER_HEIGHT 400
 
 /* Resize the filer window to w x h pixels, plus border (not clamped).
@@ -303,6 +303,12 @@ void filer_window_set_size(FilerWindow *filer_window, int w, int h)
 		gtk_widget_get_allocation(filer_window->toolbar, &alloc);
 		h += alloc.height;
 	}
+
+	/* Modificado por josejp2424 (2026): ninguna instancia normal del
+	 * filer puede quedar por debajo de 640x400, incluso cuando el modo de
+	 * autoajuste calcula una sola fila de iconos. */
+	w = MAX(w, DEFAULT_FILER_WIDTH);
+	h = MAX(h, DEFAULT_FILER_HEIGHT);
 
 	if (!gtk_widget_get_visible(window))
 		return;
@@ -393,7 +399,7 @@ void filer_window_set_size(FilerWindow *filer_window, int w, int h)
 /* Called on a timeout while scanning or when scanning ends
  * (whichever happens first).
  */
-/* Agregado por josejp2424: aplicar 600x400 después del primer mapeo,
+/* Agregado por josejp2424: aplicar 640x400 después del primer mapeo,
  * evitando que GTK3 abra la ventana como una franja ancha y baja. */
 static gboolean apply_standard_initial_geometry(gpointer data)
 {
@@ -402,17 +408,19 @@ static gboolean apply_standard_initial_geometry(gpointer data)
 	if (!filer_exists(filer_window))
 		return G_SOURCE_REMOVE;
 
-	if (!filer_window->initial_geometry_saved &&
-	    GTK_IS_WINDOW(filer_window->window))
+	if (GTK_IS_WINDOW(filer_window->window))
 	{
-		/* gtk_window_set_default_size() is only a size negotiation hint.
-		 * Apply the requested standard geometry once after mapping so the
-		 * GTK3 child requisition cannot turn the filer into a wide strip.
-		 */
+		gint width;
+		gint height;
+
+		/* Modificado por josejp2424 (2026): aplicar el mínimo real tras
+		 * el mapeo también cuando existe una geometría antigua guardada. */
+		gtk_window_get_size(GTK_WINDOW(filer_window->window), &width, &height);
+		width = MAX(width, DEFAULT_FILER_WIDTH);
+		height = MAX(height, DEFAULT_FILER_HEIGHT);
 		gtk_window_set_default_size(GTK_WINDOW(filer_window->window),
-				DEFAULT_FILER_WIDTH, DEFAULT_FILER_HEIGHT);
-		gtk_window_resize(GTK_WINDOW(filer_window->window),
-				DEFAULT_FILER_WIDTH, DEFAULT_FILER_HEIGHT);
+				width, height);
+		gtk_window_resize(GTK_WINDOW(filer_window->window), width, height);
 	}
 
 	filer_window->initial_geometry_pending = FALSE;
@@ -445,12 +453,11 @@ static gint open_filer_window(FilerWindow *filer_window)
 
 		/* Keep automatic sizing blocked until GTK has completed the first
 		 * map/allocation cycle.  The idle callback then applies a real
-		 * 600 x 400 resize, rather than only a default-size hint.
+		 * 640 x 400 resize, rather than only a default-size hint.
 		 */
-		if (filer_window->initial_geometry_saved)
-			filer_window->initial_geometry_pending = FALSE;
-		else
-			g_idle_add(apply_standard_initial_geometry, filer_window);
+		/* Modificado por josejp2424 (2026): verificar siempre el mínimo
+		 * después del primer mapeo, incluso con geometría guardada. */
+		g_idle_add(apply_standard_initial_geometry, filer_window);
 	}
 
 	return FALSE;
@@ -470,6 +477,77 @@ static void queue_interesting(FilerWindow *filer_window)
 		if (item->flags & ITEM_FLAG_NEED_RESCAN_QUEUE)
 			dir_queue_recheck(filer_window->directory, item);
 	}
+}
+
+/* Agregado por josejp2424 (2026): garantía autoritativa de contenido.
+ * Al terminar un escaneo, comparar la colección visible con known_items y
+ * reconstruirla si falta o sobra cualquier elemento. Así se muestran todos
+ * los archivos no ocultos y el scrollbar se calcula con el total real. */
+static void sync_complete_directory_view(FilerWindow *filer_window)
+{
+	GPtrArray *expected;
+	GHashTable *remaining;
+	ViewIter iter;
+	DirItem *item;
+	gboolean mismatch = FALSE;
+	guint i;
+
+	if (!filer_window || !filer_window->directory || !filer_window->view)
+		return;
+
+	expected = g_ptr_array_new();
+	{
+		GHashTableIter hash_iter;
+		gpointer key;
+		gpointer value;
+
+		g_hash_table_iter_init(&hash_iter,
+			filer_window->directory->known_items);
+		while (g_hash_table_iter_next(&hash_iter, &key, &value))
+		{
+			DirItem *known = value;
+			(void) key;
+			if (filer_match_filter(filer_window, known))
+				g_ptr_array_add(expected, known);
+		}
+	}
+
+	remaining = g_hash_table_new(g_direct_hash, g_direct_equal);
+	for (i = 0; i < expected->len; i++)
+		g_hash_table_add(remaining, expected->pdata[i]);
+
+	if ((guint) view_count_items(filer_window->view) != expected->len)
+		mismatch = TRUE;
+
+	view_get_iter(filer_window->view, &iter, 0);
+	while ((item = iter.next(&iter)))
+	{
+		if (!g_hash_table_remove(remaining, item))
+			mismatch = TRUE;
+	}
+	if (g_hash_table_size(remaining) != 0)
+		mismatch = TRUE;
+
+	if (mismatch)
+	{
+		view_clear(filer_window->view);
+		view_add_items(filer_window->view, expected);
+	}
+
+	/* Modificado por josejp2424 (2026): ordenar y recalcular siempre, no sólo
+	 * cuando fue necesario reconstruir. Esto obliga al Collection hijo a
+	 * publicar nuevamente su altura natural completa al GtkViewport. */
+	view_sort(filer_window->view);
+
+	/* Forzar una nueva negociación de tamaño aunque la lista ya coincidiera.
+	 * view_style_changed recalcula las dimensiones de cada celda; después el
+	 * GtkViewport obtiene la altura total y permite bajar hasta la última fila. */
+	view_style_changed(filer_window->view, 0);
+	gtk_widget_queue_resize(GTK_WIDGET(filer_window->view));
+	gtk_widget_queue_draw(GTK_WIDGET(filer_window->view));
+
+	g_hash_table_destroy(remaining);
+	g_ptr_array_free(expected, TRUE);
 }
 
 static void update_display(Directory *dir,
@@ -495,6 +573,11 @@ static void update_display(Directory *dir,
 			toolbar_update_info(filer_window);
 			break;
 		case DIR_END_SCAN:
+
+			/* Agregado por josejp2424 (2026): antes de terminar el
+			 * escaneo, garantizar que la vista contenga todos los elementos
+			 * visibles del directorio y que el scroll abarque la lista completa. */
+			sync_complete_directory_view(filer_window);
 
 			if (filer_window->win_icon)
 				g_object_unref(filer_window->win_icon);
@@ -1643,9 +1726,11 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 		filer_window->show_thumbs = src_win->show_thumbs;
 		filer_window->view_type = src_win->view_type;
 
-		filer_window->filter_directories = src_win->filter_directories;
-		filer_set_filter(filer_window, src_win->filter,
-				 src_win->filter_string);
+		/* Modificado por josejp2424 (2026): no heredar filtros de otra
+		 * ventana. Cada carpeta debe mostrar siempre todos los elementos
+		 * visibles que contiene; sólo se conserva el control de ocultos. */
+		filer_window->filter_directories = FALSE;
+		filer_set_filter(filer_window, FILER_SHOW_ALL, NULL);
 	}
 	else
 	{
@@ -1686,15 +1771,25 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 		if (dir_settings->flags & SET_THUMBS)
 			filer_window->show_thumbs = dir_settings->show_thumbs;
 
+		/* Modificado por josejp2424 (2026): ignorar filtros guardados por
+		 * directorio. Un ajuste histórico de "sólo carpetas", "sólo archivos"
+		 * o glob no debe volver a ocultar tar.gz, AppImage, scripts u otros
+		 * archivos al abrir nuevamente la carpeta. */
 		if (dir_settings->flags & SET_FILTER)
 		{
-			filer_set_filter(filer_window,
-					   dir_settings->filter_type,
-					   dir_settings->filter);
-			filer_set_filter_directories(filer_window,
-					     dir_settings->filter_directories);
+			filer_set_filter(filer_window, FILER_SHOW_ALL, NULL);
+			filer_set_filter_directories(filer_window, FALSE);
 		}
 	}
+
+	/* Modificado por josejp2424 (2026): garantía final antes de adjuntar la
+	 * carpeta. ROX debe mostrar todas las carpetas y todos los archivos
+	 * visibles, sin importar filtros heredados o guardados por versiones
+	 * anteriores. */
+	filer_window->dirs_only = FALSE;
+	filer_window->files_only = FALSE;
+	filer_window->filter_directories = FALSE;
+	filer_set_filter(filer_window, FILER_SHOW_ALL, NULL);
 
 	/* Add all the user-interface elements & realise */
 	filer_add_widgets(filer_window, wm_class);
@@ -1713,15 +1808,22 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 		{
 			/* The window is not mapped yet, so use its initial/default
 			 * geometry directly.  This also ensures a saved directory size
-			 * takes precedence over the standard 600 x 400 size.
+			 * takes precedence over the standard 640 x 400 size.
 			 */
 			if (dir_settings->width > 0 && dir_settings->height > 0)
 			{
+				gint saved_width;
+				gint saved_height;
+
+				/* Modificado por josejp2424 (2026): incluso una geometría
+				 * antigua guardada no puede abrir una instancia por debajo de
+				 * 640x400. */
+				saved_width = MAX(dir_settings->width, DEFAULT_FILER_WIDTH);
+				saved_height = MAX(dir_settings->height, DEFAULT_FILER_HEIGHT);
 				filer_window->initial_geometry_saved = TRUE;
 				gtk_window_set_default_size(
 					GTK_WINDOW(filer_window->window),
-					dir_settings->width,
-					dir_settings->height);
+					saved_width, saved_height);
 			}
 			force_resize = o_filer_auto_resize.int_value != RESIZE_NEVER;
 		}
@@ -1855,7 +1957,7 @@ static void filer_add_widgets(FilerWindow *filer_window, const gchar *wm_class)
 {
 	GtkWidget *hbox, *vbox;
 
-	/* Create the top-level window widget.  Give new filer windows a balanced 600 x 400
+	/* Create the top-level window widget.  Give new filer windows a balanced 640 x 400
 	 * initial geometry instead of letting the icon requisition produce a
 	 * very wide and shallow window.  A saved per-directory geometry below
 	 * overrides this value.
@@ -1863,6 +1965,22 @@ static void filer_add_widgets(FilerWindow *filer_window, const gchar *wm_class)
 	filer_window->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(filer_window->window),
 			DEFAULT_FILER_WIDTH, DEFAULT_FILER_HEIGHT);
+	/* Agregado por josejp2424 (2026): solicitud mínima directa adicional.
+	 * Esto evita que un gestor de ventanas o una requisición tardía de GTK3
+	 * reduzca la instancia por debajo de 640x400. */
+	gtk_widget_set_size_request(filer_window->window,
+		DEFAULT_FILER_WIDTH, DEFAULT_FILER_HEIGHT);
+	{
+		GdkGeometry minimum_geometry;
+
+		/* Agregado por josejp2424 (2026): mínimo directo en cada ventana
+		 * del filer. No depende del tema, del autoajuste ni de un hook global. */
+		memset(&minimum_geometry, 0, sizeof(minimum_geometry));
+		minimum_geometry.min_width = DEFAULT_FILER_WIDTH;
+		minimum_geometry.min_height = DEFAULT_FILER_HEIGHT;
+		gtk_window_set_geometry_hints(GTK_WINDOW(filer_window->window), NULL,
+			&minimum_geometry, GDK_HINT_MIN_SIZE);
+	}
 	filer_set_title(filer_window);
 	gtk_widget_set_name(filer_window->window, "rox-filer");
 
@@ -3177,30 +3295,17 @@ gboolean filer_match_filter(FilerWindow *filer_window, DirItem *item)
 {
 	g_return_val_if_fail(item != NULL, FALSE);
 
-	if (filer_window->files_only &&
-			item->base_type == TYPE_DIRECTORY)
-		return FALSE;
-
-	if (filer_window->dirs_only &&
-			item->base_type != TYPE_DIRECTORY)
-		return FALSE;
+	/* Modificado por josejp2424: se eliminaron los modos de barra "sólo
+	 * carpetas" y "sólo archivos". No filtrar aquí por tipo, para que tar.gz,
+	 * AppImage, scripts y cualquier otro archivo visible siempre aparezcan. */
 
 	if(is_hidden(filer_window->real_path, item) &&
 	   (!filer_window->temp_show_hidden && !filer_window->show_hidden))
 		return FALSE;
 
-	switch(filer_window->filter) {
-		case FILER_SHOW_GLOB:
-			return fnmatch(filer_window->filter_string,
-					item->leafname, 0)==0 ||
-				(item->base_type==TYPE_DIRECTORY &&
-				 !filer_window->filter_directories);
-			break;
-
-		case FILER_SHOW_ALL:
-		default:
-			break;
-	}
+	/* Modificado por josejp2424 (2026): no aplicar filtros de tipo ni
+	 * patrones glob a la vista normal. La prioridad es que la carpeta o
+	 * unidad muestre siempre todo su contenido visible. */
 	return TRUE;
 }
 
@@ -3223,6 +3328,11 @@ void filer_set_filter_directories(FilerWindow *filer_window,
 gboolean filer_set_filter(FilerWindow *filer_window, FilterType type,
 			     const gchar *filter_string)
 {
+	/* Modificado por josejp2424 (2026): desactivar los filtros persistentes
+	 * que podían dejar una carpeta mostrando únicamente directorios. */
+	type = FILER_SHOW_ALL;
+	filter_string = NULL;
+
 	/* Is this new filter the same as the old one? */
 	if (filer_window->filter == type)
 	{

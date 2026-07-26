@@ -1,3 +1,107 @@
+ROX-Filer 2.12 GTK3 r15 - 2026-07-26
+
+GTK3 folder icon theme correction
+---------------------------------
+
+- Fixed normal directory icons using an old `inode_directory.png` MIME override
+  instead of the standard folder icon from the active GTK3 icon theme.
+- Normal folders now request `folder` first and use `folder-symbolic` only as a
+  fallback.
+- Legacy MIME-icons remain available for other MIME types but can no longer
+  override the colour and appearance of ordinary folders.
+- Removed the historical `inode-directory.png` and `inode-mount-point.png`
+  links to `/usr/lib/X11/pixmaps/folder48.png`, which forced Puppy's old folder
+  colour instead of the active GTK3 icon theme.
+- Per-directory `.DirIcon` images and AppDir icons continue to take priority.
+- Added automatic icon-cache invalidation when the active GTK3 icon theme
+  changes, allowing folder icons to refresh without restarting ROX-Filer.
+
+ROX-Filer 2.12 GTK3 r14
+--------------------------
+- Partitions is now the permanent first toolbar item, before Up.
+- Partition filtering now follows EssoraWM's exact lsblk conditions.
+- Successful lsblk results are no longer mixed with broad sysfs/runtime scans.
+- ROX-Filer respects ~/.config/essorawm/hidden-drives.
+- Puppy/sysfs detection remains only as a fallback when lsblk is unavailable.
+
+ROX-Filer 2.12 GTK3 r13
+------------------------
+
+- Fixed the GTK3 icon-view scrollbar for directories containing more items
+  than fit in the visible window. GtkViewport now uses the collection's
+  natural vertical size instead of its small minimum requisition, allowing
+  access to every visible file in large directories such as /usr/bin.
+- The fix preserves the normal hidden-file option: dot files remain hidden
+  until the user enables hidden files.
+
+ROX-Filer 2.12 GTK3 r12 - 2026-07-26
+-------------------------------------------
+- Replaced the fragile incremental collection update search with linear pointer
+  matching before sorting. Metadata changes from TYPE_UNKNOWN to a real file
+  type can no longer make items disappear from the icon view.
+- Added an authoritative end-of-scan verification against Directory.known_items.
+  If even one visible item is missing, duplicated or stale, the view is rebuilt
+  from the complete directory contents.
+- Forced a full GTK3 layout recalculation after scanning so the viewport and
+  scrollbar include every visible row.
+- Locked the safe display order to folders first and all remaining visible files
+  afterwards, sorted by name. Removed the Sort button from the toolbar.
+- Expanded partition detection to combine lsblk, Puppy runtime drive_* entries
+  and /sys/class/block partitions, while preventing duplicate devices.
+- Relaxed the partition acceptance rule to match EssoraWM and include real
+  partitions even when old Puppy lsblk versions omit TYPE or filesystem data.
+- Kept hidden files controlled exclusively by the existing Hidden button.
+- Added or updated josejp2424 attribution comments in every modified block.
+
+ROX-Filer 2.12 GTK3 r11 - 2026-07-26
+-------------------------------------------
+- Enforced a real 640x400 minimum directly on every normal filer window,
+  including windows restored from an older saved geometry and automatic
+  icon-layout resizes.
+- Disabled inherited, per-directory and glob filters in the normal filer view
+  so every visible folder and every visible file is always displayed.
+- Kept hidden-file visibility controlled only by the existing Hidden button.
+- Moved the permanent Partitions button immediately after Up and added a
+  fallback insertion path so it cannot disappear because of old toolbar
+  customisation settings.
+- Replaced the one-dimensional partition menu with a GTK3 popover containing a
+  four-column grid. Additional units continue on the next row in groups of four.
+- Kept drive-harddisk as the standard icon-theme name for the permanent button.
+- Added or updated josejp2424 attribution comments in every modified block.
+
+ROX-Filer 2.12 GTK3 r10 - 2026-07-26
+-------------------------------------------
+- Fixed the partition toolbar build failure caused by drives.h including
+  global.h a second time while compiling drives.c.
+- Replaced that include with a forward declaration of FilerWindow, preventing
+  duplicate enum and typedef declarations such as MINI_NONE and TYPE_FILE.
+- Kept drive-harddisk as the standard system icon for the permanent partition
+  button, with the existing symbolic theme fallback.
+
+ROX-Filer 2.12 GTK3 r9 - 2026-07-26
+------------------------------------------
+- Added a permanent Partitions button to the filer toolbar. It cannot be
+  disabled through toolbar customisation.
+- Reused the EssoraWM drive-detection approach to list real internal and
+  removable partitions while filtering loop, Puppy runtime, swap and EFI
+  technical volumes. Added a compatible lsblk fallback for older Puppy builds.
+- Added mount-and-open behaviour: Puppy/root uses /bin/mount under /mnt and
+  regular users can fall back to udisksctl. Mounted partitions open in the
+  current ROX-Filer window.
+- Set 640x400 as the minimum size for every normal ROX-Filer window and dialog,
+  excluding panels, pinboards, menus, tooltips and desktop surfaces.
+- Changed new filer windows and Preferences to 640x400.
+- Removed the Dirs/Files-only toolbar filter that could accidentally hide
+  tar.gz, AppImage, scripts and other normal files.
+- Made directories remain first for every sort criterion, including descending
+  order and both icon and detailed views.
+- Added complete translations for the new partition interface strings in
+  Arabic, Catalan, German, Spanish, French, Italian, Portuguese, Japanese,
+  Hungarian, Russian, Simplified Chinese and Traditional Chinese.
+- Marked every new or modified block with josejp2424 attribution comments.
+- Added the GPLv3 text as LICENSE and documented this modified GTK3 release as
+  GPL-3.0-or-later while retaining all original upstream notices.
+
 ROX-Filer 2.12 GTK3 r8 - 2026-07-25
 ------------------------------------------
 - Added consistent source attribution comments to GTK3 port blocks and new

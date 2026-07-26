@@ -433,8 +433,8 @@ msgstr "حدث خطأ واحد.\n"
 msgid "There were %d errors.\n"
 msgstr "حدثت %d أخطاء.\n"
 
-msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
-msgstr "هذا البرنامج حر؛ يمكنك إعادة توزيعه و/أو تعديله وفق شروط رخصة جنو العمومية كما نشرتها مؤسسة البرمجيات الحرة، إما الإصدار 2 من الرخصة أو أي إصدار لاحق حسب اختيارك."
+msgid "This modified GTK3 version is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version."
+msgstr "هذا البرنامج حر؛ يمكنك إعادة توزيعه و/أو تعديله وفق شروط رخصة جنو العمومية كما نشرتها مؤسسة البرمجيات الحرة، إما الإصدار 3 من الرخصة أو أي إصدار لاحق حسب اختيارك."
 
 msgid "Times"
 msgstr "التواريخ"
@@ -559,3 +559,47 @@ msgstr "أمر الطرفية فارغ."
 #: menu.c
 msgid "Script completed. Press RETURN to close the terminal."
 msgstr "اكتمل تنفيذ البرنامج. اضغط RETURN لإغلاق الطرفية."
+
+#: drives.c
+msgid "Partitions"
+msgstr "الأقسام"
+
+#: drives.c
+msgid "Show partitions, mount them and open their contents"
+msgstr "عرض الأقسام وتركيبها وفتح محتوياتها"
+
+#: drives.c
+msgid "No usable partitions found"
+msgstr "لم يتم العثور على أقسام قابلة للاستخدام"
+
+#: drives.c
+msgid "Mounted"
+msgstr "مُركّب"
+
+#: drives.c
+msgid "Not mounted"
+msgstr "غير مُركّب"
+
+#: drives.c
+msgid "The lsblk command is required to list partitions."
+msgstr "يلزم الأمر lsblk لعرض الأقسام."
+
+#: drives.c
+msgid "Volume %s"
+msgstr "وحدة تخزين %s"
+
+#: drives.c
+msgid "The mount command failed."
+msgstr "فشل أمر التركيب."
+
+#: drives.c
+msgid "Could not mount '%s'."
+msgstr "تعذّر تركيب '%s'."
+
+#: drives.c
+msgid "The partition could not be mounted."
+msgstr "تعذّر تركيب القسم."
+
+#: drives.c
+msgid "The partition '%s' was mounted, but its mount point could not be found."
+msgstr "تم تركيب القسم '%s'، لكن تعذّر العثور على نقطة تركيبه."

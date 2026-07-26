@@ -98,6 +98,10 @@ static gboolean remove_handler_with_confirm(const guchar *path);
 static void set_icon_theme(void);
 static GList *build_icon_theme(Option *option, xmlNode *node, guchar *label);
 static char *find_default_desktop_app(MIME_type *type);
+/* Agregado por josejp2424 (2026): mantener los iconos de carpetas normales
+ * sincronizados con el tema de iconos GTK3 activo. */
+static GdkPixbuf *load_system_folder_icon(void);
+static void system_icon_theme_changed(GtkIconTheme *theme, gpointer data);
 
 /* Hash of all allocated MIME types, indexed by "media/subtype".
  * MIME_type structs are never freed; this table prevents memory leaks
@@ -134,6 +138,13 @@ void type_init(void)
 	icon_theme = gtk_icon_theme_new();
 
 	type_hash = g_hash_table_new(g_str_hash, g_str_equal);
+
+	/* Agregado por josejp2424 (2026): observar el tema GTK3 del sistema.
+	 * Al cambiar el tema se invalidan los iconos MIME almacenados para que
+	 * las carpetas adopten inmediatamente el nuevo icono `folder`. */
+	if (gtk_icon_theme_get_default())
+		g_signal_connect(gtk_icon_theme_get_default(), "changed",
+			G_CALLBACK(system_icon_theme_changed), NULL);
 
 	text_plain = get_mime_type("text/plain", TRUE);
 	inode_directory = get_mime_type("inode/directory", TRUE);
@@ -541,6 +552,38 @@ inline static void init_gnome_theme(void)
 	init_aux_theme(&gnome_theme, "gnome");
 }
 
+/* Agregado por josejp2424 (2026): cargar las carpetas normales desde el
+ * tema GTK3 activo, usando los nombres estándar de Freedesktop. Esto evita
+ * que un antiguo MIME-icons/inode_directory.png imponga otro color. */
+static GdkPixbuf *load_system_folder_icon(void)
+{
+	GtkIconTheme *theme = gtk_icon_theme_get_default();
+	static const gchar *names[] = {
+		ROX_ICON_DIRECTORY,
+		"folder-symbolic",
+		NULL
+	};
+	guint i;
+
+	if (!theme)
+		return NULL;
+
+	for (i = 0; names[i] != NULL; i++)
+	{
+		GdkPixbuf *pixbuf;
+
+		if (!gtk_icon_theme_has_icon(theme, names[i]))
+			continue;
+
+		pixbuf = gtk_icon_theme_load_icon(theme, names[i], HUGE_HEIGHT,
+				GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
+		if (pixbuf)
+			return pixbuf;
+	}
+
+	return NULL;
+}
+
 /* We don't want ROX to override configured theme so try all possibilities
  * in icon_theme first */
 static GtkIconInfo *mime_type_lookup_icon_info(GtkIconTheme *theme,
@@ -596,6 +639,7 @@ static GtkIconInfo *mime_type_lookup_icon_info(GtkIconTheme *theme,
 MaskedPixmap *type_to_icon(MIME_type *type)
 {
 	GtkIconInfo *full;
+	GdkPixbuf *folder_pixbuf;
 	char	*type_name, *path;
 	time_t	now;
 
@@ -620,6 +664,22 @@ MaskedPixmap *type_to_icon(MIME_type *type)
 	}
 
 again:
+	/* Modificado por josejp2424 (2026): una carpeta normal usa primero el
+	 * icono `folder` del tema GTK3 activo. Los iconos personalizados .DirIcon
+	 * se resuelven antes en diritem.c y continúan teniendo prioridad. */
+	if (type == inode_directory)
+	{
+		folder_pixbuf = load_system_folder_icon();
+		if (folder_pixbuf)
+		{
+			type->image = masked_pixmap_new(folder_pixbuf);
+			g_object_unref(folder_pixbuf);
+			goto out;
+		}
+	}
+
+	/* Los MIME-icons históricos siguen disponibles para otros tipos, pero ya
+	 * no pueden reemplazar el color de las carpetas del tema GTK3. */
 	type_name = g_strconcat(type->media_type, "_", type->subtype,
 				".png", NULL);
 	path = choices_find_xdg_path_load(type_name, "MIME-icons", SITE);
@@ -1235,6 +1295,20 @@ static void expire_timer(gpointer key, gpointer value, gpointer data)
 	MIME_type *type = value;
 
 	type->image_time = 0;
+}
+
+/* Agregado por josejp2424 (2026): refrescar los iconos cuando cambia el tema
+ * GTK3 del sistema, sin exigir reiniciar ROX-Filer. */
+static void system_icon_theme_changed(GtkIconTheme *theme, gpointer data)
+{
+	(void) theme;
+	(void) data;
+
+	if (!type_hash)
+		return;
+
+	g_hash_table_foreach(type_hash, expire_timer, NULL);
+	full_refresh();
 }
 
 static void options_changed(void)

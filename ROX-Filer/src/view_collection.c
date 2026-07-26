@@ -343,6 +343,18 @@ static void view_collection_init(GTypeInstance *object, gpointer gclass)
 	gtk_scrollable_set_vadjustment(GTK_SCROLLABLE(viewport), adj);
 	g_object_unref(adj);
 	gtk_scrollable_set_hadjustment(GTK_SCROLLABLE(viewport), NULL);
+
+	/* Modificado por josejp2424 (2026): GtkViewport usa por defecto la
+	 * requisición mínima del hijo para calcular el desplazamiento. Collection
+	 * mantiene una altura mínima pequeña y una altura natural igual a todas
+	 * sus filas; con GTK_SCROLL_MINIMUM el ajuste vertical quedaba limitado a
+	 * la zona visible aunque el directorio tuviera miles de elementos. Usar la
+	 * altura natural hace que el scrollbar abarque la colección completa. */
+	gtk_scrollable_set_hscroll_policy(GTK_SCROLLABLE(viewport),
+				 GTK_SCROLL_MINIMUM);
+	gtk_scrollable_set_vscroll_policy(GTK_SCROLLABLE(viewport),
+				 GTK_SCROLL_NATURAL);
+
 	gtk_viewport_set_shadow_type(viewport, GTK_SHADOW_NONE);
 	gtk_container_add(GTK_CONTAINER(object), collection);
 	gtk_widget_show(collection);
@@ -1078,34 +1090,16 @@ static void view_collection_style_changed(ViewIface *view, int flags)
 	gtk_widget_queue_draw(GTK_WIDGET(view_collection));
 }
 
-typedef int (*SortFn)(gconstpointer a, gconstpointer b);
-
-static SortFn sort_fn(FilerWindow *fw)
-{
-	switch (fw->sort_type)
-	{
-		case SORT_NAME: return sort_by_name;
-		case SORT_TYPE: return sort_by_type;
-		case SORT_DATEA: return sort_by_datea;
-		case SORT_DATEC: return sort_by_datec;
-		case SORT_DATEM: return sort_by_datem;
-		case SORT_SIZE: return sort_by_size;
-		case SORT_OWNER: return sort_by_owner;
-		case SORT_GROUP: return sort_by_group;
-		default:
-			g_assert_not_reached();
-	}
-
-	return NULL;
-}
-
+/* Modificado por josejp2424 (2026): orden seguro y determinista.
+ * La función sort_by_name ya mantiene las carpetas normales primero; usarla
+ * directamente evita comparadores con contexto global durante actualizaciones. */
 static void view_collection_sort(ViewIface *view)
 {
-	ViewCollection	*view_collection = VIEW_COLLECTION(view);
-	FilerWindow	*filer_window = view_collection->filer_window;
+	ViewCollection *view_collection = VIEW_COLLECTION(view);
 
-	collection_qsort(view_collection->collection, sort_fn(filer_window),
-			filer_window->sort_order);
+	collection_qsort(view_collection->collection, sort_by_name,
+			GTK_SORT_ASCENDING);
+	gtk_widget_queue_resize(GTK_WIDGET(view_collection->collection));
 }
 
 static void view_collection_add_items(ViewIface *view, GPtrArray *items)
@@ -1138,12 +1132,10 @@ static void view_collection_update_items(ViewIface *view, GPtrArray *items)
 
 	g_return_if_fail(items->len > 0);
 
-	/* The item data has already been modified, so this gives the
-	 * final sort order...
-	 */
-	collection_qsort(collection, sort_fn(filer_window),
-			 filer_window->sort_order);
-
+	/* Modificado por josejp2424 (2026): localizar los elementos por identidad
+	 * de puntero antes de ordenar. Una búsqueda binaria deja de ser válida
+	 * cuando el restat cambia TYPE_UNKNOWN a carpeta o archivo y fue la causa
+	 * de vistas parciales en las que sólo permanecían las carpetas. */
 	for (i = 0; i < items->len; i++)
 	{
 		DirItem *item = (DirItem *) items->pdata[i];
@@ -1153,15 +1145,19 @@ static void view_collection_update_items(ViewIface *view, GPtrArray *items)
 		if (!filer_match_filter(filer_window, item))
 			continue;
 
-		j = collection_find_item(collection, item,
-					 sort_fn(filer_window),
-					 filer_window->sort_order);
+		for (j = 0; j < collection->number_of_items; j++)
+		{
+			if (collection->items[j].data == item)
+				break;
+		}
 
-		if (j < 0)
+		if (j >= collection->number_of_items)
 			g_warning("Failed to find '%s'\n", leafname);
 		else
 			update_item(view_collection, j);
 	}
+
+	view_collection_sort(view);
 }
 
 static void view_collection_delete_if(ViewIface *view,
