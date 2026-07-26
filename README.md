@@ -12,265 +12,299 @@
   Maintained by <strong>josejp2424</strong>
 </p>
 
-Overview
+---
 
-ROX-Filer is a fast and lightweight graphical file manager originally createdby Thomas Leonard for the ROX Desktop.
+## Overview
 
-This repository contains the ongoing port of ROX-Filer 2.12 to GTK3.
+ROX-Filer is a fast and lightweight graphical file manager originally created
+by **Thomas Leonard** for the ROX Desktop.
 
-The goal of this project is to preserve the speed, simplicity, flexibility andtraditional behaviour of the original ROX-Filer while replacing its GTK2-eraimplementation with a modern GTK3 code base.
+This repository contains the ongoing port of **ROX-Filer 2.12 to GTK3**.
 
-The main filer interface, file views, menus, preferences, file operations,input handling, GTK theme integration, icon-theme support and dialogs havealready been adapted to GTK3. Development may continue with additional testing,cleanup, translation work and compatibility improvements.
+The goal of this project is to preserve the speed, simplicity, flexibility and
+traditional behaviour of the original ROX-Filer while replacing its GTK2-era
+implementation with a modern GTK3 code base.
 
-This version is intended primarily for lightweight X11 and XLibre desktops,including:
+The main filer interface, file views, menus, preferences, file operations,
+input handling, GTK theme integration, icon-theme support and dialogs have
+already been adapted to GTK3.
 
-Puppy Linux
+This version is intended primarily for lightweight X11 and XLibre desktops,
+including:
 
-EssoraPup
+- Puppy Linux
+- EssoraPup
+- Essora
+- JWM
+- EssoraWM
+- Other lightweight X11/XLibre environments
 
-Essora
+> ROX-Filer GTK3 currently targets X11/XLibre. It is not yet a native Wayland
+> port. Basic use may work through XWayland, but the pinboard, panels and other
+> desktop functions still depend on X11-specific APIs.
 
-JWM
+## Project goals
 
-EssoraWM
+- Preserve the classic ROX-Filer workflow.
+- Maintain fast startup and low resource usage.
+- Remove the normal runtime dependency on GTK2.
+- Integrate correctly with GTK3 themes and icon themes.
+- Improve behaviour on modern Puppy Linux and Essora systems.
+- Preserve all original copyright and contributor notices.
+- Add practical desktop features without making the filer unnecessarily heavy.
 
-Other lightweight X11/XLibre environments
-
-ROX-Filer GTK3 currently targets X11/XLibre. It is not a native Wayland port.
-
-Project goals
-
-Preserve the classic ROX-Filer workflow.
-
-Maintain fast startup and low resource usage.
-
-Remove the dependency on GTK2.
-
-Integrate correctly with GTK3 themes and icon themes.
-
-Improve behaviour on modern Puppy Linux and Essora systems.
-
-Keep the source understandable and maintainable.
-
-Preserve all original copyright and contributor notices.
-
-Add practical desktop features without making the filer unnecessarily heavy.
-
-Current GTK3 status
+## GTK3 status
 
 The project builds against:
 
+```text
 GTK+ 3.22 or newer
+```
 
-The source uses GTK3 for the main interface and no longer requires GTK2 for thenormal build.
+The normal build uses GTK3 and does not require GTK2.
 
 Major GTK3 porting work includes:
 
-GTK3 widgets and containers.
+- GTK3 widgets and containers.
+- GTK3 event and mouse handling.
+- Cairo-based custom drawing.
+- `GtkStyleContext` theme integration.
+- GTK3-compatible menus.
+- GTK3-compatible scroll adjustments and file views.
+- GTK3-compatible drag and drop.
+- GTK3 preferences and dialogs.
+- GTK3 icon-theme loading.
+- Native GTK3 About dialog.
+- Replacement of removed GTK2 menu infrastructure.
+- X11/XLibre compatibility through GDK X11 and Xlib.
 
-GTK3 event handling.
+## Main features
 
-Cairo-based custom drawing.
+- Fast and lightweight graphical file manager.
+- Classic ROX-Filer icon and detailed list views.
+- Desktop pinboard support.
+- Panel support.
+- Drag and drop.
+- Copy, move, rename and delete operations.
+- File associations and MIME handling.
+- AppDir support.
+- Mount and unmount integration.
+- Symbolic-link handling.
+- Extended-attribute support.
+- Per-directory display settings.
+- GTK3 theme and icon-theme integration.
+- Multilingual interface.
+- Integrated terminal actions.
+- Permanent partition toolbar.
+- Native GTK3 About dialog.
 
-GtkStyleContext theme integration.
+## Complete directory view
 
-GTK3-compatible menus.
+The GTK3 port fixes a scrolling problem that prevented users from reaching all
+files in directories containing hundreds or thousands of entries.
 
-GTK3-compatible scroll adjustments and file views.
+ROX-Filer was loading the complete directory, but `GtkViewport` was calculating
+the scrollable area from the minimum widget height instead of the full natural
+height of the collection.
 
-GTK3-compatible drag-and-drop handling.
+The vertical view now uses the complete natural height, allowing access to every
+visible item in the directory.
 
-GTK3 preferences and dialogs.
+The default presentation is:
 
-GTK3 icon-theme loading.
+1. Directories first.
+2. All remaining visible files afterwards.
+3. Alphabetical order inside each group.
 
-Native GTK3 About dialog.
+ROX-Filer displays archives, AppImages, scripts, binaries, images, documents and
+all other visible file types.
 
-Replacement of removed GTK2 menu infrastructure.
+Hidden files remain hidden unless the user enables **Show Hidden**.
 
-Compatibility with X11/XLibre through GDK X11 and Xlib.
+## Partitions toolbar
 
-Main features
+ROX-Filer GTK3 includes a permanent **Partitions** button in the main toolbar.
 
-Fast and lightweight graphical file manager.
+The button:
 
-Classic ROX-Filer icon and list views.
+- Is always displayed first, before the **Up** button.
+- Cannot be hidden, removed or reordered through toolbar customization.
+- Uses the active icon theme's standard `drive-harddisk` icon.
+- Detects usable disk partitions.
+- Shows the partition label, device name, size and mount state.
+- Mounts an unmounted partition before opening it.
+- Opens mounted partitions directly in the current ROX-Filer window.
+- Displays partitions in a four-column grid.
+- Continues on additional rows when more than four partitions are available.
 
-Desktop pinboard support.
+Partition detection follows the filtering behaviour used by EssoraWM, avoiding
+technical devices such as loop, RAM, swap and internal Puppy layer devices.
 
-Panel support.
+When available, ROX-Filer also respects:
 
-Drag and drop.
+```text
+~/.config/essorawm/hidden-drives
+```
 
-File copy, move, rename and delete operations.
+<p align="center">
+  <img src="screenshot/rox-particiones.png"
+       alt="ROX-Filer GTK3 partitions toolbar and partition grid"
+       width="760">
+</p>
 
-File type handling and application associations.
+<p align="center">
+  <em>Permanent partition access from the ROX-Filer toolbar.</em>
+</p>
 
-AppDir support.
+## Window behaviour
 
-Mount and unmount integration.
+Normal ROX-Filer windows use:
 
-Symbolic-link handling.
+```text
+640 × 400 pixels
+```
 
-Extended-attribute support.
+as their default and minimum usable size.
 
-Per-directory display settings.
+This prevents filer windows and dialogs from opening as very small or unusually
+wide single-row windows.
 
-Configurable toolbar.
+Saved geometries smaller than the minimum are adjusted to a usable size.
 
-GTK3 theme and icon-theme integration.
+Special desktop surfaces such as the pinboard, panels, menus and tooltips are
+not forced to use the normal filer-window size.
 
-Multilingual interface.
+## Preferences window
 
-Integrated terminal actions.
+The Preferences window uses a minimum usable size of:
 
-Native GTK3 About dialog.
+```text
+640 × 400 pixels
+```
 
-Window defaults
+Large option pages are placed inside scrollable GTK3 containers so their natural
+size cannot expand the dialog beyond the available screen area.
 
-New filer windows use a real initial size of:
+The category panel has its own compact scrollable area.
 
-600 × 400 pixels
+## Terminal integration
 
-This size is applied after the initial GTK3 window mapping so that the contentlayout cannot stretch a new window into a single wide row.
+ROX-Filer GTK3 adds two file-context-menu actions.
 
-A saved per-directory geometry continues to take priority when one exists.
-
-The window remains fully resizable and the default size is not enforced as aminimum size.
-
-Preferences window
-
-The Preferences window uses a default size of:
-
-600 × 400 pixels
-
-Large settings pages are placed inside scrollable GTK3 containers. This preventstheir natural size from expanding the dialog beyond the available screen area.
-
-The category list also has its own compact scrollable panel.
-
-Terminal integration
-
-ROX-Filer GTK3 adds two practical file-context-menu actions.
-
-Open Terminal Here
+### Open Terminal Here
 
 When a directory is selected, the contextual menu provides:
 
+```text
 Open Terminal Here
+```
 
-The configured terminal emulator opens with the selected directory as itsworking directory.
+The configured terminal emulator opens with the selected directory as its
+working directory.
 
-Run in Terminal
+### Run in Terminal
 
 The contextual menu provides:
 
+```text
 Run in Terminal
+```
 
 for supported files, including:
 
-Executable native binaries
+- Executable native binaries
+- Executable shell scripts
+- Files ending in `.sh`
+- Python scripts ending in `.py`
+- Python GUI scripts ending in `.pyw`
+- Executable AppImage files
+- Other executable files with a valid interpreter line
 
-Executable shell scripts
-
-Files ending in .sh
-
-Python scripts ending in .py
-
-Python GUI scripts ending in .pyw
-
-Executable AppImage files
-
-Other executable files with a valid interpreter line
-
-The command is launched with safely separated arguments, supports pathscontaining spaces and keeps the terminal open until the user presses Enter.
+The command uses safely separated arguments, supports paths containing spaces
+and keeps the terminal open until the user presses Enter.
 
 The terminal command remains controlled by ROX-Filer's existing:
 
+```text
 menu_xterm
+```
 
 option.
 
-The terminal menu entries use the standard icon-theme name:
+Terminal entries use the standard icon-theme name:
 
+```text
 utilities-terminal
+```
 
-Optional runtime tools
+Depending on the selected file, terminal execution may use:
 
-Depending on the selected file, the terminal integration may use:
-
-A configured terminal emulator, such as xterm
-
-/bin/sh
-
-python3
+- The configured terminal emulator, such as `xterm`
+- `/bin/sh`
+- `python3`
 
 AppImage files must have executable permission before they can be launched.
 
-File-operation dialog fixes
+## File-operation dialog fixes
 
-The GTK3 port includes corrections for file-operation dialogs that previouslyremained visible after an operation had already completed.
+The GTK3 port fixes progress dialogs that previously remained open after a file
+operation had already completed.
 
-The child-process communication now handles pending input correctly when GLibreports input and pipe closure at the same time.
+The child-process communication now processes all pending messages before
+handling pipe closure.
 
-This applies to operations such as:
+This applies to:
 
-Copying files
+- Copying files
+- Replacing existing files
+- Moving files
+- Deleting files
+- Deleting directories recursively
 
-Replacing existing files
+A progress dialog closes after a successful operation and remains open only
+when an actual error must be shown.
 
-Moving files
+## GTK3 theme integration
 
-Deleting files
+ROX-Filer uses the active GTK3 widget theme and icon theme.
 
-Deleting directories recursively
+GTK3 normally reads the user configuration from:
 
-The progress dialog closes after a successful operation and remains open onlywhen an actual error must be shown to the user.
-
-GTK3 theme integration
-
-ROX-Filer uses the active GTK3 settings, widget theme and icon theme.
-
-GTK3 normally reads the user's configuration from:
-
+```text
 ~/.config/gtk-3.0/settings.ini
+```
 
-For example:
+Example:
 
+```ini
 [Settings]
 gtk-theme-name=YourGtkTheme
 gtk-icon-theme-name=YourIconTheme
 gtk-font-name=Sans 10
+```
 
-This port does not force a fixed filer background or text colour. File views usestandard GTK3 styling so that the selected system theme controls theirappearance.
+This port does not force a fixed filer background or text colour.
 
-System icon theme
+## System icon theme
 
 ROX-Filer GTK3 uses the active system icon theme for interface graphics such as:
 
-Toolbar actions
+- Toolbar actions
+- Directories
+- Applications and AppDirs
+- List view
+- Selection actions
+- Mounted devices
+- Unmount and eject actions
+- Symbolic links
+- Extended attributes
+- Iconified windows
+- Terminal actions
+- Partition toolbar
 
-Folders
+Standard icon names include:
 
-Applications and AppDirs
-
-List view
-
-Selection actions
-
-Mounted devices
-
-Unmount and eject actions
-
-Symbolic links
-
-Extended attributes
-
-Iconified windows
-
-Terminal actions
-
-Examples of standard icon names used by the application include:
-
+```text
 folder
 application-x-executable
 view-list
@@ -280,166 +314,165 @@ media-eject
 document-properties
 emblem-symbolic-link
 utilities-terminal
+```
 
-ROX-Filer also checks for symbolic variants when appropriate.
+Normal directories now request the standard `folder` icon from the active GTK3
+icon theme instead of using the legacy Puppy `folder48.png` MIME icon.
+
+Custom `.DirIcon` files and AppDir icons continue to take priority.
 
 The only bundled interface fallback image is:
 
+```text
 ROX-Filer/images/rox-show-hidden.png
+```
 
-ROX-Filer first tries the theme icon:
+ROX-Filer first tries:
 
+```text
 view-hidden-files
+```
 
-and uses the bundled image only when the active icon theme does not provide asuitable icon.
+and uses the bundled image only when the active icon theme does not provide a
+suitable icon.
 
-Menu cleanup
+## Menu cleanup
 
-Obsolete Help entries have been removed from the active interface, including:
+Obsolete Help entries were removed from the active interface:
 
-Help
+- Help
+- Show Help Files
+- Manual
 
-Show Help Files
+They were removed from contextual menus, AppDir menus, desktop and panel menus,
+and the main toolbar.
 
-Manual
+The native GTK3 **About ROX-Filer** dialog remains directly available.
 
-They were removed from the main contextual menus, AppDir menus, desktop andpanel menus, and the main toolbar.
+Historical documentation remains in the source where required to preserve
+project history and original licensing information.
 
-The native GTK3 About ROX-Filer dialog remains directly available.
-
-Historical documentation may remain in the source tree because it containsimportant project history and original licensing information.
-
-About dialog
+## About dialog
 
 The About dialog is integrated directly into the GTK3 source.
 
 It identifies the project as:
 
+```text
 ROX-Filer 2.12 GTK3
+```
 
 Credits are preserved as follows:
 
-Original author: Thomas Leonard
-
-Original contributors: ROX Desktop contributors
-
-GTK3 port and new features: josejp2424
-
-Maintainer of this GTK3 version: josejp2424
+- Original author: Thomas Leonard
+- Original contributors: ROX Desktop contributors
+- GTK3 port and new features: josejp2424
+- Maintainer of this GTK3 version: josejp2424
 
 All original copyright and attribution notices remain in the source files.
 
-Interface languages
+## Interface languages
 
 Included interface languages:
 
-English
-
-Arabic
-
-Catalan
-
-German
-
-Spanish
-
-French
-
-Italian
-
-Portuguese
-
-Japanese
-
-Hungarian
-
-Russian
-
-Chinese, simplified
-
-Chinese, traditional
+- English
+- Arabic
+- Catalan
+- German
+- Spanish
+- French
+- Italian
+- Portuguese
+- Japanese
+- Hungarian
+- Russian
+- Chinese, simplified
+- Chinese, traditional
 
 The original upstream translation catalogues are preserved.
 
-Arabic and Catalan currently cover the principal interface, menus, terminalintegration and file-operation dialogs. Their translation coverage may continueto expand as development progresses.
+Arabic and Catalan currently cover the principal interface, menus, terminal
+integration, partition integration and file-operation dialogs. Their coverage
+may continue to expand.
 
-Precompiled .mo files are included so the available translations can work onsystems where msgfmt is not installed.
+Precompiled `.mo` files are included so translations can work on systems where
+`msgfmt` is not installed.
 
-Build requirements
+## Build requirements
 
-The build requires a C development environment and the development files for:
+The build requires a C development environment and development files for:
 
-GTK+ 3.22 or newer
-
-GLib and GObject
-
-GDK-Pixbuf
-
-Cairo
-
-libxml2
-
-X11
-
-X Session Management library (sm)
-
-Inter-Client Exchange library (ice)
-
-pkg-config
-
-GNU Autoconf tools when regenerating configure
+- GTK+ 3.22 or newer
+- GLib and GObject
+- GDK-Pixbuf
+- Cairo
+- libxml2
+- X11
+- X Session Management library (`sm`)
+- Inter-Client Exchange library (`ice`)
+- `pkg-config`
+- GNU Autoconf tools when regenerating `configure`
 
 The exact package names depend on the distribution.
 
-The build system checks the main dependencies through pkg-config, including:
+The build system checks its primary dependencies through:
 
+```sh
 pkg-config --cflags --libs gtk+-3.0 libxml-2.0 sm ice
+```
 
-Build and run
+Optional runtime tools include:
+
+- `file`
+- `xterm` or another configured terminal emulator
+- `udisksctl`, normally provided by `udisks2`
+- librsvg/GDK-Pixbuf SVG loader support
+
+## Build and run
 
 From the repository root:
 
-cd ROX-Filer
-./AppRun --compile
-
-Run a new ROX-Filer instance with:
-
-./AppRun -n
-
-The complete sequence is:
-
+```sh
 cd ROX-Filer
 ./AppRun --compile
 ./AppRun -n
+```
 
-AppRun --compile removes the previous generated binary before rebuilding, whichhelps prevent stale object files or an older binary from being reused.
+`AppRun --compile` removes the previous generated binary before rebuilding.
 
-Clean rebuild
+## Clean rebuild
 
 For a completely clean rebuild:
 
+```sh
 cd ROX-Filer
 
 rm -rf build
 rm -f ROX-Filer ROX-Filer.dbg
 
 ./AppRun --compile
-./AppRun -n
+```
 
-Close an older running instance before testing a newly compiled version:
+Close any older running instance before testing the newly compiled binary:
 
+```sh
 killall ROX-Filer 2>/dev/null
 ./AppRun -n
+```
 
-Repository layout
+ROX-Filer uses a single running instance. If an older binary remains active,
+new windows may still be created by that older process.
 
-Important files and directories include:
+## Repository layout
 
+```text
 .
 ├── README.md
 ├── CHANGELOG
 ├── LICENSE
 ├── ROX-Filer.svg
+├── screenshot/
+│   └── rox-particiones.png
 ├── ROX-Filer/
 │   ├── AppRun
 │   ├── AppInfo.xml
@@ -451,110 +484,146 @@ Important files and directories include:
 │   ├── Help/
 │   └── src/
 └── .gitignore
+```
 
-The exact contents may evolve as the GTK3 port continues.
-
-Configuration
+## Configuration
 
 ROX-Filer stores user configuration under:
 
+```text
 ~/.config/rox.sourceforge.net/ROX-Filer/
+```
 
-Common configuration files may include:
+Common files include:
 
+```text
 Options
 Settings.xml
+```
 
-The GTK3 widget and icon themes are controlled separately through the user'sGTK3 configuration.
+GTK3 widget and icon themes are controlled through the user's GTK3 settings.
 
-Compatibility
+## Compatibility
 
 The primary target is GTK3 on X11/XLibre.
 
-The source contains X11-specific integration using components such as:
+The source contains X11-specific integration using:
 
-GDK X11
+- GDK X11
+- GTK X11 embedding support
+- Xlib
+- X Session Management
+- ICE
 
-GTK X11 embedding support
+This is appropriate for Puppy Linux, Essora, JWM, EssoraWM and similar
+lightweight X11/XLibre environments.
 
-Xlib
+Native Wayland support is not currently included. A future port is technically
+possible, but the pinboard, panels, exact window positioning and desktop
+integration would require substantial redesign.
 
-X Session Management
+## Known limitations
 
-ICE
+- Additional testing remains useful across different GTK3 and icon themes.
+- Arabic and Catalan translation coverage is not yet as extensive as every
+  historical upstream catalogue.
+- Some deprecated but still supported GTK3 APIs may remain.
+- Behaviour can vary depending on the external terminal emulator.
+- X11/XLibre-specific desktop and panel functionality is not expected to work
+  natively on Wayland.
+- SVG preview support depends on the system GDK-Pixbuf/librsvg loader.
 
-This is appropriate for Puppy Linux, Essora, JWM, EssoraWM and similarlightweight X11/XLibre environments.
-
-Native Wayland support is not currently a project goal.
-
-Known limitations
-
-Additional testing is still useful across different GTK3 themes and iconthemes.
-
-Arabic and Catalan translation coverage is not yet as extensive as everyhistorical upstream catalogue.
-
-Some deprecated GTK3 APIs may remain, although they are still available inGTK3 and do not introduce a GTK2 dependency.
-
-Behaviour can vary depending on the external terminal emulator and desktopenvironment.
-
-X11/XLibre-specific desktop and panel functionality is not expected to worknatively on Wayland.
-
-Reporting issues
+## Reporting issues
 
 When reporting a problem, include:
 
-Distribution and version
+- Distribution and version
+- Desktop or window manager
+- X11 or XLibre version
+- GTK3 version
+- Steps needed to reproduce the problem
+- Console output
+- Relevant log files
+- A screenshot when the problem is visual
 
-Desktop or window manager
+For input or event diagnostics:
 
-X11 or XLibre version
-
-GTK3 version
-
-Steps needed to reproduce the problem
-
-Console output
-
-Relevant log files
-
-A screenshot when the issue is visual
-
-For input or event problems, running ROX-Filer from a terminal can provide usefuldiagnostics:
-
+```sh
 ROX_TRACE_INPUT=1 GDK_SYNCHRONIZE=1 ./AppRun -n
+```
 
-Contributing
+## Contributing
 
-Contributions, testing reports and translations are welcome.
+Contributions, test reports and translations are welcome.
 
 Changes should:
 
-Preserve the lightweight character of ROX-Filer.
+- Preserve the lightweight character of ROX-Filer.
+- Remain compatible with GTK3.
+- Avoid unnecessary dependencies.
+- Preserve original copyright notices.
+- Follow the existing source style where practical.
+- Be tested on X11 or XLibre.
+- Include translation updates for new interface strings when possible.
 
-Remain compatible with GTK3.
-
-Avoid adding unnecessary dependencies.
-
-Preserve original copyright notices.
-
-Follow the existing source style where practical.
-
-Be tested on X11 or XLibre.
-
-Include translation updates for newly added interface strings when possible.
-
-Changelog
+## Changelog
 
 See the consolidated file:
 
+```text
 CHANGELOG
+```
 
-It contains the development history of the GTK3 port and the fixes introducedduring the conversion.
+It contains the development history of the GTK3 port and all fixes introduced
+during the conversion.
 
-Credits
+## Credits
 
-Original project
+### Original project
 
-ROX-Filer was originally created by Thomas Leonard for the ROX Desktop.
+ROX-Filer was originally created by **Thomas Leonard** for the ROX Desktop.
 
-The project also includes work from the original ROX Desktop contributors.Their copyright and attribution notices remain preserved throughout the source.
+The project also includes work from the original ROX Desktop contributors.
+Their copyright and attribution notices remain preserved throughout the source.
+
+### GTK3 version
+
+- GTK3 port: **josejp2424**
+- New GTK3 integration and features: **josejp2424**
+- Maintainer of this version: **josejp2424**
+
+## License
+
+This modified GTK3 version of ROX-Filer is distributed under the:
+
+```text
+GNU General Public License, version 3 or, at your option, any later version
+```
+
+SPDX identifier:
+
+```text
+GPL-3.0-or-later
+```
+
+See:
+
+```text
+LICENSE
+```
+
+The original ROX-Filer source was distributed under GPL-2.0-or-later. That
+license permits this modified version to be distributed under
+GPL-3.0-or-later.
+
+All original copyright, authorship and licensing notices are retained.
+
+Files containing third-party code may retain their own compatible copyright and
+license notices. Those file-specific notices remain applicable.
+
+---
+
+<p align="center">
+  <strong>ROX-Filer 2.12 GTK3</strong><br>
+  Classic ROX-Filer simplicity, adapted for modern GTK3 desktops.
+</p>
