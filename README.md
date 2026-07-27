@@ -181,6 +181,10 @@ The partition selector is a GTK3 popover arranged as a four-column grid. The
 first four units appear on the first row, the next four on the second row, and
 so on. Each unit shows its volume label, device name, size and mounted state.
 
+
+<p align="center">
+  <img src="screenshot/rox-particiones.png" alt="partition" width="180">
+</p>
 ## File visibility and ordering
 
 The historical toolbar control that switched between **directories only** and
