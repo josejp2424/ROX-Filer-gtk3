@@ -19,8 +19,7 @@
 ROX-Filer is a fast and lightweight graphical file manager originally created
 by **Thomas Leonard** for the ROX Desktop.
 
-This repository contains the ongoing port of **ROX-Filer 2.12 to GTK3**,
-maintained by **josejp2424**.
+This repository contains the ongoing port of **ROX-Filer 2.12 to GTK3**
 
 The goal of this project is to preserve the speed, simplicity, flexibility and
 traditional behaviour of the original ROX-Filer while replacing its GTK2-era
