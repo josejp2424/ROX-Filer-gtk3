@@ -5513,3 +5513,151 @@ msgstr "Не удалось подключить раздел."
 #: drives.c
 msgid "The partition '%s' was mounted, but its mount point could not be found."
 msgstr "Раздел «%s» подключён, но его точка монтирования не найдена."
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Apply this decision to all remaining conflicts"
+msgstr "Применить это решение ко всем оставшимся конфликтам"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace all"
+msgstr "Заменить все"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip all"
+msgstr "Пропустить все"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "%s conflict policy"
+msgstr "Политика конфликтов: %s"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Some items already exist in the destination. Choose how ROX-Filer should handle all conflicts in this operation:"
+msgstr "Некоторые элементы уже существуют в месте назначения. Выберите, как ROX-Filer должен обрабатывать все конфликты этой операции:"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "_Continue"
+msgstr "_Продолжить"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Ask for each conflict"
+msgstr "Спрашивать при каждом конфликте"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace existing files"
+msgstr "Заменять существующие файлы"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip existing files"
+msgstr "Пропускать существующие файлы"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace only if the source is newer"
+msgstr "Заменять только если источник новее"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Failed to start rsync: %s\n"
+msgstr "!Не удалось запустить rsync: %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Unknown error"
+msgstr "Неизвестная ошибка"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s':\n%s\n"
+msgstr "!Сбой rsync при обработке '%s':\n%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s'\n"
+msgstr "!Сбой rsync при обработке '%s'\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Skipped existing destination '%s'\n"
+msgstr "'Существующий объект назначения '%s' пропущен\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace non-empty directory '%s': %s\n"
+msgstr "!Невозможно заменить непустой каталог '%s': %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace '%s': %s\n"
+msgstr "!Невозможно заменить '%s': %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Copied '%s' with rsync\n"
+msgstr "'%s' скопирован с помощью rsync\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Moved '%s' with rsync\n"
+msgstr "'%s' перемещён с помощью rsync\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "rsync is not installed; using the classic ROX-Filer engine.\n"
+msgstr "rsync не установлен; используется классический механизм ROX-Filer.\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'%s' already exists - %s?"
+msgstr "'%s' уже существует — %s?"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed:\n%s\n"
+msgstr "!Пакетное копирование rsync завершилось ошибкой:\n%s\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed\n"
+msgstr "!Пакетное копирование rsync завершилось ошибкой\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "'Fast rsync copy completed\n"
+msgstr "'Быстрое копирование rsync завершено\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "The filesystem containing '%s' does not support the standard Trash.\n"
+msgstr "Файловая система, содержащая «%s», не поддерживает стандартную корзину.\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Unable to move '%s' to the Trash: %s\n"
+msgstr "Не удалось переместить «%s» в корзину: %s\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move '%s' to the Trash?"
+msgstr "Переместить «%s» в корзину?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move %d selected items to the Trash?"
+msgstr "Переместить %d выбранных элементов в корзину?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Move to Trash"
+msgstr "_Переместить в корзину"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete '%s'?\n\nThis action cannot be undone."
+msgstr "Удалить «%s» безвозвратно?\n\nЭто действие нельзя отменить."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete %d selected items?\n\nThis action cannot be undone."
+msgstr "Удалить безвозвратно %d выбранных элементов?\n\nЭто действие нельзя отменить."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Delete Permanently"
+msgstr "_Удалить безвозвратно"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move to Trash"
+msgstr "Переместить в корзину"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently"
+msgstr "Удалить безвозвратно"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently..."
+msgstr "Удалить безвозвратно..."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move ... to Trash ?"
+msgstr "Переместить ... в корзину?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "DELETE ... permanently ?"
+msgstr "УДАЛИТЬ ... безвозвратно?"

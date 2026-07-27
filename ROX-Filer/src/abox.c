@@ -228,6 +228,16 @@ static void abox_init(GTypeInstance *object, gpointer gclass)
 	gtk_grid_attach(GTK_GRID(abox->cmp_area),
 				abox->cmp_arrow, 0, 0, 1, 2);
 
+	/* Agregado por josejp2424 (2026): permite que Reemplazar u Omitir
+	 * se aplique a todos los conflictos restantes, como en los gestores
+	 * de archivos modernos. Sólo se muestra durante un conflicto. */
+	abox->apply_all = gtk_check_button_new_with_label(
+			_("Apply this decision to all remaining conflicts"));
+	gtk_widget_set_halign(abox->apply_all, GTK_ALIGN_START);
+	gtk_widget_set_margin_start(abox->apply_all, 8);
+	gtk_widget_set_margin_end(abox->apply_all, 8);
+	gtk_box_pack_start(GTK_BOX(content), abox->apply_all, FALSE, FALSE, 2);
+
 	abox->progress=NULL;
 
 	abox->flag_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 16);
@@ -241,6 +251,7 @@ static void abox_init(GTypeInstance *object, gpointer gclass)
 
 	gtk_widget_show_all(content);
 	gtk_widget_hide(abox->cmp_area);
+	gtk_widget_hide(abox->apply_all);
 
 	abox->quiet = abox_add_flag(abox,
 			_("Quiet"), _("Don't confirm every operation"),
@@ -295,6 +306,7 @@ static void response(GtkDialog *dialog, gint response_id)
 					response_id == GTK_RESPONSE_NO)
 	{
 		abox->question = FALSE;
+		gtk_widget_hide(abox->apply_all);
 		shade(abox);
 	}
 }
@@ -308,10 +320,37 @@ void abox_ask(ABox *abox, const gchar *question)
 	g_return_if_fail(question != NULL);
 	g_return_if_fail(IS_ABOX(abox));
 
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(abox->apply_all), FALSE);
+	gtk_widget_hide(abox->apply_all);
 	abox_log(abox, question, "question");
 
 	abox->question = TRUE;
 	shade(abox);
+}
+
+/* Agregado por josejp2424 (2026): pregunta de conflicto con la opción
+ * de recordar Reemplazar u Omitir durante el resto de la operación. */
+void abox_ask_conflict(ABox *abox, const gchar *question)
+{
+	g_return_if_fail(abox != NULL);
+	g_return_if_fail(question != NULL);
+	g_return_if_fail(IS_ABOX(abox));
+
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(abox->apply_all), FALSE);
+	gtk_widget_show(abox->apply_all);
+	abox_log(abox, question, "question");
+	abox->question = TRUE;
+	shade(abox);
+}
+
+gboolean abox_apply_to_all(ABox *abox)
+{
+	g_return_val_if_fail(abox != NULL, FALSE);
+	g_return_val_if_fail(IS_ABOX(abox), FALSE);
+
+	/* La señal GtkDialog::response puede ocultar el control antes o después
+	 * del manejador conectado. El estado activo es la fuente fiable. */
+	return gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(abox->apply_all));
 }
 
 void abox_cancel_ask(ABox *abox)
@@ -320,6 +359,7 @@ void abox_cancel_ask(ABox *abox)
 	g_return_if_fail(IS_ABOX(abox));
 
 	abox->question = FALSE;
+	gtk_widget_hide(abox->apply_all);
 	shade(abox);
 }
 

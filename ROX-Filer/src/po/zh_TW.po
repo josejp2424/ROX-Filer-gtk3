@@ -5025,3 +5025,151 @@ msgstr "無法掛載此分割區。"
 #: drives.c
 msgid "The partition '%s' was mounted, but its mount point could not be found."
 msgstr "分割區「%s」已掛載，但找不到其掛載點。"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Apply this decision to all remaining conflicts"
+msgstr "將此決定套用至所有剩餘衝突"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace all"
+msgstr "全部取代"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip all"
+msgstr "全部略過"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "%s conflict policy"
+msgstr "%s 衝突原則"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Some items already exist in the destination. Choose how ROX-Filer should handle all conflicts in this operation:"
+msgstr "目的地中已有部分項目。請選擇 ROX-Filer 應如何處理本次操作中的所有衝突："
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "_Continue"
+msgstr "_繼續"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Ask for each conflict"
+msgstr "每次衝突時詢問"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace existing files"
+msgstr "取代現有檔案"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip existing files"
+msgstr "略過現有檔案"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace only if the source is newer"
+msgstr "僅在來源較新時取代"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Failed to start rsync: %s\n"
+msgstr "!無法啟動 rsync：%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Unknown error"
+msgstr "未知錯誤"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s':\n%s\n"
+msgstr "!rsync 處理「%s」時失敗：\n%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s'\n"
+msgstr "!rsync 處理「%s」時失敗\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Skipped existing destination '%s'\n"
+msgstr "'已略過現有目的地「%s」\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace non-empty directory '%s': %s\n"
+msgstr "!無法取代非空目錄「%s」：%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace '%s': %s\n"
+msgstr "!無法取代「%s」：%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Copied '%s' with rsync\n"
+msgstr "'已使用 rsync 複製「%s」\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Moved '%s' with rsync\n"
+msgstr "'已使用 rsync 移動「%s」\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "rsync is not installed; using the classic ROX-Filer engine.\n"
+msgstr "未安裝 rsync；將使用傳統 ROX-Filer 引擎。\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'%s' already exists - %s?"
+msgstr "「%s」已存在 — %s？"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed:\n%s\n"
+msgstr "!rsync 批次複製失敗：\n%s\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed\n"
+msgstr "!rsync 批次複製失敗\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "'Fast rsync copy completed\n"
+msgstr "'rsync 快速複製已完成\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "The filesystem containing '%s' does not support the standard Trash.\n"
+msgstr "包含「%s」的檔案系統不支援標準回收筒。\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Unable to move '%s' to the Trash: %s\n"
+msgstr "無法將「%s」移到回收筒：%s\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move '%s' to the Trash?"
+msgstr "將「%s」移到回收筒嗎？"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move %d selected items to the Trash?"
+msgstr "將選取的 %d 個項目移到回收筒嗎？"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Move to Trash"
+msgstr "移到回收筒(_M)"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete '%s'?\n\nThis action cannot be undone."
+msgstr "永久刪除「%s」嗎？\n\n此動作無法復原。"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete %d selected items?\n\nThis action cannot be undone."
+msgstr "永久刪除選取的 %d 個項目嗎？\n\n此動作無法復原。"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Delete Permanently"
+msgstr "永久刪除(_D)"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move to Trash"
+msgstr "移到回收筒"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently"
+msgstr "永久刪除"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently..."
+msgstr "永久刪除..."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move ... to Trash ?"
+msgstr "將 ... 移到回收筒嗎？"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "DELETE ... permanently ?"
+msgstr "永久刪除 ... 嗎？"

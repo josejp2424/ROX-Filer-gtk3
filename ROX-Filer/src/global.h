@@ -192,6 +192,7 @@ enum
 #define ROX_ICON_SAVE             "document-save"
 #define ROX_ICON_CANCEL           "process-stop"
 #define ROX_ICON_DELETE           "edit-delete"
+#define ROX_ICON_TRASH            "user-trash"
 #define ROX_ICON_PREFERENCES      "preferences-system"
 #define ROX_ICON_REFRESH          "view-refresh"
 #define ROX_ICON_COPY             "edit-copy"
@@ -231,7 +232,11 @@ enum
 #define ROX_ICON_TERMINAL         "utilities-terminal"
 
 #define ROX_ICON_SHOW_DETAILS     "view-list"
-#define ROX_ICON_SHOW_HIDDEN      "view-hidden-files"
+/* Modificado por josejp2424 (2026): usar primero cab_view, presente en los
+ * temas de iconos de Puppy, para que el botón Oculto siga el tema activo.
+ * gui_support.c conserva alternativas GTK/Freedesktop y el recurso interno
+ * únicamente como último respaldo. */
+#define ROX_ICON_SHOW_HIDDEN      "cab_view"
 #define ROX_ICON_SELECT           "edit-select-all"
 #define ROX_ICON_MOUNT            "drive-harddisk"
 #define ROX_ICON_MOUNTED          "media-eject"

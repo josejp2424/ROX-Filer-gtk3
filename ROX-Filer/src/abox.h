@@ -42,6 +42,10 @@ struct _ABox
 	GtkWidget       *cmp_date[2];
 	GtkWidget       *cmp_arrow;
 
+	/* Agregado por josejp2424 (2026): opción para aplicar una decisión
+	 * a todos los conflictos restantes de la operación. */
+	GtkWidget       *apply_all;
+
 	GtkWidget       *progress;      /* Progress bar, NULL until set */
 
 	gchar		*next_dir;	/* NULL => no timer active */
@@ -67,6 +71,9 @@ GtkWidget *abox_add_flag		(ABox *abox,
 					 gboolean default_value);
 void	abox_ask			(ABox *abox,
 					 const gchar *question);
+void	abox_ask_conflict		(ABox *abox,
+					 const gchar *question);
+gboolean abox_apply_to_all		(ABox *abox);
 void	abox_cancel_ask			(ABox *abox);
 void	abox_set_current_object		(ABox *abox,
 					 const gchar *message);

@@ -5547,3 +5547,151 @@ msgstr "Die Partition konnte nicht eingehängt werden."
 #: drives.c
 msgid "The partition '%s' was mounted, but its mount point could not be found."
 msgstr "Die Partition „%s“ wurde eingehängt, aber ihr Einhängepunkt wurde nicht gefunden."
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Apply this decision to all remaining conflicts"
+msgstr "Diese Entscheidung auf alle verbleibenden Konflikte anwenden"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace all"
+msgstr "Alle ersetzen"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip all"
+msgstr "Alle überspringen"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "%s conflict policy"
+msgstr "%s-Konfliktrichtlinie"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Some items already exist in the destination. Choose how ROX-Filer should handle all conflicts in this operation:"
+msgstr "Einige Elemente sind am Ziel bereits vorhanden. Wählen Sie, wie ROX-Filer alle Konflikte dieses Vorgangs behandeln soll:"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "_Continue"
+msgstr "_Fortfahren"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Ask for each conflict"
+msgstr "Bei jedem Konflikt nachfragen"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace existing files"
+msgstr "Vorhandene Dateien ersetzen"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Skip existing files"
+msgstr "Vorhandene Dateien überspringen"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Replace only if the source is newer"
+msgstr "Nur ersetzen, wenn die Quelle neuer ist"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Failed to start rsync: %s\n"
+msgstr "!rsync konnte nicht gestartet werden: %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "Unknown error"
+msgstr "Unbekannter Fehler"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s':\n%s\n"
+msgstr "!rsync ist beim Verarbeiten von '%s' fehlgeschlagen:\n%s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!rsync failed while processing '%s'\n"
+msgstr "!rsync ist beim Verarbeiten von '%s' fehlgeschlagen\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Skipped existing destination '%s'\n"
+msgstr "'Vorhandenes Ziel '%s' wurde übersprungen\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace non-empty directory '%s': %s\n"
+msgstr "!Nicht leeres Verzeichnis '%s' kann nicht ersetzt werden: %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "!Cannot replace '%s': %s\n"
+msgstr "!'%s' kann nicht ersetzt werden: %s\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Copied '%s' with rsync\n"
+msgstr "'%s' wurde mit rsync kopiert\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'Moved '%s' with rsync\n"
+msgstr "'%s' wurde mit rsync verschoben\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "rsync is not installed; using the classic ROX-Filer engine.\n"
+msgstr "rsync ist nicht installiert; die klassische ROX-Filer-Engine wird verwendet.\n"
+
+#. Agregado por josejp2424: motor rsync y política de conflictos.
+msgid "'%s' already exists - %s?"
+msgstr "'%s' ist bereits vorhanden - %s?"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed:\n%s\n"
+msgstr "!Die rsync-Stapelkopie ist fehlgeschlagen:\n%s\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "!rsync batch copy failed\n"
+msgstr "!Die rsync-Stapelkopie ist fehlgeschlagen\n"
+
+#. Agregado por josejp2424: copia rsync por lotes.
+msgid "'Fast rsync copy completed\n"
+msgstr "'Schnelle rsync-Kopie abgeschlossen\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "The filesystem containing '%s' does not support the standard Trash.\n"
+msgstr "Das Dateisystem mit „%s“ unterstützt den Standard-Papierkorb nicht.\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Unable to move '%s' to the Trash: %s\n"
+msgstr "„%s“ konnte nicht in den Papierkorb verschoben werden: %s\n"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move '%s' to the Trash?"
+msgstr "„%s“ in den Papierkorb verschieben?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move %d selected items to the Trash?"
+msgstr "%d ausgewählte Elemente in den Papierkorb verschieben?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Move to Trash"
+msgstr "In den _Papierkorb verschieben"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete '%s'?\n\nThis action cannot be undone."
+msgstr "„%s“ dauerhaft löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Permanently delete %d selected items?\n\nThis action cannot be undone."
+msgstr "%d ausgewählte Elemente dauerhaft löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "_Delete Permanently"
+msgstr "_Dauerhaft löschen"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move to Trash"
+msgstr "In den Papierkorb verschieben"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently"
+msgstr "Dauerhaft löschen"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Delete Permanently..."
+msgstr "Dauerhaft löschen..."
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "Move ... to Trash ?"
+msgstr "... in den Papierkorb verschieben?"
+
+#. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
+msgid "DELETE ... permanently ?"
+msgstr "... DAUERHAFT LÖSCHEN?"

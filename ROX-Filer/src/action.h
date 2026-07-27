@@ -12,7 +12,9 @@ void action_init(void);
 
 void action_usage(GList *paths);
 void action_mount(GList	*paths, gboolean open_dir, gboolean mount, int quiet);
+void action_trash(GList *paths);
 void action_delete(GList *paths);
+void action_delete_permanently(GList *paths);
 void action_chmod(GList *paths, gboolean force_recurse, const char *action);
 void action_find(GList *paths);
 void action_move(GList *paths, const char *dest, const char *leaf, int quiet);

@@ -322,6 +322,11 @@ int get_choice(const char *title,
 					GTK_BUTTONS_NONE,
 					"%s", message);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	/* Modificado por josejp2424 (2026): los cuadros de confirmación deben
+	 * conservar el tamaño compacto tradicional de ROX y no heredar el mínimo
+	 * global de 640x400 reservado para ventanas de trabajo. */
+	g_object_set_data(G_OBJECT(dialog), "rox-standard-size-exempt",
+		GINT_TO_POINTER(1));
 
 	va_start(ap, number_of_buttons);
 
@@ -902,10 +907,14 @@ const char *rox_icon_name(const char *icon_name)
 	};
 	static const struct {
 		const char *canonical;
-		const char *alternatives[4];
+		const char *alternatives[7];
 	} themed_names[] = {
 		{ROX_ICON_SHOW_DETAILS, {"view-list", "view-list-symbolic", "view-list-details", NULL}},
-		{ROX_ICON_SHOW_HIDDEN, {"view-hidden-files", "view-hidden-files-symbolic", NULL, NULL}},
+		/* Modificado por josejp2424 (2026): priorizar el ojo cab_view de Puppy
+		 * y conservar alternativas de otros temas GTK3. */
+		{ROX_ICON_SHOW_HIDDEN, {"cab_view", "view-hidden-files",
+			"view-hidden-files-symbolic", "view-reveal",
+			"view-reveal-symbolic", NULL, NULL}},
 		{ROX_ICON_SELECT, {"edit-select-all", "edit-select-all-symbolic", NULL, NULL}},
 		{ROX_ICON_MOUNT, {"drive-harddisk", "drive-harddisk-symbolic", NULL, NULL}},
 		{ROX_ICON_MOUNTED, {"media-eject", "media-eject-symbolic", NULL, NULL}},
@@ -961,8 +970,9 @@ const char *rox_icon_name(const char *icon_name)
 	return resolved;
 }
 
-/* Only the hidden-files toolbar symbol has no dependable cross-theme name.
- * Keep one bundled image as a compatibility fallback. */
+/* Modificado por josejp2424 (2026): cab_view y las alternativas del tema
+ * se intentan primero. El recurso interno se conserva únicamente como último
+ * respaldo para temas que no proporcionan ningún icono de visibilidad. */
 const char *rox_icon_fallback_name(const char *icon_name)
 {
 	if (!icon_name)

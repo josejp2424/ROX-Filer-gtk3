@@ -1,3 +1,119 @@
+ROX-Filer 2.12 GTK3 - r20 - 2026-07-26
+
+GTK3 hidden-files toolbar icon
+--------------------------------
+
+- Changed the Hidden toolbar action to prefer the `cab_view` eye icon from the
+  active GTK3 icon theme.
+
+- Added a cross-theme fallback chain: `cab_view`, `view-hidden-files`,
+  `view-hidden-files-symbolic`, `view-reveal` and `view-reveal-symbolic`.
+
+- The bundled `rox-show-hidden` image is now used only as a final compatibility
+  fallback when the active icon theme contains none of the supported names.
+
+- The toolbar icon now follows Puppy/GTK3 icon-theme changes without depending
+  on a theme-specific copy of the historical ROX image.
+
+ROX-Filer 2.12 GTK3 - r19 - 2026-07-26
+
+Standard Trash and batch deletion
+---------------------------------
+
+- The normal Delete key now moves selected items to the standard Freedesktop
+  Trash through GIO, matching the behaviour of PCManFM, EssoraFM and other
+  GTK file managers.
+- Added a compact ROX-style confirmation with small action buttons.
+- Added a separate Delete Permanently action on Shift+Delete.
+- Permanent deletion asks once for the whole selection instead of once per
+  file, then refreshes only the selected top-level paths.
+- Moving a directory to Trash no longer recursively processes every file; the
+  complete directory is moved by the GIO trash backend.
+- Filesystems without Trash support report a clear error and are never silently
+  converted to permanent deletion.
+- Choice dialogs are exempt from the 640x400 work-window minimum so they retain
+  the compact traditional ROX appearance.
+- Added translations and precompiled message catalogues for all languages
+  maintained by this GTK3 port.
+
+ROX-Filer 2.12 GTK3 r18 - 2026-07-26
+
+Compact ROX-style conflict buttons
+----------------------------------
+
+- Replaced the oversized 2x2 conflict-policy grid with compact action buttons
+  in the standard GtkDialog action area.
+- The dialog now follows the visual layout of the original ROX-Filer copy
+  window, with small buttons aligned along the bottom.
+- Removed the forced 640 x 400 size from this selector and exempted it from the
+  global minimum used by normal filer windows.
+- The available policies remain Ask, Skip all, Newer and Replace all.
+- Added tooltips containing the complete policy descriptions.
+- Ask remains the safe default and can be activated with Enter.
+- Added the compact Ask translation to the Arabic and Catalan catalogues and
+  rebuilt their bundled .mo files.
+
+ROX-Filer 2.12 GTK3 r17 - 2026-07-26
+
+ROX-style conflict policy buttons
+---------------------------------
+
+- Replaced the conflict-policy drop-down menu with four large, visible buttons.
+- The available actions remain: ask for each conflict, replace existing files,
+  skip existing files, and replace only when the source is newer.
+- Arranged the choices in a compact two-by-two grid inside the 640 x 400 dialog.
+- Added standard themed icons to each choice for faster visual recognition.
+- The Ask button is the safe default and can be activated with Enter.
+- The Cancel button remains separate in the normal GTK/ROX dialog action area.
+- Reused the existing translated strings, so the button interface is available
+  in every language already included with the rsync conflict dialog.
+- Kept the per-file "Apply this decision to all remaining conflicts" option
+  when the user chooses to ask for each conflict.
+
+ROX-Filer 2.12 GTK3 r16 - 2026-07-26
+
+Fast rsync copy and move engine
+-------------------------------
+
+- Added a hybrid file-operation engine based on rsync for faster local copies.
+- Copying a directory now uses one rsync process for the complete directory
+  tree instead of launching a separate cp process for every regular file.
+- Multiple selected files and directories are copied in one rsync batch when
+  their destination types are compatible.
+- Moves inside the same filesystem continue to use the fast rename/mv path.
+- Moves across filesystems and directory merges use rsync with
+  --remove-source-files, followed by safe removal of directories that are
+  actually empty.
+- Added --partial so an interrupted rsync copy can retain partial transfer data.
+- Added an automatic fallback to the classic ROX-Filer engine when rsync is not
+  installed.
+- The fallback remains fully functional and now also honours the selected
+  conflict policy.
+
+Conflict handling
+-----------------
+
+- Added a single conflict-policy dialog when destination items already exist.
+- Available choices are: ask for each conflict, replace existing files, skip
+  existing files, or replace only when the source is newer.
+- Added "Apply this decision to all remaining conflicts" to the classic
+  per-conflict comparison dialog.
+- Replacing or skipping all remaining conflicts no longer requires pressing
+  Enter or clicking a button for every individual file.
+- Conflict decisions apply only to the current operation and are reset before
+  the next copy or move.
+- Added translated rsync errors, completion messages and conflict controls.
+
+Internationalisation
+--------------------
+
+- Added all new rsync and conflict-policy strings to Arabic, Catalan, German,
+  Spanish, French, Italian, Portuguese, Japanese, Hungarian, Russian,
+  Simplified Chinese and Traditional Chinese catalogues.
+- Rebuilt the bundled .mo catalogues, including generic pt and zh aliases.
+- Catalogues remain inside the ROX AppDir under ROX-Filer/Messages; no duplicate
+  installation under /usr/share/locale is required.
+
 ROX-Filer 2.12 GTK3 r15 - 2026-07-26
 
 GTK3 folder icon theme correction

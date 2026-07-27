@@ -94,6 +94,7 @@ typedef enum {
 	FILE_RUN_ACTION,
 	FILE_SET_ICON,
 	FILE_SEND_TO,
+	FILE_TRASH,
 	FILE_DELETE,
 	FILE_USAGE,
 	FILE_CHMOD_ITEMS,
@@ -279,7 +280,10 @@ static RoxItemFactoryEntry filer_menu_def[] = {
 {">" N_("Duplicate..."),	"<Ctrl>D", file_op, FILE_DUPLICATE_ITEM, "<IconItem>", ROX_ICON_COPY},
 {">" N_("Rename..."),		"F2", file_op, FILE_RENAME_ITEM, NULL},
 {">" N_("Link..."),		NULL, file_op, FILE_LINK_ITEM, NULL},
-{">" N_("Delete"),		"Delete", file_op, FILE_DELETE, "<IconItem>", ROX_ICON_DELETE},
+/* Modificado por josejp2424 (2026): Delete usa la papelera estándar y
+ * Shift+Delete conserva el borrado permanente tradicional. */
+{">" N_("Move to Trash"),	"Delete", file_op, FILE_TRASH, "<IconItem>", ROX_ICON_TRASH},
+{">" N_("Delete Permanently..."), "<Shift>Delete", file_op, FILE_DELETE, "<IconItem>", ROX_ICON_DELETE},
 {">",				NULL, NULL, 0, "<Separator>"},
 {">" N_("Shift Open"),   	NULL, file_op, FILE_OPEN_FILE},
 {">" N_("Open With..."),		NULL, file_op, FILE_SEND_TO, NULL},
@@ -1144,11 +1148,19 @@ static void save_settings(gpointer data, guint action, GtkWidget *widget)
 	filer_save_settings(window_with_focus);
 }
 
-static void delete(FilerWindow *filer_window)
+/* Agregado por josejp2424 (2026): acciones separadas para papelera y
+ * borrado permanente, manteniendo funciones pequeñas al estilo de ROX. */
+static void move_to_trash(FilerWindow *filer_window)
 {
-	GList *paths;
-	paths = filer_selected_items(filer_window);
-	action_delete(paths);
+	GList *paths = filer_selected_items(filer_window);
+	action_trash(paths);
+	destroy_glist(&paths);
+}
+
+static void delete_permanently(FilerWindow *filer_window)
+{
+	GList *paths = filer_selected_items(filer_window);
+	action_delete_permanently(paths);
 	destroy_glist(&paths);
 }
 
@@ -2822,8 +2834,11 @@ static void file_op(gpointer data, guint action, GtkWidget *unused)
 			case FILE_SEND_TO:
 				prompt = _("Send ... to ... ?");
 				break;
+			case FILE_TRASH:
+				prompt = _("Move ... to Trash ?");
+				break;
 			case FILE_DELETE:
-				prompt = _("DELETE ... ?");
+				prompt = _("DELETE ... permanently ?");
 				break;
 			case FILE_USAGE:
 				prompt = _("Count the size of ... ?");
@@ -2854,8 +2869,11 @@ static void file_op(gpointer data, guint action, GtkWidget *unused)
 		case FILE_SEND_TO:
 			send_to(window_with_focus);
 			return;
+		case FILE_TRASH:
+			move_to_trash(window_with_focus);
+			return;
 		case FILE_DELETE:
-			delete(window_with_focus);
+			delete_permanently(window_with_focus);
 			return;
 		case FILE_USAGE:
 			usage(window_with_focus);

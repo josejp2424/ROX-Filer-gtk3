@@ -37,6 +37,7 @@
 #include <sys/time.h>
 #include <utime.h>
 #include <stdarg.h>
+#include <gio/gio.h>
 
 #include "global.h"
 
@@ -79,6 +80,35 @@ typedef struct _GUIside GUIside;
 typedef void ActionChild(gpointer data);
 typedef void ForDirCB(const char *path, const char *dest_path);
 
+/* Agregado por josejp2424 (2026): política de conflictos compartida por
+ * el motor clásico y el nuevo motor rápido basado en rsync. */
+typedef enum
+{
+	CONFLICT_ASK = 0,
+	CONFLICT_REPLACE_ALL,
+	CONFLICT_SKIP_EXISTING,
+	CONFLICT_UPDATE_NEWER,
+	CONFLICT_CANCELLED
+} ConflictPolicy;
+
+/* Agregado por josejp2424 (2026): respuestas directas para los botones
+ * visibles de política de conflictos. Se mantienen fuera del rango de las
+ * respuestas estándar de GtkDialog. */
+enum
+{
+	RESPONSE_CONFLICT_ASK = 1201,
+	RESPONSE_CONFLICT_REPLACE,
+	RESPONSE_CONFLICT_SKIP,
+	RESPONSE_CONFLICT_NEWER
+};
+
+typedef enum
+{
+	RSYNC_FAILED = -1,
+	RSYNC_SKIPPED = 0,
+	RSYNC_DONE = 1
+} RsyncResult;
+
 struct _GUIside
 {
 	ABox		*abox;		/* The action window widget */
@@ -110,6 +140,15 @@ static GString  *message = NULL;
 static const char *action_dest = NULL;
 static const char *action_leaf = NULL;
 static void (*action_do_func)(const char *source, const char *dest);
+/* Agregado por josejp2424 (2026): selección por operación. El valor se
+ * copia al proceso hijo en fork(), por lo que nunca queda activo para la
+ * siguiente copia o movimiento. */
+static ConflictPolicy conflict_policy = CONFLICT_ASK;
+static gboolean use_rsync_engine = FALSE;
+static gboolean rsync_available = FALSE;
+/* Agregado por josejp2424 (2026): el borrado permanente confirmado se
+ * procesa por lotes, sin preguntar ni refrescar por cada archivo interno. */
+static gboolean delete_batch_mode = FALSE;
 static double	size_tally;		/* For Disk Usage */
 static unsigned long dir_counter;	/* For Disk Usage */
 static unsigned long file_counter;	/* For Disk Usage */
@@ -159,10 +198,28 @@ static gboolean read_exact(int source, char *buffer, ssize_t len);
 static void do_mount(const guchar *path, gboolean mount);
 static gboolean printf_reply(int fd, gboolean ignore_quiet,
 			     const char *msg, ...);
+static gboolean printf_conflict_reply(int fd, const char *msg, ...);
 static gboolean remove_pinned_ok(GList *paths);
+static const char *make_dest_path(const char *object, const char *dir);
+static void do_copy2(const char *path, const char *dest);
+static void do_move2(const char *path, const char *dest);
+static gboolean destination_has_conflicts(GList *paths, const char *dest,
+					 const char *leaf);
+static ConflictPolicy choose_conflict_policy(const gchar *operation);
+static RsyncResult run_rsync_operation(const char *source, const char *dest_path,
+				      gboolean remove_source);
+static void remove_empty_source_dirs(const char *path);
+static void do_copy_fast(const char *path, const char *dest);
+static void do_move_fast(const char *path, const char *dest);
+static void list_cb(gpointer data);
+static void rsync_copy_list_cb(gpointer data);
 /* Agregado por josejp2424: cierre fiable de los diálogos de copia,
  * movimiento y borrado mediante un mensaje explícito de finalización. */
 static void finish_action(GUIside *gui_side);
+/* Agregado por josejp2424 (2026): papelera estándar Freedesktop mediante GIO. */
+static void trash_cb(gpointer data);
+static gboolean confirm_trash_paths(GList *paths);
+static gboolean confirm_permanent_delete_paths(GList *paths);
 
 /*			SUPPORT				*/
 
@@ -416,6 +473,8 @@ static void process_message(GUIside *gui_side, const gchar *buffer)
 	}
 	else if (*buffer == '?')
 		abox_ask(abox, buffer + 1);
+	else if (*buffer == 'C')
+		abox_ask_conflict(abox, buffer + 1);
 	else if (*buffer == 's')
 		dir_check_this(buffer + 1);	/* Update this item */
 	else if (*buffer == '=')
@@ -619,9 +678,9 @@ static void response(GtkDialog *dialog, gint response, GUIside *gui_side)
 		return;
 
 	if (response == GTK_RESPONSE_YES)
-		code = 'Y';
+		code = abox_apply_to_all(gui_side->abox) ? 'A' : 'Y';
 	else if (response == GTK_RESPONSE_NO)
-		code = 'N';
+		code = abox_apply_to_all(gui_side->abox) ? 'S' : 'N';
 	else
 		return;
 
@@ -767,6 +826,62 @@ static gboolean printf_reply(int fd, gboolean ignore_quiet,
 
 		switch (retval)
 		{
+			case 'Y':
+				printf_send("' %s\n", _("Yes"));
+				return TRUE;
+			case 'N':
+				printf_send("' %s\n", _("No"));
+				return FALSE;
+			default:
+				process_flag(retval);
+				break;
+		}
+	}
+}
+
+/* Agregado por josejp2424 (2026): pregunta específica de conflicto.
+ * A = reemplazar todos y S = omitir todos durante esta operación. */
+static gboolean printf_conflict_reply(int fd, const char *msg, ...)
+{
+	ssize_t len;
+	char retval;
+	va_list args;
+	gchar *tmp;
+
+	if (conflict_policy == CONFLICT_REPLACE_ALL)
+		return TRUE;
+	if (conflict_policy == CONFLICT_SKIP_EXISTING)
+		return FALSE;
+
+	va_start(args, msg);
+	tmp = g_strdup_vprintf(msg, args);
+	va_end(args);
+	g_string_assign(message, tmp);
+	g_free(tmp);
+
+	/* La C permite a la GUI mostrar "aplicar a todos" sólo en conflictos. */
+	g_string_prepend_c(message, 'C');
+	send_msg();
+
+	while (1)
+	{
+		len = read(fd, &retval, 1);
+		if (len != 1)
+		{
+			fprintf(stderr, "read() error: %s\n", g_strerror(errno));
+			_exit(1);
+		}
+
+		switch (retval)
+		{
+			case 'A':
+				conflict_policy = CONFLICT_REPLACE_ALL;
+				printf_send("' %s\n", _("Replace all"));
+				return TRUE;
+			case 'S':
+				conflict_policy = CONFLICT_SKIP_EXISTING;
+				printf_send("' %s\n", _("Skip all"));
+				return FALSE;
 			case 'Y':
 				printf_send("' %s\n", _("Yes"));
 				return TRUE;
@@ -988,7 +1103,9 @@ static void do_delete(const char *src_path, const char *unused)
 
 	write_prot = S_ISLNK(info.st_mode) ? FALSE
 					   : access(src_path, W_OK) != 0;
-	if (write_prot || !quiet)
+	/* Modificado por josejp2424 (2026): en un borrado permanente por
+	 * lotes, Force evita de verdad la pregunta por cada archivo protegido. */
+	if ((write_prot && !o_force) || !quiet)
 	{
 		int res;
 
@@ -1016,15 +1133,19 @@ static void do_delete(const char *src_path, const char *unused)
 			send_error();
 			return;
 		}
-		printf_send(_("'Directory '%s' deleted\n"), safe_path);
-		send_mount_path(safe_path);
+		if (!delete_batch_mode)
+		{
+			printf_send(_("'Directory '%s' deleted\n"), safe_path);
+			send_mount_path(safe_path);
+		}
 	}
 	else if (unlink(src_path))
 		send_error();
 	else
 	{
-		send_check_path(safe_path);
-		if (strcmp(base, ".DirIcon") == 0)
+		if (!delete_batch_mode)
+			send_check_path(safe_path);
+		if (!delete_batch_mode && strcmp(base, ".DirIcon") == 0)
 		{
 			gchar *dir;
 			dir = g_path_get_dirname(safe_path);
@@ -1354,6 +1475,437 @@ static void do_settype(const char *path, const char *unused)
 	}
 }
 
+/* Agregado por josejp2424 (2026): comprueba conflictos de primer nivel.
+ * Si una carpeta de destino ya existe, cualquier conflicto interno quedará
+ * cubierto por la política elegida para esa carpeta. */
+static gboolean destination_has_conflicts(GList *paths, const char *dest,
+					 const char *leaf)
+{
+	GList *iter;
+
+	for (iter = paths; iter; iter = iter->next)
+	{
+		const char *source = (const char *) iter->data;
+		gchar *base = leaf ? g_strdup(leaf) : g_path_get_basename(source);
+		gchar *target = g_build_filename(dest, base, NULL);
+		struct stat info;
+		gboolean exists = (mc_lstat(target, &info) == 0);
+
+		g_free(target);
+		g_free(base);
+		if (exists)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+/* Modificado por josejp2424 (2026): selector compacto de conflictos al
+ * estilo clásico de ROX-Filer. Las políticas se presentan como botones
+ * normales en el área inferior del diálogo, sin cuadrículas ni tamaños
+ * forzados. */
+static ConflictPolicy choose_conflict_policy(const gchar *operation)
+{
+	GtkWidget *dialog;
+	GtkWidget *content;
+	GtkWidget *label;
+	GtkWidget *action_area;
+	GtkWidget *button;
+	gint response_id;
+	ConflictPolicy policy = CONFLICT_CANCELLED;
+	gchar *title;
+
+	title = g_strdup_printf(_("%s conflict policy"), operation);
+	dialog = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(dialog), title);
+	g_free(title);
+
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+	gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+	/* Modificado por josejp2424 (2026): este selector debe conservar el
+	 * tamaño compacto de los diálogos originales de ROX y no recibir el
+	 * mínimo global de 640x400 reservado para ventanas de trabajo. */
+	g_object_set_data(G_OBJECT(dialog), "rox-standard-size-exempt",
+		GINT_TO_POINTER(1));
+
+	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+	label = gtk_label_new(_("Some items already exist in the destination. "
+		"Choose how ROX-Filer should handle all conflicts in this operation:"));
+	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_label_set_max_width_chars(GTK_LABEL(label), 72);
+	gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+	gtk_widget_set_margin_start(label, 12);
+	gtk_widget_set_margin_end(label, 12);
+	gtk_widget_set_margin_top(label, 12);
+	gtk_widget_set_margin_bottom(label, 8);
+	gtk_box_pack_start(GTK_BOX(content), label, FALSE, FALSE, 0);
+
+	/* Modificado por josejp2424 (2026): botones pequeños, alineados como los
+	 * botones Cancelar/No/Sí del diálogo clásico de operaciones de ROX. */
+	action_area = gtk_dialog_get_action_area(GTK_DIALOG(dialog));
+	gtk_box_set_spacing(GTK_BOX(action_area), 6);
+	gtk_button_box_set_layout(GTK_BUTTON_BOX(action_area), GTK_BUTTONBOX_END);
+
+	button = dialog_add_icon_button(GTK_DIALOG(dialog), ROX_ICON_CANCEL,
+		_("_Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_widget_set_tooltip_text(button, _("Cancel"));
+
+	button = dialog_add_icon_button(GTK_DIALOG(dialog),
+		ROX_ICON_DIALOG_QUESTION, _("Ask"), RESPONSE_CONFLICT_ASK);
+	gtk_widget_set_tooltip_text(button, _("Ask for each conflict"));
+
+	button = dialog_add_icon_button(GTK_DIALOG(dialog), "go-next",
+		_("Skip all"), RESPONSE_CONFLICT_SKIP);
+	gtk_widget_set_tooltip_text(button, _("Skip existing files"));
+
+	button = dialog_add_icon_button(GTK_DIALOG(dialog), ROX_ICON_REFRESH,
+		_("Newer"), RESPONSE_CONFLICT_NEWER);
+	gtk_widget_set_tooltip_text(button,
+		_("Replace only if the source is newer"));
+
+	button = dialog_add_icon_button(GTK_DIALOG(dialog), ROX_ICON_COPY,
+		_("Replace all"), RESPONSE_CONFLICT_REPLACE);
+	gtk_widget_set_tooltip_text(button, _("Replace existing files"));
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), RESPONSE_CONFLICT_ASK);
+	gtk_widget_show_all(dialog);
+	response_id = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	switch (response_id)
+	{
+		case RESPONSE_CONFLICT_ASK:
+			policy = CONFLICT_ASK;
+			break;
+		case RESPONSE_CONFLICT_REPLACE:
+			policy = CONFLICT_REPLACE_ALL;
+			break;
+		case RESPONSE_CONFLICT_SKIP:
+			policy = CONFLICT_SKIP_EXISTING;
+			break;
+		case RESPONSE_CONFLICT_NEWER:
+			policy = CONFLICT_UPDATE_NEWER;
+			break;
+		default:
+			policy = CONFLICT_CANCELLED;
+			break;
+	}
+
+	gtk_widget_destroy(dialog);
+	return policy;
+}
+
+static gboolean rsync_is_available(void)
+{
+	gchar *program = g_find_program_in_path("rsync");
+	gboolean found = program != NULL;
+	g_free(program);
+	return found;
+}
+
+/* Agregado por josejp2424 (2026): ejecuta una carpeta completa mediante un
+ * único proceso rsync. Esto evita iniciar un cp separado por cada archivo. */
+static RsyncResult run_rsync_operation(const char *source, const char *dest_path,
+				      gboolean remove_source)
+{
+	const gchar *argv[16];
+	gint argc = 0;
+	gchar *source_arg = NULL;
+	gchar *dest_arg = NULL;
+	gchar *errors = NULL;
+	GError *spawn_error = NULL;
+	gint status = 0;
+	struct stat source_info;
+	struct stat dest_info;
+	gboolean is_dir;
+	gboolean dest_exists;
+	gboolean ok;
+
+	if (mc_lstat(source, &source_info) != 0)
+	{
+		send_error();
+		return RSYNC_FAILED;
+	}
+	is_dir = S_ISDIR(source_info.st_mode);
+	dest_exists = (mc_lstat(dest_path, &dest_info) == 0);
+
+	/* Modificado por josejp2424 (2026): resolver los cambios de tipo antes
+	 * de llamar a rsync. rsync no puede fusionar una carpeta con un archivo. */
+	if (dest_exists && is_dir != S_ISDIR(dest_info.st_mode))
+	{
+		if (conflict_policy == CONFLICT_SKIP_EXISTING ||
+		    (conflict_policy == CONFLICT_UPDATE_NEWER &&
+		     source_info.st_mtime <= dest_info.st_mtime))
+		{
+			printf_send(_("'Skipped existing destination '%s'\n"), dest_path);
+			return RSYNC_SKIPPED;
+		}
+
+		if (S_ISDIR(dest_info.st_mode))
+		{
+			if (rmdir(dest_path) != 0)
+			{
+				printf_send(_("!Cannot replace non-empty directory '%s': %s\n"),
+					dest_path, g_strerror(errno));
+				return RSYNC_FAILED;
+			}
+		}
+		else if (unlink(dest_path) != 0)
+		{
+			printf_send(_("!Cannot replace '%s': %s\n"),
+				dest_path, g_strerror(errno));
+			return RSYNC_FAILED;
+		}
+	}
+
+	if (is_dir)
+	{
+		source_arg = g_strconcat(source, "/", NULL);
+		dest_arg = g_strconcat(dest_path, "/", NULL);
+	}
+	else
+	{
+		source_arg = g_strdup(source);
+		dest_arg = g_strdup(dest_path);
+	}
+
+	argv[argc++] = "rsync";
+	argv[argc++] = "-a";
+	argv[argc++] = "--partial";
+	if (conflict_policy == CONFLICT_SKIP_EXISTING)
+		argv[argc++] = "--ignore-existing";
+	else if (conflict_policy == CONFLICT_UPDATE_NEWER)
+		argv[argc++] = "--update";
+	if (remove_source)
+		argv[argc++] = "--remove-source-files";
+	argv[argc++] = "--";
+	argv[argc++] = source_arg;
+	argv[argc++] = dest_arg;
+	argv[argc] = NULL;
+
+	ok = g_spawn_sync(NULL, (gchar **) argv, NULL,
+		G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL,
+		NULL, NULL, NULL, &errors, &status, &spawn_error);
+
+	if (!ok)
+	{
+		printf_send(_("!Failed to start rsync: %s\n"),
+			spawn_error ? spawn_error->message : _("Unknown error"));
+		if (spawn_error)
+			g_error_free(spawn_error);
+	}
+	else if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+	{
+		if (errors && *errors)
+			printf_send(_("!rsync failed while processing '%s':\n%s\n"),
+				source, errors);
+		else
+			printf_send(_("!rsync failed while processing '%s'\n"), source);
+		ok = FALSE;
+	}
+
+	g_free(errors);
+	g_free(source_arg);
+	g_free(dest_arg);
+	return ok ? RSYNC_DONE : RSYNC_FAILED;
+}
+
+/* Agregado por josejp2424 (2026): copia varias selecciones con una sola
+ * ejecución de rsync. Si existe un cambio incompatible archivo/carpeta se
+ * vuelve al recorrido individual, que puede resolverlo de forma segura. */
+static gboolean can_batch_rsync_copy(GList *paths, const char *dest)
+{
+	GList *iter;
+
+	for (iter = paths; iter; iter = iter->next)
+	{
+		const char *source = (const char *) iter->data;
+		gchar *base = g_path_get_basename(source);
+		gchar *target = g_build_filename(dest, base, NULL);
+		struct stat source_info;
+		struct stat dest_info;
+
+		if (mc_lstat(source, &source_info) != 0)
+		{
+			g_free(target);
+			g_free(base);
+			return FALSE;
+		}
+		if (mc_lstat(target, &dest_info) == 0 &&
+		    S_ISDIR(source_info.st_mode) != S_ISDIR(dest_info.st_mode))
+		{
+			g_free(target);
+			g_free(base);
+			return FALSE;
+		}
+		g_free(target);
+		g_free(base);
+	}
+	return TRUE;
+}
+
+static RsyncResult run_rsync_batch_copy(GList *paths, const char *dest)
+{
+	gint count = g_list_length(paths);
+	gchar **argv;
+	gint argc = 0;
+	gint i;
+	GList *iter;
+	gchar *dest_arg;
+	gchar *errors = NULL;
+	GError *spawn_error = NULL;
+	gint status = 0;
+	gboolean ok;
+
+	argv = g_new0(gchar *, count + 10);
+	argv[argc++] = g_strdup("rsync");
+	argv[argc++] = g_strdup("-a");
+	argv[argc++] = g_strdup("--partial");
+	if (conflict_policy == CONFLICT_SKIP_EXISTING)
+		argv[argc++] = g_strdup("--ignore-existing");
+	else if (conflict_policy == CONFLICT_UPDATE_NEWER)
+		argv[argc++] = g_strdup("--update");
+	argv[argc++] = g_strdup("--");
+	for (iter = paths; iter; iter = iter->next)
+		argv[argc++] = g_strdup((const gchar *) iter->data);
+	dest_arg = g_strconcat(dest, "/", NULL);
+	argv[argc++] = dest_arg;
+	argv[argc] = NULL;
+
+	ok = g_spawn_sync(NULL, argv, NULL,
+		G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL,
+		NULL, NULL, NULL, &errors, &status, &spawn_error);
+	if (!ok)
+	{
+		printf_send(_("!Failed to start rsync: %s\n"),
+			spawn_error ? spawn_error->message : _("Unknown error"));
+		if (spawn_error)
+			g_error_free(spawn_error);
+	}
+	else if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+	{
+		if (errors && *errors)
+			printf_send(_("!rsync batch copy failed:\n%s\n"), errors);
+		else
+			printf_send(_("!rsync batch copy failed\n"));
+		ok = FALSE;
+	}
+
+	g_free(errors);
+	for (i = 0; i < argc; i++)
+		g_free(argv[i]);
+	g_free(argv);
+	return ok ? RSYNC_DONE : RSYNC_FAILED;
+}
+
+static void rsync_copy_list_cb(gpointer data)
+{
+	GList *paths = (GList *) data;
+
+	if (!can_batch_rsync_copy(paths, action_dest))
+	{
+		list_cb(data);
+		return;
+	}
+
+	send_dir(action_dest);
+	if (run_rsync_batch_copy(paths, action_dest) == RSYNC_DONE)
+	{
+		printf_send(_("'Fast rsync copy completed\n"));
+		send_check_path(action_dest);
+	}
+	printf_send("%%100");
+	send_done();
+}
+
+/* Agregado por josejp2424 (2026): rsync --remove-source-files conserva las
+ * carpetas. Se eliminan sólo las que hayan quedado realmente vacías. */
+static void remove_empty_source_dirs(const char *path)
+{
+	DIR *dir;
+	struct dirent *entry;
+
+	dir = mc_opendir(path);
+	if (!dir)
+		return;
+
+	while ((entry = readdir(dir)) != NULL)
+	{
+		gchar *child;
+		struct stat info;
+
+		if (strcmp(entry->d_name, ".") == 0 ||
+		    strcmp(entry->d_name, "..") == 0)
+			continue;
+		child = g_build_filename(path, entry->d_name, NULL);
+		if (mc_lstat(child, &info) == 0 && S_ISDIR(info.st_mode))
+			remove_empty_source_dirs(child);
+		g_free(child);
+	}
+	closedir(dir);
+	rmdir(path);
+}
+
+static gboolean paths_on_same_filesystem(const char *source, const char *dest_dir)
+{
+	struct stat source_info;
+	struct stat dest_info;
+
+	if (mc_lstat(source, &source_info) != 0 || mc_stat(dest_dir, &dest_info) != 0)
+		return FALSE;
+	return source_info.st_dev == dest_info.st_dev;
+}
+
+/* Agregado por josejp2424 (2026): motor híbrido de copia. */
+static void do_copy_fast(const char *path, const char *dest)
+{
+	gchar *dest_path = g_strdup(make_dest_path(path, dest));
+
+	RsyncResult result;
+
+	check_flags();
+	result = run_rsync_operation(path, dest_path, FALSE);
+	if (result == RSYNC_DONE)
+	{
+		printf_send(_("'Copied '%s' with rsync\n"), path);
+		send_check_path(dest_path);
+	}
+	g_free(dest_path);
+}
+
+/* Agregado por josejp2424 (2026): rename/mv dentro de la misma unidad y
+ * rsync --remove-source-files para movimientos entre unidades o fusiones. */
+static void do_move_fast(const char *path, const char *dest)
+{
+	gchar *dest_path = g_strdup(make_dest_path(path, dest));
+	struct stat dest_info;
+	gboolean dest_exists = (mc_lstat(dest_path, &dest_info) == 0);
+
+	check_flags();
+	if (!dest_exists && paths_on_same_filesystem(path, dest))
+	{
+		g_free(dest_path);
+		do_move2(path, dest);
+		return;
+	}
+
+	{
+		RsyncResult result = run_rsync_operation(path, dest_path, TRUE);
+		if (result == RSYNC_DONE)
+		{
+			struct stat source_info;
+			printf_send(_("'Moved '%s' with rsync\n"), path);
+			if (mc_lstat(path, &source_info) == 0 && S_ISDIR(source_info.st_mode))
+				remove_empty_source_dirs(path);
+			send_check_path(dest_path);
+			send_check_path(path);
+		}
+	}
+	g_free(dest_path);
+}
+
 /* We want to copy 'object' into directory 'dir'. If 'action_leaf'
  * is set then that is the new leafname, otherwise the leafname stays
  * the same.
@@ -1397,42 +1949,29 @@ static void do_copy2(const char *path, const char *dest)
 	{
 		int		err;
 		gboolean	merge;
-		gboolean	ignore_quiet;
 
 		merge = S_ISDIR(info.st_mode) && S_ISDIR(dest_info.st_mode);
 
-		if (o_ignore &&
-				info.st_mtime <= dest_info.st_mtime &&
-				!S_ISDIR(info.st_mode))
-		{
-			/* Ignore Older; skip */
+		if (conflict_policy == CONFLICT_SKIP_EXISTING)
 			return;
-		}
-		else if (merge && o_merge)
+		else if (conflict_policy == CONFLICT_UPDATE_NEWER &&
+				 !S_ISDIR(info.st_mode) &&
+				 info.st_mtime <= dest_info.st_mtime)
+			return;
+		else if (conflict_policy == CONFLICT_REPLACE_ALL ||
+			 conflict_policy == CONFLICT_UPDATE_NEWER ||
+			 (merge && o_merge))
 		{
-			/* Automatic merging; keep going */
+			/* Política automática; continuar sin otra pregunta. */
 		}
 		else
 		{
 			printf_send("<%s", path);
 			printf_send(">%s", dest_path);
 
-			/* Using greater than or equal because people who tick the
-			* "Newer" checkbox probably don't want to be prompted whether
-			* to overwrite a file that has an identical mtime. */
-			if (o_newer &&
-					info.st_mtime >= dest_info.st_mtime &&
-					!S_ISDIR(info.st_mode))
-			{
-				ignore_quiet = FALSE;
-			}
-			else
-			{
-				ignore_quiet = TRUE;
-			}
 
-			if (!printf_reply(from_parent, ignore_quiet,
-				_("?'%s' already exists - %s?"),
+			if (!printf_conflict_reply(from_parent,
+				_("'%s' already exists - %s?"),
 				dest_path,
 				merge ? _("merge contents")
 					: _("overwrite")))
@@ -1590,42 +2129,29 @@ static void do_move2(const char *path, const char *dest)
 	{
 		int		err;
 		gboolean	merge;
-		gboolean	ignore_quiet;
 
 		merge = S_ISDIR(info.st_mode) && S_ISDIR(dest_info.st_mode);
 
-		if (o_ignore &&
-				info.st_mtime <= dest_info.st_mtime &&
-				!S_ISDIR(info.st_mode))
-		{
-			/* Ignore Older; skip */
+		if (conflict_policy == CONFLICT_SKIP_EXISTING)
 			return;
-		}
-		else if (merge && o_merge)
+		else if (conflict_policy == CONFLICT_UPDATE_NEWER &&
+				 !S_ISDIR(info.st_mode) &&
+				 info.st_mtime <= dest_info.st_mtime)
+			return;
+		else if (conflict_policy == CONFLICT_REPLACE_ALL ||
+			 conflict_policy == CONFLICT_UPDATE_NEWER ||
+			 (merge && o_merge))
 		{
-			/* Automatic merging; keep going */
+			/* Política automática; continuar sin otra pregunta. */
 		}
 		else
 		{
 			printf_send("<%s", path);
 			printf_send(">%s", dest_path);
 
-			/* Using greater than or equal because people who tick the
-			* "Newer" checkbox probably don't want to be prompted whether
-			* to overwrite a file that has an identical mtime. */
-			if (o_newer &&
-					info.st_mtime >= dest_info.st_mtime &&
-					!S_ISDIR(info.st_mode))
-			{
-				ignore_quiet = FALSE;
-			}
-			else
-			{
-				ignore_quiet = TRUE;
-			}
 
-			if (!printf_reply(from_parent, ignore_quiet,
-				_("?'%s' already exists - %s?"),
+			if (!printf_conflict_reply(from_parent,
+				_("'%s' already exists - %s?"),
 				dest_path,
 				merge ? _("merge contents")
 					: _("overwrite")))
@@ -1981,7 +2507,56 @@ static void delete_cb(gpointer data)
 			printf_send("%%%d", per);
 		}
 		do_delete(path, dir);
+		if (delete_batch_mode)
+		{
+			send_check_path(path);
+			send_mount_path(path);
+		}
 		g_free(dir);
+	}
+
+	send_done();
+}
+
+/* Agregado por josejp2424 (2026): mueve cada elemento seleccionado a la
+ * papelera estándar usada por GIO, PCManFM y otros gestores compatibles con
+ * la especificación Freedesktop. No recorre el contenido de las carpetas: el
+ * backend de GIO realiza el movimiento del elemento completo. */
+static void trash_cb(gpointer data)
+{
+	GList *paths = (GList *) data;
+	const gint total = g_list_length(paths);
+	gint index = 0;
+
+	for (; paths; paths = paths->next, index++)
+	{
+		const gchar *path = paths->data;
+		gchar *parent = g_path_get_dirname(path);
+		GFile *file = g_file_new_for_path(path);
+		GError *error = NULL;
+
+		send_dir(parent);
+		if (total > 1 && index > 0)
+			printf_send("%%%d", (100 * index) / total);
+
+		if (!g_file_trash(file, NULL, &error))
+		{
+			if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+				printf_send(_("!The filesystem containing '%s' does not support the standard Trash.\n"), path);
+			else
+				printf_send(_("!Unable to move '%s' to the Trash: %s\n"),
+					path, error ? error->message : _("Unknown error"));
+			g_clear_error(&error);
+		}
+		else
+		{
+			/* Sólo se actualiza el elemento superior; no se generan miles de
+			 * notificaciones por el contenido interno de una carpeta. */
+			send_check_path(path);
+		}
+
+		g_object_unref(file);
+		g_free(parent);
 	}
 
 	send_done();
@@ -2123,6 +2698,8 @@ static void list_cb(gpointer data)
 		action_do_func((char *) paths->data, action_dest);
 	}
 
+	if (n > 0)
+		printf_send("%%100");
 	send_done();
 }
 
@@ -2246,7 +2823,80 @@ void action_mount(GList	*paths, gboolean open_dir, gboolean mount, int quiet)
 #endif /* DO_MOUNT_POINTS */
 }
 
-/* Delete these paths */
+/* Agregado por josejp2424 (2026): confirmaciones compactas al estilo ROX. */
+static gboolean confirm_trash_paths(GList *paths)
+{
+	gint count = g_list_length(paths);
+	gchar *message;
+	gboolean accepted;
+
+	if (count == 1)
+	{
+		gchar *leaf = g_path_get_basename((const gchar *) paths->data);
+		message = g_strdup_printf(_("Move '%s' to the Trash?"), leaf);
+		g_free(leaf);
+	}
+	else
+		message = g_strdup_printf(_("Move %d selected items to the Trash?"), count);
+
+	accepted = confirm(message, ROX_ICON_TRASH, _("_Move to Trash"));
+	g_free(message);
+	return accepted;
+}
+
+static gboolean confirm_permanent_delete_paths(GList *paths)
+{
+	gint count = g_list_length(paths);
+	gchar *message;
+	gboolean accepted;
+
+	if (count == 1)
+	{
+		gchar *leaf = g_path_get_basename((const gchar *) paths->data);
+		message = g_strdup_printf(
+			_("Permanently delete '%s'?\n\nThis action cannot be undone."), leaf);
+		g_free(leaf);
+	}
+	else
+		message = g_strdup_printf(
+			_("Permanently delete %d selected items?\n\nThis action cannot be undone."), count);
+
+	accepted = confirm(message, ROX_ICON_DELETE, _("_Delete Permanently"));
+	g_free(message);
+	return accepted;
+}
+
+/* Agregado por josejp2424 (2026): borrado normal compatible con la papelera
+ * estándar de Freedesktop. GIO selecciona la papelera del usuario o la
+ * papelera local del sistema de archivos, igual que otros gestores GTK. */
+void action_trash(GList *paths)
+{
+	GUIside *gui_side;
+	GtkWidget *abox;
+
+	if (!paths || !remove_pinned_ok(paths) || !confirm_trash_paths(paths))
+		return;
+
+	abox = abox_new(_("Move to Trash"), TRUE);
+	if (paths->next)
+		abox_set_percentage(ABOX(abox), 0);
+
+	gui_side = start_action(abox, trash_cb, paths,
+				  TRUE, TRUE,
+				  o_action_recurse.int_value,
+				  o_action_merge.int_value,
+				  o_action_newer.int_value,
+				  o_action_ignore.int_value);
+	if (!gui_side)
+		return;
+
+	log_info_paths("Trash", paths, NULL);
+	number_of_windows++;
+	gtk_widget_show(abox);
+}
+
+/* Modificado por josejp2424 (2026): conserva el motor histórico para usos
+ * internos que todavía necesitan su diálogo y sus opciones tradicionales. */
 void action_delete(GList *paths)
 {
 	GUIside		*gui_side;
@@ -2255,6 +2905,7 @@ void action_delete(GList *paths)
 	if (!remove_pinned_ok(paths))
 		return;
 
+	delete_batch_mode = FALSE;
 	abox = abox_new(_("Delete"), o_action_delete.int_value);
 	if(paths && paths->next)
 		abox_set_percentage(ABOX(abox), 0);
@@ -2277,6 +2928,37 @@ void action_delete(GList *paths)
 
 	log_info_paths("Delete", paths, NULL);
 
+	number_of_windows++;
+	gtk_widget_show(abox);
+}
+
+/* Agregado por josejp2424 (2026): Shift+Delete confirma una sola vez y luego
+ * elimina la selección completa sin pedir confirmación por cada archivo. */
+void action_delete_permanently(GList *paths)
+{
+	GUIside *gui_side;
+	GtkWidget *abox;
+
+	if (!paths || !remove_pinned_ok(paths) ||
+	    !confirm_permanent_delete_paths(paths))
+		return;
+
+	delete_batch_mode = TRUE;
+	abox = abox_new(_("Delete Permanently"), TRUE);
+	if (paths->next)
+		abox_set_percentage(ABOX(abox), 0);
+
+	gui_side = start_action(abox, delete_cb, paths,
+				  TRUE, TRUE,
+				  o_action_recurse.int_value,
+				  o_action_merge.int_value,
+				  o_action_newer.int_value,
+				  o_action_ignore.int_value);
+	delete_batch_mode = FALSE;
+	if (!gui_side)
+		return;
+
+	log_info_paths("Delete permanently", paths, NULL);
 	number_of_windows++;
 	gtk_widget_show(abox);
 }
@@ -2451,35 +3133,40 @@ void action_copy(GList *paths, const char *dest, const char *leaf, int quiet)
 	if (quiet == -1)
 		quiet = o_action_copy.int_value;
 
+	rsync_available = rsync_is_available();
+	if (destination_has_conflicts(paths, dest, leaf))
+		conflict_policy = choose_conflict_policy(_("Copy"));
+	else
+		conflict_policy = CONFLICT_REPLACE_ALL;
+	if (conflict_policy == CONFLICT_CANCELLED)
+		return;
+	use_rsync_engine = rsync_available && conflict_policy != CONFLICT_ASK;
+
 	action_dest = dest;
 	action_leaf = leaf;
-	action_do_func = do_copy;
+	action_do_func = use_rsync_engine ? do_copy_fast : do_copy;
 
 	abox = abox_new(_("Copy"), quiet);
 	if(paths && paths->next)
 		abox_set_percentage(ABOX(abox), 0);
-	gui_side = start_action(abox, list_cb, paths,
+	gui_side = start_action(abox,
+		(use_rsync_engine && paths && paths->next && leaf == NULL)
+			? rsync_copy_list_cb : list_cb,
+		paths,
 					 o_action_force.int_value,
 					 o_action_brief.int_value,
 					 o_action_recurse.int_value,
-					 o_action_merge.int_value,
-					 o_action_newer.int_value,
-					 o_action_ignore.int_value);
+					 FALSE,
+					 FALSE,
+					 FALSE);
 	if (!gui_side)
 		return;
 
-	abox_add_flag(ABOX(abox),
-		_("Ignore Older"),
-		_("Silently ignore if source is older than destination."),
-		'I', o_action_ignore.int_value);
-	abox_add_flag(ABOX(abox),
-		_("Newer"),
-		_("Always over-write if source is newer than destination."),
-		'W', o_action_newer.int_value);
-	abox_add_flag(ABOX(abox),
-		_("Merge"),
-		_("Always merge directories."),
-		'M', o_action_merge.int_value);
+	if (!rsync_available)
+		abox_log(ABOX(abox),
+			_("rsync is not installed; using the classic ROX-Filer engine.\n"),
+			NULL);
+
 	abox_add_flag(ABOX(abox),
 		_("Brief"), _("Only log directories as they are copied"),
 		'B', o_action_brief.int_value);
@@ -2501,9 +3188,18 @@ void action_move(GList *paths, const char *dest, const char *leaf, int quiet)
 	if (quiet == -1)
 		quiet = o_action_move.int_value;
 
+	rsync_available = rsync_is_available();
+	if (destination_has_conflicts(paths, dest, leaf))
+		conflict_policy = choose_conflict_policy(_("Move"));
+	else
+		conflict_policy = CONFLICT_REPLACE_ALL;
+	if (conflict_policy == CONFLICT_CANCELLED)
+		return;
+	use_rsync_engine = rsync_available && conflict_policy != CONFLICT_ASK;
+
 	action_dest = dest;
 	action_leaf = leaf;
-	action_do_func = do_move;
+	action_do_func = use_rsync_engine ? do_move_fast : do_move;
 
 	abox = abox_new(_("Move"), quiet);
 	if(paths && paths->next)
@@ -2512,24 +3208,17 @@ void action_move(GList *paths, const char *dest, const char *leaf, int quiet)
 					 o_action_force.int_value,
 					 o_action_brief.int_value,
 					 o_action_recurse.int_value,
-					 o_action_merge.int_value,
-					 o_action_newer.int_value,
-					 o_action_ignore.int_value);
+					 FALSE,
+					 FALSE,
+					 FALSE);
 	if (!gui_side)
 		return;
 
-	abox_add_flag(ABOX(abox),
-		_("Ignore Older"),
-		_("Silently ignore if source is older than destination."),
-		'I', o_action_ignore.int_value);
-	abox_add_flag(ABOX(abox),
-		_("Newer"),
-		_("Always over-write if source is newer than destination."),
-		'W', o_action_newer.int_value);
-	abox_add_flag(ABOX(abox),
-		_("Merge"),
-		_("Always merge directories."),
-		'M', o_action_merge.int_value);
+	if (!rsync_available)
+		abox_log(ABOX(abox),
+			_("rsync is not installed; using the classic ROX-Filer engine.\n"),
+			NULL);
+
 	abox_add_flag(ABOX(abox),
 		_("Brief"), _("Don't log each file as it is moved"),
 		'B', o_action_brief.int_value);
