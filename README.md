@@ -183,7 +183,7 @@ so on. Each unit shows its volume label, device name, size and mounted state.
 
 
 <p align="center">
-  <img src="screenshot/rox-particiones.png" alt="partition" width="180">
+  <img src="screenshot/rox-particiones.png" alt="partition">
 </p>
 ## File visibility and ordering
 
