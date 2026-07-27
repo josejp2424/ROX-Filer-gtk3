@@ -79,9 +79,6 @@ Major GTK3 porting work includes:
 - Replacement of removed GTK2 menu infrastructure.
 - Compatibility with X11/XLibre through GDK X11 and Xlib.
 
-Some historical compatibility code and deprecated-but-still-supported GTK3 APIs
-may remain and can be cleaned up gradually without preventing the application
-from being a GTK3 program.
 
 ## Main features
 
