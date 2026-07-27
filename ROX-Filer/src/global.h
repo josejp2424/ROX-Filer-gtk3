@@ -210,6 +210,9 @@ enum
 #define ROX_ICON_CLEAR            "edit-clear"
 #define ROX_ICON_ADD              "list-add"
 #define ROX_ICON_REMOVE           "list-remove"
+/* Agregado por josejp2424 (2026): iconos estándar del historial. */
+#define ROX_ICON_GO_BACK          "go-previous"
+#define ROX_ICON_GO_FORWARD       "go-next"
 #define ROX_ICON_GO_UP            "go-up"
 #define ROX_ICON_GO_DOWN          "go-down"
 #define ROX_ICON_GO_LAST          "go-last"

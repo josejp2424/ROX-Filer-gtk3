@@ -926,6 +926,10 @@ static void filer_window_destroyed(GtkWidget *widget, FilerWindow *filer_window)
 	g_free(filer_window->auto_select);
 	g_free(filer_window->real_path);
 	g_free(filer_window->sym_path);
+	/* Agregado por josejp2424 (2026): liberar el historial privado de esta
+	 * ventana al cerrarla. */
+	g_list_free_full(filer_window->history_back, g_free);
+	g_list_free_full(filer_window->history_forward, g_free);
 	g_free(filer_window);
 
 	one_less_window();
@@ -1400,6 +1404,22 @@ gint filer_key_press_event(GtkWidget	*widget,
 		g_signal_emit_by_name(widget, "keys_changed");
 	}
 
+	/* Agregado por josejp2424 (2026): atajos estándar de navegación,
+	 * disponibles incluso cuando el minibuffer tiene el foco. */
+	if (event->state & GDK_MOD1_MASK)
+	{
+		if (key == GDK_KEY_Left || key == GDK_KEY_KP_Left)
+		{
+			filer_history_back(filer_window);
+			return TRUE;
+		}
+		if (key == GDK_KEY_Right || key == GDK_KEY_KP_Right)
+		{
+			filer_history_forward(filer_window);
+			return TRUE;
+		}
+	}
+
 	if (focus && focus == filer_window->minibuffer)
 		if (gtk_widget_event(focus, (GdkEvent *) event))
 			return TRUE;	/* Handled */
@@ -1525,6 +1545,86 @@ static void tidy_sympath(gchar *path)
 	}
 }
 
+/* Agregado por josejp2424 (2026): historial ligero de rutas por ventana.
+ * Se limita a cien entradas para conservar el bajo consumo tradicional de ROX. */
+#define FILER_HISTORY_LIMIT 100
+
+static void filer_history_clear(GList **history)
+{
+	if (!history)
+		return;
+	g_list_free_full(*history, g_free);
+	*history = NULL;
+}
+
+static void filer_history_push(GList **history, const gchar *path)
+{
+	GList *last;
+
+	if (!history || !path || !*path)
+		return;
+	if (*history && g_strcmp0((*history)->data, path) == 0)
+		return;
+
+	*history = g_list_prepend(*history, g_strdup(path));
+	if (g_list_length(*history) <= FILER_HISTORY_LIMIT)
+		return;
+
+	last = g_list_last(*history);
+	g_free(last->data);
+	*history = g_list_delete_link(*history, last);
+}
+
+gboolean filer_history_can_back(FilerWindow *filer_window)
+{
+	return filer_window && filer_window->history_back != NULL;
+}
+
+gboolean filer_history_can_forward(FilerWindow *filer_window)
+{
+	return filer_window && filer_window->history_forward != NULL;
+}
+
+static void filer_history_go(FilerWindow *filer_window, gboolean backwards)
+{
+	GList **source;
+	GList **destination;
+	GList *link;
+	gchar *target;
+
+	if (!filer_window)
+		return;
+	source = backwards ? &filer_window->history_back :
+		&filer_window->history_forward;
+	destination = backwards ? &filer_window->history_forward :
+		&filer_window->history_back;
+	if (!*source)
+		return;
+
+	link = *source;
+	target = link->data;
+	*source = g_list_delete_link(*source, link);
+	filer_history_push(destination, filer_window->sym_path);
+
+	/* Evitar que filer_change_to() agregue otra entrada mientras se recorre
+	 * el propio historial. */
+	filer_window->history_navigation = TRUE;
+	filer_change_to(filer_window, target, NULL);
+	filer_window->history_navigation = FALSE;
+	g_free(target);
+	toolbar_update_navigation(filer_window);
+}
+
+void filer_history_back(FilerWindow *filer_window)
+{
+	filer_history_go(filer_window, TRUE);
+}
+
+void filer_history_forward(FilerWindow *filer_window)
+{
+	filer_history_go(filer_window, FALSE);
+}
+
 /* Make filer_window display path. When finished, highlight item 'from', or
  * the first item if from is NULL. If there is currently no cursor then
  * simply wink 'from' (if not NULL).
@@ -1544,7 +1644,19 @@ void filer_change_to(FilerWindow *filer_window,
 	tooltip_show(NULL);
 
 	sym_path = g_strdup(path);
+	tidy_sympath(sym_path);
 	real_path = pathdup(path);
+
+	/* Agregado por josejp2424 (2026): registrar cambios normales de ruta y
+	 * descartar la rama Adelante cuando se inicia una navegación nueva. Las
+	 * aperturas temporales de arrastre no contaminan el historial. */
+	if (!filer_window->history_navigation && !spring_in_progress &&
+	    g_strcmp0(filer_window->sym_path, sym_path) != 0)
+	{
+		filer_history_push(&filer_window->history_back,
+			filer_window->sym_path);
+		filer_history_clear(&filer_window->history_forward);
+	}
 	new_dir = g_fscache_lookup(dir_cache, real_path) ?:
 		dir_new(real_path); //dummy dir
 
@@ -1564,7 +1676,6 @@ void filer_change_to(FilerWindow *filer_window,
 	g_free(filer_window->sym_path);
 	filer_window->real_path = real_path;
 	filer_window->sym_path = sym_path;
-	tidy_sympath(filer_window->sym_path);
 
 	filer_window->directory = new_dir;
 
@@ -1591,6 +1702,8 @@ void filer_change_to(FilerWindow *filer_window,
 
 	if (filer_window->mini_type == MINI_PATH)
 		g_idle_add((GSourceFunc) minibuffer_show_cb, filer_window);
+
+	toolbar_update_navigation(filer_window);
 }
 
 /* Returns a list containing the full (sym) pathname of every selected item.
@@ -1677,6 +1790,13 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 	filer_window->mini_type = MINI_NONE;
 	filer_window->selection_state = GTK_STATE_FLAG_INSENSITIVE;
 	filer_window->toolbar = NULL;
+	/* Agregado por josejp2424 (2026): cada ventana comienza con un historial
+	 * de navegación vacío e independiente. */
+	filer_window->history_back = NULL;
+	filer_window->history_forward = NULL;
+	filer_window->history_navigation = FALSE;
+	filer_window->toolbar_back = NULL;
+	filer_window->toolbar_forward = NULL;
 	filer_window->toplevel_vbox = NULL;
 	filer_window->view_hbox = NULL;
 	filer_window->view = NULL;

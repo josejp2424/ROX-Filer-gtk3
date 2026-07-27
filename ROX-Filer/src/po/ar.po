@@ -755,3 +755,51 @@ msgstr "نقل ... إلى سلة المهملات؟"
 #. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
 msgid "DELETE ... permanently ?"
 msgstr "حذف ... نهائياً؟"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Back"
+msgstr "رجوع"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Forward"
+msgstr "تقدم"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go back to the previous directory"
+msgstr "العودة إلى المجلد السابق"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go forward to the next directory"
+msgstr "الانتقال إلى المجلد التالي"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Open"
+msgstr "فتح"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not unmount '%s'."
+msgstr "تعذر إلغاء تحميل '%s'."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not eject '%s'."
+msgstr "تعذر إخراج '%s'."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The partition could not be unmounted."
+msgstr "تعذر إلغاء تحميل القسم."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The device could not be ejected."
+msgstr "تعذر إخراج الجهاز."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Left click: open or mount\nRight click: drive actions"
+msgstr "النقر الأيسر: فتح أو تحميل\nالنقر الأيمن: إجراءات محرك الأقراص"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Show partitions, mount, unmount and open them"
+msgstr "عرض الأقسام وتحميلها وإلغاء تحميلها وفتحها"
+
+#. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
+msgid "The command failed."
+msgstr "فشل الأمر."

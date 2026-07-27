@@ -8,9 +8,6 @@
   A modern GTK3 port of the classic, fast and lightweight ROX-Filer file manager.
 </p>
 
-<p align="center">
-  Maintained by <strong>josejp2424</strong>
-</p>
 
 ---
 
@@ -19,7 +16,10 @@
 ROX-Filer is a fast and lightweight graphical file manager originally created
 by **Thomas Leonard** for the ROX Desktop.
 
-This repository contains the ongoing port of **ROX-Filer 2.12 to GTK3**
+This repository contains an ongoing GTK3 development line based on the
+**ROX-Filer 2.11 source currently used by Puppy Linux Woof-CE**.
+The **2.12 GTK3** version identifies this updated fork and does
+not refer to a separate upstream ROX-Filer 2.12 source release.
 
 The goal of this project is to preserve the speed, simplicity, flexibility and
 traditional behaviour of the original ROX-Filer while replacing its GTK2-era
@@ -79,6 +79,9 @@ Major GTK3 porting work includes:
 - Replacement of removed GTK2 menu infrastructure.
 - Compatibility with X11/XLibre through GDK X11 and Xlib.
 
+Some historical compatibility code and deprecated-but-still-supported GTK3 APIs
+may remain and can be cleaned up gradually without preventing the application
+from being a GTK3 program.
 
 ## Main features
 
@@ -97,11 +100,12 @@ Major GTK3 porting work includes:
 - Extended-attribute support.
 - Per-directory display settings.
 - Configurable toolbar.
+- Per-window Back and Forward path navigation.
 - GTK3 theme and icon-theme integration.
 - Multilingual interface.
 - Integrated terminal actions.
 - Permanent partition browser in the main toolbar.
-- Mount-and-open support for internal and removable partitions.
+- Mount, unmount, eject and open support for internal and removable partitions.
 - Directories-first ordering without hiding normal file types.
 - Native GTK3 About dialog.
 
@@ -145,9 +149,9 @@ The button uses the active icon theme's standard:
 drive-harddisk
 ```
 
-icon and refreshes the partition list each time it is opened. It is inserted
-immediately after the **Up** button and has an additional fallback insertion
-path so an old toolbar configuration cannot hide it.
+icon and refreshes the partition list each time it is opened. It remains the
+first permanent toolbar item, followed by the compact **Back**, **Forward** and
+**Up** navigation buttons.
 
 The partition detection is based on the drive-handling approach used by
 EssoraWM. It reads `lsblk` data and filters technical devices that should not be
@@ -165,8 +169,9 @@ For compatibility with older Puppy Linux versions, ROX-Filer first requests the
 complete modern `lsblk` column set and automatically retries with a smaller
 compatible set when some columns are unavailable.
 
-Mounted partitions open directly in the current filer window. When a partition
-is not mounted:
+A left click keeps the original direct workflow: mounted partitions open in the
+current filer window and unmounted partitions are mounted before opening.
+When a partition is not mounted:
 
 - Puppy Linux and other root sessions mount it under `/mnt/<device>` using
   `/bin/mount`.
@@ -177,10 +182,36 @@ The partition selector is a GTK3 popover arranged as a four-column grid. The
 first four units appear on the first row, the next four on the second row, and
 so on. Each unit shows its volume label, device name, size and mounted state.
 
+A right click on a partition opens a compact traditional ROX menu containing:
+
+- Open
+- Mount
+- Unmount
+- Eject
+
+Puppy/root sessions use `umount` directly. Regular users can use
+`udisksctl unmount -b`. Removable media is unmounted first and then safely
+powered off with `udisksctl power-off`, with `eject` as a fallback.
 
 <p align="center">
   <img src="screenshot/rox-particiones.png" alt="partition">
 </p>
+
+## Back and Forward navigation
+
+Every filer window keeps its own lightweight directory history. The toolbar
+uses small traditional buttons with the active icon theme's `go-previous` and
+`go-next` icons.
+
+```text
+Alt+Left   Back
+Alt+Right  Forward
+```
+
+Opening a new directory after navigating backwards clears the Forward branch,
+matching the behaviour expected from other file managers. History is limited
+to 100 paths per window.
+
 ## File visibility and ordering
 
 The historical toolbar control that switched between **directories only** and

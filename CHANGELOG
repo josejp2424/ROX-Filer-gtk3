@@ -1,3 +1,33 @@
+ROX-Filer 2.12 GTK3 - r21 - 2026-07-26
+
+Back/Forward navigation and complete partition actions
+------------------------------------------------------
+
+- Added a per-window navigation history with compact Back and Forward toolbar
+  buttons using the standard `go-previous` and `go-next` icon-theme names.
+- Added Alt+Left and Alt+Right keyboard shortcuts.
+- Back and Forward are disabled automatically when no corresponding history
+  entry exists; entering a new path after going back clears the forward branch.
+- Limited each window history to 100 paths to preserve ROX-Filer's lightweight
+  behaviour.
+- Added a traditional right-click menu to every partition button with Open,
+  Mount, Unmount and Eject actions.
+- Kept the existing left-click behaviour: a mounted partition opens directly,
+  while an unmounted partition is mounted and then opened.
+- Puppy/root sessions unmount directly with `umount`; regular-user sessions can
+  use `udisksctl unmount -b`.
+- Removable devices are safely unmounted before ROX-Filer attempts
+  `udisksctl power-off` or the `eject` fallback.
+- Partition and mount state is refreshed after successful mount, unmount or
+  eject operations.
+- Clarified in the README that this development line is based on the ROX-Filer
+  2.11 source used by Woof-CE; 2.12 GTK3 is the version of this maintained fork.
+- Added translations and rebuilt bundled `.mo` catalogues for Arabic, Catalan,
+  German, Spanish, French, Hungarian, Italian, Japanese, Brazilian and European
+  Portuguese, Russian, Simplified Chinese and Traditional Chinese.
+- Marked every new or modified source block with
+  `Agregado por josejp2424 (2026)` or `Modificado por josejp2424 (2026)`.
+
 ROX-Filer 2.12 GTK3 - r20 - 2026-07-26
 
 GTK3 hidden-files toolbar icon

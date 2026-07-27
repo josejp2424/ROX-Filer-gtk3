@@ -2,7 +2,8 @@
  * ROX-Filer GTK3 partition toolbar integration.
  *
  * Agregado por josejp2424 (2026): botón permanente de particiones,
- * detección de volúmenes, montaje y apertura desde la barra principal.
+ * detección de volúmenes, montaje, desmontaje, expulsión y apertura desde la
+ * barra principal.
  *
  * Copyright (C) 2026 josejp2424
  *

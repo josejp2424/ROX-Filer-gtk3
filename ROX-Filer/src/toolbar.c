@@ -77,6 +77,8 @@ static FilerWindow *filer_window_being_counted;
 
 /* Static prototypes */
 static void toolbar_close_clicked(GtkWidget *widget, FilerWindow *filer_window);
+static void toolbar_back_clicked(GtkWidget *widget, FilerWindow *filer_window);
+static void toolbar_forward_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_up_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_home_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_bookmarks_clicked(GtkWidget *widget,
@@ -119,6 +121,16 @@ static void tally_items(gpointer key, gpointer value, gpointer data);
 static Tool all_tools[] = {
 	{N_("Close"), ROX_ICON_CLOSE, N_("Close filer window"),
 	 toolbar_close_clicked, DROP_NONE, FALSE,
+	 FALSE},
+
+	/* Agregado por josejp2424 (2026): navegación de rutas por ventana con
+	 * botones pequeños y tradicionales de ROX. */
+	{N_("Back"), ROX_ICON_GO_BACK, N_("Go back to the previous directory"),
+	 toolbar_back_clicked, DROP_NONE, TRUE,
+	 FALSE},
+
+	{N_("Forward"), ROX_ICON_GO_FORWARD, N_("Go forward to the next directory"),
+	 toolbar_forward_clicked, DROP_NONE, TRUE,
 	 FALSE},
 
 	{N_("Up"), ROX_ICON_GO_UP, N_("Change to parent directory"),
@@ -281,6 +293,8 @@ void toolbar_update_toolbar(FilerWindow *filer_window)
 		filer_window->toolbar = NULL;
 		filer_window->toolbar_text = NULL;
 	}
+	filer_window->toolbar_back = NULL;
+	filer_window->toolbar_forward = NULL;
 
 	if (o_toolbar.int_value != TOOLBAR_NONE)
 	{
@@ -294,6 +308,21 @@ void toolbar_update_toolbar(FilerWindow *filer_window)
 
 	filer_target_mode(filer_window, NULL, NULL, NULL);
 	toolbar_update_info(filer_window);
+	toolbar_update_navigation(filer_window);
+}
+
+/* Agregado por josejp2424 (2026): mantener desactivados los botones cuando
+ * no existe una ruta anterior o posterior en el historial de esta ventana. */
+void toolbar_update_navigation(FilerWindow *filer_window)
+{
+	if (!filer_window)
+		return;
+	if (filer_window->toolbar_back)
+		gtk_widget_set_sensitive(filer_window->toolbar_back,
+			filer_history_can_back(filer_window));
+	if (filer_window->toolbar_forward)
+		gtk_widget_set_sensitive(filer_window->toolbar_forward,
+			filer_history_can_forward(filer_window));
 }
 
 /****************************************************************
@@ -388,6 +417,20 @@ static void toolbar_close_clicked(GtkWidget *widget, FilerWindow *filer_window)
 	else if (!filer_window_delete(filer_window->window, NULL, filer_window))
 		gtk_widget_destroy(filer_window->window);
 	gdk_event_free(event);
+}
+
+/* Agregado por josejp2424 (2026): callbacks de los botones clásicos
+ * Atrás y Adelante. */
+static void toolbar_back_clicked(GtkWidget *widget, FilerWindow *filer_window)
+{
+	(void) widget;
+	filer_history_back(filer_window);
+}
+
+static void toolbar_forward_clicked(GtkWidget *widget, FilerWindow *filer_window)
+{
+	(void) widget;
+	filer_history_forward(filer_window);
 }
 
 static void toolbar_up_clicked(GtkWidget *widget, FilerWindow *filer_window)
@@ -555,6 +598,11 @@ static GtkWidget *create_toolbar(FilerWindow *filer_window)
 	int width;
 
 	bar = gtk_toolbar_new();
+	if (filer_window)
+	{
+		filer_window->toolbar_back = NULL;
+		filer_window->toolbar_forward = NULL;
+	}
 
 	if (o_toolbar.int_value == TOOLBAR_NORMAL || !filer_window)
 		gtk_toolbar_set_style(GTK_TOOLBAR(bar), GTK_TOOLBAR_ICONS);
@@ -593,6 +641,13 @@ static GtkWidget *create_toolbar(FilerWindow *filer_window)
 			continue;
 
 		b = add_button(bar, tool, filer_window);
+
+		/* Agregado por josejp2424 (2026): conservar referencias sólo a los
+		 * dos botones de historial para actualizar su sensibilidad. */
+		if (filer_window && tool->clicked == toolbar_back_clicked)
+			filer_window->toolbar_back = b;
+		else if (filer_window && tool->clicked == toolbar_forward_clicked)
+			filer_window->toolbar_forward = b;
 
 		gtk_widget_get_preferred_size(b, NULL, &req);
 		width += req.width;

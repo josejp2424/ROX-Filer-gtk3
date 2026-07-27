@@ -5443,3 +5443,51 @@ msgstr "Spostare ... nel cestino?"
 #. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
 msgid "DELETE ... permanently ?"
 msgstr "ELIMINARE ... definitivamente?"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Back"
+msgstr "Indietro"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Forward"
+msgstr "Avanti"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go back to the previous directory"
+msgstr "Torna alla cartella precedente"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go forward to the next directory"
+msgstr "Vai alla cartella successiva"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Open"
+msgstr "Apri"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not unmount '%s'."
+msgstr "Impossibile smontare «%s»."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not eject '%s'."
+msgstr "Impossibile espellere «%s»."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The partition could not be unmounted."
+msgstr "Impossibile smontare la partizione."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The device could not be ejected."
+msgstr "Impossibile espellere il dispositivo."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Left click: open or mount\nRight click: drive actions"
+msgstr "Clic sinistro: apri o monta\nClic destro: azioni dell’unità"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Show partitions, mount, unmount and open them"
+msgstr "Mostra, monta, smonta e apri le partizioni"
+
+#. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
+msgid "The command failed."
+msgstr "Il comando non è riuscito."

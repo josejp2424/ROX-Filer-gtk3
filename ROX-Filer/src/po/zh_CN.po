@@ -5169,3 +5169,51 @@ msgstr "将 ... 移到回收站吗？"
 #. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
 msgid "DELETE ... permanently ?"
 msgstr "永久删除 ... 吗？"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Back"
+msgstr "后退"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Forward"
+msgstr "前进"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go back to the previous directory"
+msgstr "返回上一个目录"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go forward to the next directory"
+msgstr "前往下一个目录"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Open"
+msgstr "打开"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not unmount '%s'."
+msgstr "无法卸载“%s”。"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not eject '%s'."
+msgstr "无法弹出“%s”。"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The partition could not be unmounted."
+msgstr "无法卸载该分区。"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The device could not be ejected."
+msgstr "无法弹出该设备。"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Left click: open or mount\nRight click: drive actions"
+msgstr "左键：打开或挂载\n右键：驱动器操作"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Show partitions, mount, unmount and open them"
+msgstr "显示、挂载、卸载和打开分区"
+
+#. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
+msgid "The command failed."
+msgstr "命令执行失败。"

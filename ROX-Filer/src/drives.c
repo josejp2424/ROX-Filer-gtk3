@@ -33,6 +33,7 @@
 #include "drives.h"
 #include "filer.h"
 #include "gui_support.h"
+#include "mount.h"
 
 #define DRIVE_ICON_INTERNAL  "drive-harddisk"
 #define DRIVE_ICON_REMOVABLE "drive-removable-media-usb"
@@ -73,8 +74,12 @@ static void drive_info_free(gpointer data);
 static gchar *find_mountpoint(const gchar *device);
 static gboolean spawn_wait(gchar **argv, gchar **error_text);
 static gchar *mount_drive(const DriveInfo *drive, gchar **error_text);
+static gboolean unmount_drive(const DriveInfo *drive, gchar **error_text);
+static gboolean eject_drive(const DriveInfo *drive, gchar **error_text);
 static void drive_menu_action_free(gpointer data);
 static void drive_grid_activate(GtkButton *button, gpointer data);
+static gboolean drive_grid_button_press(GtkWidget *button,
+		GdkEventButton *event, gpointer data);
 static void drives_button_clicked(GtkToolButton *button, gpointer data);
 static GtkWidget *drive_grid_button_new(const DriveInfo *drive);
 static GtkWidget *drive_icon_widget(const DriveInfo *drive, gint size);
@@ -689,7 +694,7 @@ static gboolean spawn_wait(gchar **argv, gchar **error_text)
 	ok = WIFEXITED(status) && WEXITSTATUS(status) == 0;
 	if (!ok && error_text)
 		*error_text = g_strdup(stderr_text && *stderr_text ? stderr_text :
-			_("The mount command failed."));
+			_("The command failed."));
 	g_free(stderr_text);
 	return ok;
 }
@@ -754,6 +759,147 @@ static gchar *mount_drive(const DriveInfo *drive, gchar **error_text)
 	return NULL;
 }
 
+/* Agregado por josejp2424 (2026): desmontaje integrado. Puppy ejecuta
+ * umount directamente como root; los usuarios normales utilizan udisksctl
+ * cuando está disponible. */
+static gboolean unmount_drive(const DriveInfo *drive, gchar **error_text)
+{
+	gchar *mountpoint;
+	gchar *udisksctl;
+	gchar *local_error = NULL;
+	gboolean ok = FALSE;
+
+	if (error_text)
+		*error_text = NULL;
+	if (!drive || !drive->device)
+		return FALSE;
+
+	mountpoint = find_mountpoint(drive->device);
+	if (!mountpoint)
+		return TRUE;
+
+	if (geteuid() == 0)
+	{
+		gchar *argv[] = {(gchar *) "/bin/umount", mountpoint, NULL};
+		ok = spawn_wait(argv, &local_error);
+	}
+
+	if (!ok)
+	{
+		udisksctl = g_find_program_in_path("udisksctl");
+		if (udisksctl)
+		{
+			gchar *argv[] = {udisksctl, (gchar *) "unmount",
+				(gchar *) "-b", drive->device, NULL};
+			g_free(local_error);
+			local_error = NULL;
+			ok = spawn_wait(argv, &local_error);
+			g_free(udisksctl);
+		}
+	}
+
+	g_free(mountpoint);
+	if (ok)
+	{
+		g_free(local_error);
+		return TRUE;
+	}
+
+	if (error_text)
+		*error_text = local_error ? local_error :
+			g_strdup_printf(_("Could not unmount '%s'."), drive->device);
+	else
+		g_free(local_error);
+	return FALSE;
+}
+
+/* Agregado por josejp2424 (2026): obtener el dispositivo físico padre de
+ * una partición para poder expulsar o apagar de forma segura el medio. */
+static gchar *drive_parent_device(const DriveInfo *drive)
+{
+	gchar *lsblk;
+	gchar *parent = NULL;
+
+	if (!drive || !drive->device)
+		return NULL;
+	lsblk = g_find_program_in_path("lsblk");
+	if (lsblk)
+	{
+		gchar *argv[] = {lsblk, (gchar *) "-ndo", (gchar *) "PKNAME",
+			drive->device, NULL};
+		gchar *name = command_first_line(argv);
+		if (name && *name)
+			parent = g_build_filename("/dev", name, NULL);
+		g_free(name);
+		g_free(lsblk);
+	}
+	return parent ? parent : g_strdup(drive->device);
+}
+
+/* Agregado por josejp2424 (2026): expulsión segura para medios extraíbles.
+ * Primero desmonta el volumen y luego usa udisksctl o eject como respaldo. */
+static gboolean eject_drive(const DriveInfo *drive, gchar **error_text)
+{
+	gchar *device;
+	gchar *program;
+	gchar *local_error = NULL;
+	gboolean ok = FALSE;
+
+	if (error_text)
+		*error_text = NULL;
+	if (!drive || !drive->device)
+		return FALSE;
+
+	if (!unmount_drive(drive, &local_error))
+	{
+		if (error_text)
+			*error_text = local_error;
+		else
+			g_free(local_error);
+		return FALSE;
+	}
+	g_free(local_error);
+	local_error = NULL;
+
+	device = drive_parent_device(drive);
+	program = g_find_program_in_path("udisksctl");
+	if (program)
+	{
+		gchar *argv[] = {program, (gchar *) "power-off", (gchar *) "-b",
+			device, NULL};
+		ok = spawn_wait(argv, &local_error);
+		g_free(program);
+	}
+
+	if (!ok)
+	{
+		program = g_find_program_in_path("eject");
+		if (program)
+		{
+			gchar *argv[] = {program, device, NULL};
+			g_free(local_error);
+			local_error = NULL;
+			ok = spawn_wait(argv, &local_error);
+			g_free(program);
+		}
+	}
+
+	if (ok)
+	{
+		g_free(local_error);
+		g_free(device);
+		return TRUE;
+	}
+
+	if (error_text)
+		*error_text = local_error ? local_error :
+			g_strdup_printf(_("Could not eject '%s'."), drive->device);
+	else
+		g_free(local_error);
+	g_free(device);
+	return FALSE;
+}
+
 static void drive_menu_action_free(gpointer data)
 {
 	DriveMenuAction *action = data;
@@ -777,6 +923,180 @@ static DriveInfo *drive_info_copy(const DriveInfo *source)
 	copy->size = g_strdup(source->size);
 	copy->removable = source->removable;
 	return copy;
+}
+
+/* Agregado por josejp2424 (2026): el menú contextual conserva una copia
+ * propia de la acción para que siga siendo válida aunque cierre el popover. */
+static DriveMenuAction *drive_menu_action_copy(const DriveMenuAction *source)
+{
+	DriveMenuAction *copy;
+
+	if (!source)
+		return NULL;
+	copy = g_new0(DriveMenuAction, 1);
+	copy->filer_window = source->filer_window;
+	copy->drive = drive_info_copy(source->drive);
+	copy->popover = source->popover;
+	return copy;
+}
+
+/* Agregado por josejp2424 (2026): conservar una referencia temporal al
+ * popover. Una actualización de montajes puede cerrar la ventana y liberar la
+ * acción mientras el callback todavía está terminando. */
+static GtkWidget *drive_action_ref_popover(DriveMenuAction *action)
+{
+	if (!action || !GTK_IS_WIDGET(action->popover))
+		return NULL;
+	return g_object_ref(action->popover);
+}
+
+static void drive_action_finish_popover(GtkWidget *popover, gboolean close_it)
+{
+	if (!popover)
+		return;
+	if (close_it && GTK_IS_WIDGET(popover))
+		gtk_widget_destroy(popover);
+	g_object_unref(popover);
+}
+
+static void drive_menu_open(GtkMenuItem *item, gpointer data)
+{
+	(void) item;
+	drive_grid_activate(NULL, data);
+}
+
+static void drive_menu_mount(GtkMenuItem *item, gpointer data)
+{
+	DriveMenuAction *action = data;
+	GtkWidget *popover;
+	gchar *mountpoint;
+	gchar *error_text = NULL;
+
+	(void) item;
+	if (!action || !action->drive)
+		return;
+	popover = drive_action_ref_popover(action);
+	mountpoint = mount_drive(action->drive, &error_text);
+	if (!mountpoint)
+	{
+		report_error("%s", error_text ? error_text :
+			_("The partition could not be mounted."));
+		g_free(error_text);
+		drive_action_finish_popover(popover, FALSE);
+		return;
+	}
+	g_free(mountpoint);
+	g_free(error_text);
+	/* Modificado por josejp2424 (2026): actualizar una sola vez al finalizar. */
+	mount_update(TRUE);
+	filer_update_all();
+	drive_action_finish_popover(popover, TRUE);
+}
+
+static void drive_menu_unmount(GtkMenuItem *item, gpointer data)
+{
+	DriveMenuAction *action = data;
+	GtkWidget *popover;
+	gchar *error_text = NULL;
+
+	(void) item;
+	if (!action || !action->drive)
+		return;
+	popover = drive_action_ref_popover(action);
+	if (!unmount_drive(action->drive, &error_text))
+	{
+		report_error("%s", error_text ? error_text :
+			_("The partition could not be unmounted."));
+		g_free(error_text);
+		drive_action_finish_popover(popover, FALSE);
+		return;
+	}
+	g_free(error_text);
+	/* Modificado por josejp2424 (2026): actualizar vistas y montajes sólo
+	 * después de que el comando haya terminado correctamente. */
+	mount_update(TRUE);
+	filer_update_all();
+	drive_action_finish_popover(popover, TRUE);
+}
+
+static void drive_menu_eject(GtkMenuItem *item, gpointer data)
+{
+	DriveMenuAction *action = data;
+	GtkWidget *popover;
+	gchar *error_text = NULL;
+
+	(void) item;
+	if (!action || !action->drive)
+		return;
+	popover = drive_action_ref_popover(action);
+	if (!eject_drive(action->drive, &error_text))
+	{
+		report_error("%s", error_text ? error_text :
+			_("The device could not be ejected."));
+		g_free(error_text);
+		drive_action_finish_popover(popover, FALSE);
+		return;
+	}
+	g_free(error_text);
+	mount_update(TRUE);
+	filer_update_all();
+	drive_action_finish_popover(popover, TRUE);
+}
+
+/* Agregado por josejp2424 (2026): menú contextual pequeño, acorde a la
+ * interfaz tradicional de ROX. El clic izquierdo conserva montar/abrir. */
+static gboolean drive_grid_button_press(GtkWidget *button,
+		GdkEventButton *event, gpointer data)
+{
+	DriveMenuAction *action = data;
+	DriveMenuAction *menu_action;
+	GtkWidget *menu;
+	GtkWidget *open_item;
+	GtkWidget *mount_item;
+	GtkWidget *unmount_item;
+	GtkWidget *eject_item;
+	GtkWidget *separator;
+	gchar *mountpoint;
+	gboolean mounted;
+
+	if (!event || event->type != GDK_BUTTON_PRESS || event->button != 3 ||
+	    !action || !action->drive)
+		return FALSE;
+
+	mountpoint = find_mountpoint(action->drive->device);
+	mounted = mountpoint != NULL;
+	g_free(mountpoint);
+
+	menu = gtk_menu_new();
+	menu_action = drive_menu_action_copy(action);
+	g_object_set_data_full(G_OBJECT(menu), "rox-drive-menu-action",
+		menu_action, drive_menu_action_free);
+	open_item = gtk_menu_item_new_with_label(_("Open"));
+	mount_item = gtk_menu_item_new_with_label(_("Mount"));
+	unmount_item = gtk_menu_item_new_with_label(_("Unmount"));
+	separator = gtk_separator_menu_item_new();
+	eject_item = gtk_menu_item_new_with_label(_("Eject"));
+
+	gtk_widget_set_sensitive(mount_item, !mounted);
+	gtk_widget_set_sensitive(unmount_item, mounted);
+	gtk_widget_set_sensitive(eject_item, action->drive->removable);
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), open_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), mount_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), unmount_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), separator);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), eject_item);
+
+	g_signal_connect(open_item, "activate", G_CALLBACK(drive_menu_open), menu_action);
+	g_signal_connect(mount_item, "activate", G_CALLBACK(drive_menu_mount), menu_action);
+	g_signal_connect(unmount_item, "activate", G_CALLBACK(drive_menu_unmount), menu_action);
+	g_signal_connect(eject_item, "activate", G_CALLBACK(drive_menu_eject), menu_action);
+	g_signal_connect_swapped(menu, "selection-done",
+		G_CALLBACK(gtk_widget_destroy), menu);
+	gtk_menu_attach_to_widget(GTK_MENU(menu), button, NULL);
+	gtk_widget_show_all(menu);
+	gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent *) event);
+	return TRUE;
 }
 
 static void drive_grid_activate(GtkButton *button, gpointer data)
@@ -984,6 +1304,13 @@ static void drives_button_clicked(GtkToolButton *button, gpointer data)
 			action->popover = popover;
 			g_signal_connect(drive_button, "clicked",
 				G_CALLBACK(drive_grid_activate), action);
+			/* Agregado por josejp2424 (2026): clic derecho para el menú
+			 * tradicional Abrir/Montar/Desmontar/Expulsar. */
+			gtk_widget_add_events(drive_button, GDK_BUTTON_PRESS_MASK);
+			g_signal_connect(drive_button, "button-press-event",
+				G_CALLBACK(drive_grid_button_press), action);
+			gtk_widget_set_tooltip_text(drive_button,
+				_("Left click: open or mount\nRight click: drive actions"));
 			g_object_set_data_full(G_OBJECT(drive_button), "rox-drive-action",
 				action, drive_menu_action_free);
 			gtk_grid_attach(GTK_GRID(grid), drive_button,
@@ -1014,8 +1341,10 @@ GtkToolItem *drives_toolbar_button_new(FilerWindow *filer_window)
 	 * y no homogéneo para que permanezca visible junto a Subir. */
 	gtk_tool_item_set_is_important(item, TRUE);
 	gtk_tool_item_set_homogeneous(item, FALSE);
+	/* Modificado por josejp2424 (2026): reflejar las acciones completas
+	 * disponibles desde el menú contextual de cada unidad. */
 	gtk_tool_item_set_tooltip_text(item,
-		_("Show partitions, mount them and open their contents"));
+		_("Show partitions, mount, unmount and open them"));
 	g_signal_connect(item, "clicked", G_CALLBACK(drives_button_clicked),
 		filer_window);
 	return item;

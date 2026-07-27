@@ -755,3 +755,51 @@ msgstr "Mou ... a la paperera?"
 #. Agregado por josejp2424 (2026): papelera estándar y borrado por lotes.
 msgid "DELETE ... permanently ?"
 msgstr "SUPRIMEIX ... permanentment?"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Back"
+msgstr "Enrere"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Forward"
+msgstr "Endavant"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go back to the previous directory"
+msgstr "Torna al directori anterior"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Go forward to the next directory"
+msgstr "Avança al directori següent"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Open"
+msgstr "Obre"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not unmount '%s'."
+msgstr "No s'ha pogut desmuntar «%s»."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Could not eject '%s'."
+msgstr "No s'ha pogut expulsar «%s»."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The partition could not be unmounted."
+msgstr "No s'ha pogut desmuntar la partició."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "The device could not be ejected."
+msgstr "No s'ha pogut expulsar el dispositiu."
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Left click: open or mount\nRight click: drive actions"
+msgstr "Clic esquerre: obre o munta\nClic dret: accions de la unitat"
+
+#. Agregado por josejp2424 (2026): navegación y acciones de unidades.
+msgid "Show partitions, mount, unmount and open them"
+msgstr "Mostra les particions, munta-les, desmunta-les i obre-les"
+
+#. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
+msgid "The command failed."
+msgstr "L'ordre ha fallat."

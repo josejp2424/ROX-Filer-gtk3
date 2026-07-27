@@ -113,6 +113,14 @@ struct _FilerWindow
 	GtkWidget	*toolbar_text;
 	GtkWidget	*scrollbar;
 
+	/* Agregado por josejp2424 (2026): historial independiente por ventana
+	 * para los botones clásicos Atrás y Adelante. */
+	GList		*history_back;
+	GList		*history_forward;
+	gboolean	history_navigation;
+	GtkWidget	*toolbar_back;
+	GtkWidget	*toolbar_forward;
+
 	gint		open_timeout;	/* Will resize and show window... */
 	/* Agregado por josejp2424: estado del tamaño inicial GTK3. */
 	gboolean	initial_geometry_pending; /* Suppress initial auto-size */
@@ -149,6 +157,11 @@ void filer_check_mounted(const char *real_path);
 gboolean filer_close_recursive(char *path); //eats path
 void filer_change_to(FilerWindow *filer_window,
 			const char *path, const char *from);
+/* Agregado por josejp2424 (2026): navegación clásica Atrás/Adelante. */
+gboolean filer_history_can_back(FilerWindow *filer_window);
+gboolean filer_history_can_forward(FilerWindow *filer_window);
+void filer_history_back(FilerWindow *filer_window);
+void filer_history_forward(FilerWindow *filer_window);
 gboolean filer_exists(FilerWindow *filer_window);
 FilerWindow *filer_get_by_id(const char *id);
 void filer_set_id(FilerWindow *, const char *id);

@@ -22,5 +22,7 @@ extern Option o_toolbar, o_toolbar_info;
 void toolbar_init(void);
 void toolbar_update_info(FilerWindow *filer_window);
 void toolbar_update_toolbar(FilerWindow *filer_window);
+/* Agregado por josejp2424 (2026): actualizar el estado de Atrás/Adelante. */
+void toolbar_update_navigation(FilerWindow *filer_window);
 
 #endif /* _TOOLBAR_H */
