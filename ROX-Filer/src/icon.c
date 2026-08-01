@@ -136,7 +136,7 @@ static RoxItemFactoryEntry menu_def[] = {
 {N_("File"),			NULL, NULL, 0, "<Branch>"},
 {">" N_("Shift Open"),   	NULL, file_op, ACTION_SHIFT, NULL},
 {">" N_("Properties"),    	NULL, file_op, ACTION_PROPERTIES, "<IconItem>", ROX_ICON_PROPERTIES},
-{">" N_("Set Run Action..."),	NULL, file_op, ACTION_RUN_ACTION, "<IconItem>", ROX_ICON_EXECUTE},
+{">" N_("Set Default Application..."),	NULL, file_op, ACTION_RUN_ACTION, "<IconItem>", ROX_ICON_EXECUTE},
 {">" N_("Set Icon..."),		NULL, file_op, ACTION_SET_ICON, NULL},
 {N_("Edit Item"),  		NULL, file_op, ACTION_EDIT, "<IconItem>", ROX_ICON_PROPERTIES},
 {N_("Show Location"),  		NULL, file_op, ACTION_LOCATION, "<IconItem>", ROX_ICON_JUMP_TO},
@@ -735,7 +735,7 @@ static void file_op(gpointer data, guint action, GtkWidget *widget)
 						menu_icon->item->mime_type);
 			else
 				report_error(
-				_("You can only set the run action for a "
+				_("You can only set the default application for a "
 				"regular file"));
 			break;
 		case ACTION_SET_ICON:
@@ -900,7 +900,7 @@ static void show_rename_box(Icon *icon)
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Edit Item"));
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 
 	label = gtk_label_new(_("Clicking the icon opens:"));
 	gtk_box_pack_start(vbox, label, TRUE, TRUE, 0);

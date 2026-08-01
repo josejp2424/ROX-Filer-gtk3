@@ -2,7 +2,18 @@
 # ROX-Filer 2.12 GTK3 translation
 # GTK3 port maintained by josejp2424
 msgid ""
-msgstr "Project-Id-Version: ROX-Filer 2.12 GTK3\nLanguage: ca\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr ""
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Catalan\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "\nProcess terminated.\n"
 msgstr "\nProcés finalitzat.\n"
@@ -803,3 +814,554 @@ msgstr "Mostra les particions, munta-les, desmunta-les i obre-les"
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "L'ordre ha fallat."
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "Escriptori ROX"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "No s’ha pogut obrir l’element de l’escriptori"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "No hi ha cap aplicació associada amb aquest fitxer"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "Copia a Fons..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "Copiar ... a Fons?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "Només es poden copiar imatges JPEG, PNG i SVG a la carpeta de fons."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "No s'ha pogut crear la carpeta de fons «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "Ja existeix un fitxer anomenat «%s» a la carpeta de fons."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "Voleu substituir el fitxer existent?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "La imatge ja és a la carpeta de fons."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "La imatge s’ha copiat a la carpeta de fons."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "Voleu utilitzar-la ara com a fons de l’escriptori?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_Ara no"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_Utilitza com a fons"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "No s'ha pogut copiar «%s» a «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "No s’ha pogut establir el fons: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "Error de l'escriptori ROX"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "No s'ha pogut llegir el dispositiu"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "Fons de l'escriptori"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "Tria una _imatge..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_Aplica"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "Seleccioneu un fons de /usr/share/backgrounds"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "Tria el fons de l'escriptori"
+
+#: desktop.c
+msgid "Image files"
+msgstr "Fitxers d'imatge"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "No s'ha pogut establir el fons de l'escriptori"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "Canvia el fons de l'escriptori..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "Obre la carpeta de l'escriptori"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "Actualitza l'escriptori"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "Estil del fons:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "Omple"
+
+#: desktop.c
+msgid "Fit"
+msgstr "Ajusta"
+
+#: desktop.c
+msgid "Stretch"
+msgstr "Estira"
+
+#: desktop.c
+msgid "Center"
+msgstr "Centra"
+
+#: desktop.c
+msgid "Tile"
+msgstr "Mosaic"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "No s'ha pogut desar la configuració de l'escriptori"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "Mostra les icones de les unitats"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "Inferior esquerra"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "Inferior dreta"
+
+#: desktop.c
+msgid "Top left"
+msgstr "Superior esquerra"
+
+#: desktop.c
+msgid "Top right"
+msgstr "Superior dreta"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "Horitzontal"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "Vertical"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "Icones d'unitats"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "Obre el volum muntat"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "Munta i obre el volum"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "Afegeix programes a l’escriptori..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "Programes de l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "Cerca:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "Aplicació"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "Descripció"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "A l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "No s’ha pogut crear la carpeta Escriptori"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "No s’ha pogut afegir l’aplicació: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "Afegida a l’escriptori"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "Voleu eliminar «%s» de l’escriptori?"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "No s’ha pogut eliminar l’aplicació de l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "El llançador de l’escriptori no és vàlid"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_Afegeix"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_Elimina"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "No s’han trobat llançadors d’aplicacions"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "Seleccioneu una aplicació per afegir-la a l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "Aquesta aplicació ja és a l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "Aquesta aplicació no és a l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "Eliminada de l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "Comportament de les icones de l’escriptori"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "Mida de la icona:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "Obre amb un clic"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "Obre amb doble clic"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "Preferències del ROX Desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "Mida de les icones de l’escriptori:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "Obre les icones de l’escriptori:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "Amb un clic"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "Amb doble clic"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "Ajusta les icones de l’escriptori a la graella"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "Mida de les icones d’unitat:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "Mostra el botó de desmuntatge ràpid a les unitats muntades"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "Posició de les unitats:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "Orientació de les unitats:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "Preferències de l’escriptori..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "Mostra el botó de desmuntatge ràpid"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "Mida de la icona"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "Defineix l'aplicació predeterminada..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "Voleu definir l'aplicació predeterminada per a ...?"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "Només podeu definir l'aplicació predeterminada per a un fitxer normal"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "Trieu l'aplicació predeterminada"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "Seleccioneu l'aplicació predeterminada per a aquest tipus de fitxer"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "No s'ha pogut definir l'aplicació predeterminada per a %s: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "No hi ha cap aplicació predeterminada definida"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "Aplicació XDG predeterminada"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "No s'ha pogut obrir '%s' amb l'aplicació XDG predeterminada: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "No hi ha cap aplicació predeterminada configurada per als fitxers d’aquest tipus (%s/%s). Podeu triar-ne una amb «Defineix l’aplicació predeterminada» al menú Fitxer, o arrossegar el fitxer fins a una aplicació.%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "Disposició de les icones de les unitats"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "Valors predeterminats"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "Visibilitat"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "Unitats internes"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "Unitats extraïbles"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "Unitats de xarxa"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "Mostra les etiquetes"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "Marc de les etiquetes"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "Ordre invers"
+
+#: desktop.c
+msgid "Layout"
+msgstr "Disposició"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "Orientació"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "Posició horitzontal"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "Posició vertical"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "Espaiat horitzontal"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "Espaiat vertical"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "Desplaçament horitzontal"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "Desplaçament vertical"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "Organitza les icones de les unitats..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "Realinea les icones de les unitats"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "Mou les icones de les unitats cap a l’esquerra o la dreta un píxel cada vegada"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "Mou les icones de les unitats cap amunt o avall un píxel cada vegada"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr "Obriu la paperera i seleccioneu els elements que voleu restaurar."
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "Seleccioneu un o més elements per restaurar."
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "La paperera ja és buida."
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "_Buida la paperera"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "Paperera"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "Obre la paperera"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "Restaura els seleccionats"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "Buida la paperera"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "Restaura elements..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "S’ha restaurat un element."
+msgstr[1] "S’han restaurat %u elements."
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "S’han restaurat %u elements."

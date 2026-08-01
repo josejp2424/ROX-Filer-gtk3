@@ -47,6 +47,7 @@
 #include "view_iface.h"
 #include "bookmarks.h"
 #include "gui_support.h"
+#include "trash.h"
 
 typedef struct _Tool Tool;
 
@@ -76,7 +77,6 @@ static FilerWindow *filer_window_being_counted;
 	: ((GdkEventButton *) button_event)->button != 1)
 
 /* Static prototypes */
-static void toolbar_close_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_back_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_forward_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_up_clicked(GtkWidget *widget, FilerWindow *filer_window);
@@ -95,6 +95,8 @@ static void toolbar_select_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
 static void toolbar_new_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
+static void toolbar_new_show_menu(GtkMenuToolButton *button,
+                                   FilerWindow *filer_window);
 static GtkWidget *add_button(GtkWidget *bar, Tool *tool,
 				FilerWindow *filer_window);
 static GtkWidget *create_toolbar(FilerWindow *filer_window);
@@ -119,10 +121,6 @@ static void tally_items(gpointer key, gpointer value, gpointer data);
 /* Modificado por josejp2424: se eliminó Ayuda de la barra principal y
  * de la lista de personalización; Acerca de permanece en el menú contextual. */
 static Tool all_tools[] = {
-	{N_("Close"), ROX_ICON_CLOSE, N_("Close filer window"),
-	 toolbar_close_clicked, DROP_NONE, FALSE,
-	 FALSE},
-
 	/* Agregado por josejp2424 (2026): navegación de rutas por ventana con
 	 * botones pequeños y tradicionales de ROX. */
 	{N_("Back"), ROX_ICON_GO_BACK, N_("Go back to the previous directory"),
@@ -402,25 +400,6 @@ static void toolbar_bookmarks_clicked(GtkWidget *widget,
 	gdk_event_free(event);
 }
 
-static void toolbar_close_clicked(GtkWidget *widget, FilerWindow *filer_window)
-{
-	GdkEvent	*event;
-
-	g_return_if_fail(filer_window != NULL);
-
-	event = get_current_event(GDK_BUTTON_RELEASE);
-	if (event->type == GDK_BUTTON_RELEASE &&
-			((GdkEventButton *) event)->button != 1)
-	{
-		filer_opendir(filer_window->sym_path, filer_window, NULL);
-	}
-	else if (!filer_window_delete(filer_window->window, NULL, filer_window))
-		gtk_widget_destroy(filer_window->window);
-	gdk_event_free(event);
-}
-
-/* Agregado por josejp2424 (2026): callbacks de los botones clásicos
- * Atrás y Adelante. */
 static void toolbar_back_clicked(GtkWidget *widget, FilerWindow *filer_window)
 {
 	(void) widget;
@@ -573,19 +552,32 @@ static void toolbar_select_clicked(GtkWidget *widget, FilerWindow *filer_window)
 
 static void toolbar_new_clicked(GtkWidget *widget, FilerWindow *filer_window)
 {
-	GdkEvent	*event;
+	GdkEvent *event;
+	(void)widget;
 
 	event = get_current_event(GDK_BUTTON_RELEASE);
+	if (!event)
+	{
+		show_new_directory(filer_window);
+		return;
+	}
 	if (event->type == GDK_BUTTON_RELEASE)
 	{
-		if (((GdkEventButton *) event)->button == 1)
-			show_new_directory(filer_window);
-		else if (((GdkEventButton *) event)->button == 2)
+		if (((GdkEventButton *) event)->button == 2)
 			show_new_file(filer_window);
-		else
+		else if (((GdkEventButton *) event)->button == 3)
 			show_menu_new(filer_window);
+		else
+			show_new_directory(filer_window);
 	}
 	gdk_event_free(event);
+}
+
+static void toolbar_new_show_menu(GtkMenuToolButton *button,
+                                  FilerWindow *filer_window)
+{
+	GtkWidget *menu = create_menu_new(filer_window);
+	gtk_menu_tool_button_set_menu(button, menu);
 }
 
 /* If filer_window is NULL, the toolbar is for the options window */
@@ -654,6 +646,15 @@ static GtkWidget *create_toolbar(FilerWindow *filer_window)
 
 		if (filer_window && tool->drop_action != DROP_NONE)
 			handle_drops(filer_window, b, tool->drop_action);
+	}
+
+	if (filer_window)
+	{
+		GtkToolItem *trash_item = rox_trash_toolbar_button_new(filer_window);
+		GtkRequisition trash_req;
+		gtk_toolbar_insert(GTK_TOOLBAR(bar), trash_item, -1);
+		gtk_widget_get_preferred_size(GTK_WIDGET(trash_item), NULL, &trash_req);
+		width += trash_req.width;
 	}
 
 	if (filer_window)
@@ -731,10 +732,20 @@ static GtkWidget *add_button(GtkWidget *bar, Tool *tool,
 	GtkWidget *button;
 	GtkWidget *icon_widget;
 
-	/* Build toolbar buttons from public GtkToolItem widgets. */
+	/* Build toolbar buttons from public GtkToolItem widgets. New is a real
+	 * drop-down button: the main area creates a folder and the arrow exposes
+	 * Blank File plus all user and bundled templates. */
 	icon_widget = image_new_icon(tool->name,
 					      GTK_ICON_SIZE_LARGE_TOOLBAR);
-	if (filer_window)
+	if (filer_window && tool->clicked == toolbar_new_clicked)
+	{
+		item = gtk_menu_tool_button_new(icon_widget, _(tool->label));
+		gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(item),
+			create_menu_new(filer_window));
+		g_signal_connect(item, "show-menu",
+			G_CALLBACK(toolbar_new_show_menu), filer_window);
+	}
+	else if (filer_window)
 	{
 		item = gtk_tool_button_new(icon_widget, _(tool->label));
 	}

@@ -546,7 +546,7 @@ static void open_fontsel(GtkWidget *button, Option *option)
 
 	/* Modificado por josejp2424: diálogo de fuentes nativo de GTK3. */
 	current_fontsel_box = gtk_font_chooser_dialog_new(PROJECT, parent);
-	gtk_window_set_position(GTK_WINDOW(current_fontsel_box), GTK_WIN_POS_MOUSE);
+	gtk_window_set_position(GTK_WINDOW(current_fontsel_box), GTK_WIN_POS_CENTER);
 
 	g_signal_connect(current_fontsel_box, "destroy",
 			G_CALLBACK(gtk_widget_destroyed), &current_fontsel_box);

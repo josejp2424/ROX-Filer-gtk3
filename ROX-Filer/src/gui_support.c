@@ -86,10 +86,120 @@ static gint tip_timeout = 0;	/* When primed */
 
 #define ROX_STANDARD_MIN_WIDTH  640
 #define ROX_STANDARD_MIN_HEIGHT 400
+#define ROX_WINDOW_EDGE_MARGIN   16
 
-/* Agregado por josejp2424: todas las ventanas normales de la interfaz usan
- * un mínimo legible de 640x400. Se excluyen paneles, pinboard, menús, tooltips
- * y otras superficies especiales del escritorio. */
+/* Agregado por josejp2424 (2026): centrar todas las ventanas normales dentro
+ * del área útil real del monitor. gtk_window_set_position() no siempre respeta
+ * _NET_WORKAREA cuando la ventana padre es el escritorio a pantalla completa;
+ * por eso el movimiento final se realiza una vez que la ventana ya fue mapeada.
+ * Paneles, pinboard, menús, tooltips y superficies DND quedan excluidos. */
+static gboolean rox_window_is_position_exempt(GtkWindow *window)
+{
+	GdkWindowTypeHint type_hint;
+
+	if (!window || gtk_window_get_window_type(window) != GTK_WINDOW_TOPLEVEL)
+		return TRUE;
+
+	type_hint = gtk_window_get_type_hint(window);
+	return type_hint == GDK_WINDOW_TYPE_HINT_DESKTOP ||
+		type_hint == GDK_WINDOW_TYPE_HINT_DOCK ||
+		type_hint == GDK_WINDOW_TYPE_HINT_MENU ||
+		type_hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+		type_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+		type_hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
+		type_hint == GDK_WINDOW_TYPE_HINT_DND ||
+		type_hint == GDK_WINDOW_TYPE_HINT_COMBO;
+}
+
+static GdkMonitor *rox_window_target_monitor(GtkWindow *window)
+{
+	GdkDisplay *display;
+	GtkWindow *parent;
+	GdkWindow *gdk_window;
+	GdkMonitor *monitor = NULL;
+
+	display = gtk_widget_get_display(GTK_WIDGET(window));
+	if (!display)
+		return NULL;
+
+	parent = gtk_window_get_transient_for(window);
+	if (parent)
+	{
+		gdk_window = gtk_widget_get_window(GTK_WIDGET(parent));
+		if (gdk_window)
+			monitor = gdk_display_get_monitor_at_window(display, gdk_window);
+	}
+
+	if (!monitor)
+	{
+		gdk_window = gtk_widget_get_window(GTK_WIDGET(window));
+		if (gdk_window)
+			monitor = gdk_display_get_monitor_at_window(display, gdk_window);
+	}
+
+	if (!monitor)
+		monitor = gdk_display_get_primary_monitor(display);
+	if (!monitor && gdk_display_get_n_monitors(display) > 0)
+		monitor = gdk_display_get_monitor(display, 0);
+
+	return monitor;
+}
+
+static gboolean rox_window_center_idle(gpointer data)
+{
+	GtkWindow *window = GTK_WINDOW(data);
+	GtkWidget *widget = GTK_WIDGET(window);
+	GdkMonitor *monitor;
+	GdkRectangle workarea;
+	gint width = 1, height = 1;
+	gint max_width, max_height;
+	gint x, y;
+
+	g_object_set_data(G_OBJECT(window), "rox-center-id", NULL);
+	if (gtk_widget_in_destruction(widget) || !gtk_widget_get_mapped(widget) ||
+	    rox_window_is_position_exempt(window))
+		return G_SOURCE_REMOVE;
+
+	monitor = rox_window_target_monitor(window);
+	if (!monitor)
+		return G_SOURCE_REMOVE;
+
+	gdk_monitor_get_workarea(monitor, &workarea);
+	gtk_window_get_size(window, &width, &height);
+
+	max_width = MAX(1, workarea.width - ROX_WINDOW_EDGE_MARGIN * 2);
+	max_height = MAX(1, workarea.height - ROX_WINDOW_EDGE_MARGIN * 2);
+	if (width > max_width || height > max_height)
+	{
+		width = MIN(width, max_width);
+		height = MIN(height, max_height);
+		gtk_window_resize(window, width, height);
+	}
+
+	x = workarea.x + MAX(0, (workarea.width - width) / 2);
+	y = workarea.y + MAX(0, (workarea.height - height) / 2);
+	gtk_window_move(window, x, y);
+
+	return G_SOURCE_REMOVE;
+}
+
+static void rox_schedule_window_center(GtkWindow *window)
+{
+	guint source_id;
+
+	if (g_object_get_data(G_OBJECT(window), "rox-center-id"))
+		return;
+
+	source_id = g_idle_add_full(G_PRIORITY_HIGH_IDLE,
+		rox_window_center_idle, g_object_ref(window), g_object_unref);
+	g_object_set_data(G_OBJECT(window), "rox-center-id",
+		GUINT_TO_POINTER(source_id));
+}
+
+/* Todas las ventanas normales se centran después del map. El mínimo 640x400
+ * se mantiene sólo para ventanas principales; GtkDialog conserva su tamaño
+ * natural para que confirmaciones pequeñas no ocupen media pantalla ni oculten
+ * sus botones detrás del panel. */
 static gboolean standard_window_map_hook(GSignalInvocationHint *hint,
 		guint n_param_values, const GValue *param_values, gpointer data)
 {
@@ -99,6 +209,7 @@ static gboolean standard_window_map_hook(GSignalInvocationHint *hint,
 	GdkGeometry geometry;
 	gint width;
 	gint height;
+	gboolean size_exempt;
 
 	(void) hint;
 	(void) data;
@@ -106,23 +217,42 @@ static gboolean standard_window_map_hook(GSignalInvocationHint *hint,
 		return TRUE;
 
 	widget = g_value_get_object(&param_values[0]);
+
+	/* Modificado por josejp2424 (2026): GtkToolbar crea su menú de
+	 * desbordamiento internamente, por lo que no pasa por rox_menu_new().
+	 * Aplicar aquí las clases cuadradas a todos los GtkMenu y GtkPopover
+	 * garantiza el mismo aspecto para menús propios, menús automáticos,
+	 * submenús, combos y paneles emergentes. */
+	if (GTK_IS_MENU(widget))
+	{
+		gtk_style_context_add_class(gtk_widget_get_style_context(widget),
+			"rox-square-menu");
+		return TRUE;
+	}
+	if (GTK_IS_POPOVER(widget))
+	{
+		gtk_style_context_add_class(gtk_widget_get_style_context(widget),
+			"rox-square-popover");
+		return TRUE;
+	}
 	if (!GTK_IS_WINDOW(widget))
 		return TRUE;
 
 	window = GTK_WINDOW(widget);
-	if (gtk_window_get_window_type(window) != GTK_WINDOW_TOPLEVEL ||
-	    g_object_get_data(G_OBJECT(window), "rox-standard-size-exempt"))
+	if (GTK_IS_DIALOG(widget))
+		gtk_style_context_add_class(gtk_widget_get_style_context(widget),
+			"rox-square-dialog");
+	if (rox_window_is_position_exempt(window))
 		return TRUE;
 
+	rox_schedule_window_center(window);
+
 	type_hint = gtk_window_get_type_hint(window);
-	if (type_hint == GDK_WINDOW_TYPE_HINT_DESKTOP ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_DOCK ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_MENU ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_DND ||
-	    type_hint == GDK_WINDOW_TYPE_HINT_COMBO)
+	size_exempt = GTK_IS_DIALOG(widget) ||
+		type_hint == GDK_WINDOW_TYPE_HINT_DIALOG ||
+		type_hint == GDK_WINDOW_TYPE_HINT_UTILITY ||
+		g_object_get_data(G_OBJECT(window), "rox-standard-size-exempt") != NULL;
+	if (size_exempt)
 		return TRUE;
 
 	memset(&geometry, 0, sizeof(geometry));
@@ -274,8 +404,47 @@ void gui_support_init()
 
 	gui_store_screen_geometry(gdk_screen_get_default());
 
-	/* Agregado por josejp2424: aplicar el mínimo 640x400 a cualquier
-	 * GtkWindow normal creado por ROX-Filer, incluidos diálogos posteriores. */
+	/* Modificado por josejp2424 (2026): menus and normal dialog windows use
+	 * square corners.  Only geometry is overridden; the active GTK3 theme
+	 * still supplies colours, fonts, spacing, borders and selection states.
+	 * Using ordinary opaque GTK windows also prevents black corner artefacts
+	 * on X11/XLibre sessions without compositing. */
+	{
+		static GtkCssProvider *square_provider = NULL;
+		GdkScreen *screen = gdk_screen_get_default();
+
+		if (!square_provider)
+		{
+			square_provider = gtk_css_provider_new();
+			gtk_css_provider_load_from_data(square_provider,
+				/* Todos los GtkMenu, incluso el overflow generado dentro de
+				 * GtkToolbar, deben ser cuadrados. Se incluyen selectores por
+				 * nodo y por clase para cubrir temas GTK3 antiguos y nuevos. */
+				"menu, .menu, menu.rox-square-menu, .rox-square-menu, "
+				"menu menuitem, .menu menuitem, .rox-square-menu menuitem { "
+				"border-radius: 0; box-shadow: none; } "
+				/* GtkPopover se usa en Particiones y algunos controles GTK. */
+				"popover, popover.background, .popover, "
+				"popover.rox-square-popover, .rox-square-popover { "
+				"border-radius: 0; box-shadow: none; } "
+				/* Los tooltips y ventanas popup auxiliares tampoco conservan
+				 * esquinas redondeadas fuera del menú principal. */
+				"tooltip, tooltip.background, window.popup { "
+				"border-radius: 0; box-shadow: none; } "
+				"window.dialog, window.message-dialog, window.rox-square-dialog, "
+				"window.dialog decoration, window.message-dialog decoration, "
+				"window.rox-square-dialog decoration { "
+				"border-radius: 0; box-shadow: none; }",
+				-1, NULL);
+			if (screen)
+				gtk_style_context_add_provider_for_screen(screen,
+					GTK_STYLE_PROVIDER(square_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		}
+	}
+
+	/* Agregado por josejp2424: centrar globalmente todas las ventanas
+	 * normales y aplicar 640x400 sólo a las ventanas principales. */
 	{
 		guint map_signal = g_signal_lookup("map", GTK_TYPE_WIDGET);
 		if (map_signal)
@@ -1104,6 +1273,19 @@ static void menu_item_set_content(GtkWidget *item, const char *label, GtkWidget 
 	gtk_widget_show_all(box);
 }
 
+/* Create a normal GTK3 menu.  Menus are intentionally square and use the
+ * complete rectangular popup surface, avoiding transparent/rounded native
+ * corners that appear black on X11/XLibre without a compositor.  Colours,
+ * typography, spacing and selection remain controlled by the active theme. */
+GtkWidget *rox_menu_new(void)
+{
+	GtkWidget *menu = gtk_menu_new();
+
+	gtk_style_context_add_class(gtk_widget_get_style_context(menu),
+		"rox-square-menu");
+	return menu;
+}
+
 GtkWidget *menu_item_new_label(const char *label)
 {
 	GtkWidget *item = gtk_menu_item_new();
@@ -1210,22 +1392,6 @@ void fixed_move_fast(GtkFixed *fixed, GtkWidget *widget, int x, int y)
 }
 
 
-/* Draw the black border using the GTK3 draw signal. */
-static gboolean tooltip_draw(GtkWidget *w, cairo_t *cr, gpointer data)
-{
-	GtkAllocation allocation;
-
-	(void) data;
-	gtk_widget_get_allocation(w, &allocation);
-	cairo_save(cr);
-	cairo_set_source_rgba(cr, 0, 0, 0, 1);
-	cairo_rectangle(cr, 0.5, 0.5,
-		MAX(0, allocation.width - 1), MAX(0, allocation.height - 1));
-	cairo_stroke(cr);
-	cairo_restore(cr);
-	return FALSE;
-}
-
 /* When the tips window closed, record the time. If we try to open another
  * tip soon, it will appear more quickly.
  */
@@ -1259,18 +1425,23 @@ void tooltip_show(guchar *text)
 	if (!text)
 		return;
 
-	/* Show the tip */
+	/* Show the tip. Modificado por josejp2424 (2026): el tooltip anterior
+	 * usaba app-paintable y dibujaba un borde negro manual; con algunos temas
+	 * eso producía una barra negra sin texto que parecía un submenú roto.
+	 * Dejar que GTK pinte por completo fondo, borde, texto y esquinas. */
 	tip_widget = gtk_window_new(GTK_WINDOW_POPUP);
-	gtk_widget_set_app_paintable(tip_widget, TRUE);
-	gtk_widget_set_name(tip_widget, "gtk-tooltips");
-
-	g_signal_connect(tip_widget, "draw", G_CALLBACK(tooltip_draw), NULL);
+	gtk_window_set_type_hint(GTK_WINDOW(tip_widget), GDK_WINDOW_TYPE_HINT_TOOLTIP);
+	gtk_window_set_resizable(GTK_WINDOW(tip_widget), FALSE);
+	gtk_widget_set_name(tip_widget, "gtk-tooltip");
+	gtk_style_context_add_class(gtk_widget_get_style_context(tip_widget),
+				    "tooltip");
 
 	label = gtk_label_new((const gchar *) text);
-	gtk_widget_set_margin_start(label, 4);
-	gtk_widget_set_margin_end(label, 4);
-	gtk_widget_set_margin_top(label, 2);
-	gtk_widget_set_margin_bottom(label, 2);
+	gtk_style_context_add_class(gtk_widget_get_style_context(label), "tooltip");
+	gtk_widget_set_margin_start(label, 6);
+	gtk_widget_set_margin_end(label, 6);
+	gtk_widget_set_margin_top(label, 3);
+	gtk_widget_set_margin_bottom(label, 3);
 	gtk_container_add(GTK_CONTAINER(tip_widget), label);
 	gtk_widget_show(label);
 	gtk_widget_realize(tip_widget);

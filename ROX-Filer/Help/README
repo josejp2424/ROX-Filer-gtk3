@@ -14,14 +14,18 @@ To compile:
 To install:
 	$ ./install.sh
 
-To run:
-	$ rox
+To run the installed file manager:
+	$ ROX-Filer
 
-For full instructions, read the Manual.html file:
-	$ galeon ROX-Filer/Help/Manual.html
+To start the new native desktop mode directly from the binary:
+	$ ROX-Filer --desktop
 
-(or use netscape, konqueror, mozilla, w3m or any other browser in place of
-galeon)
+ROX Desktop manages the wallpaper, the real XDG Desktop directory and
+detected drives. Right-click an empty area of the desktop to change the
+wallpaper, open the Desktop folder or refresh the desktop.
+
+The classic pinboard and panel command-line options remain available only for
+legacy compatibility while the new desktop mode is completed.
 
 
 Conditions

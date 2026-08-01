@@ -9,10 +9,10 @@
  *   - rox_item_factory_get_widget
  *
  * Supported item types (as used by ROX-Filer):
- *   - <Branch>     submenu (get_widget returns the GtkMenu)
+ *   - <Branch>     submenu (get_widget returns the GtkMenu; extra_data icon)
  *   - <Separator>  separator
- *   - <ToggleItem> check menu item
- *   - <IconItem>  menu item with an icon name (best-effort)
+ *   - <ToggleItem> check menu item (optional extra_data icon)
+ *   - <IconItem>   menu item with an icon name (best-effort)
  *   - NULL/other   normal menu item
  */
 
@@ -99,7 +99,7 @@ static GtkWidget *rox_if_find_or_make_branch(RoxItemFactory *ifactory, GtkWidget
 	}
 
 	mi = menu_item_new_label(label);
-	submenu = gtk_menu_new();
+	submenu = rox_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(parent_menu), mi);
 	gtk_widget_show(mi);
@@ -120,7 +120,7 @@ RoxItemFactory *rox_item_factory_new(GType container_type, const gchar *path, Gt
 
 	ifactory = g_malloc0(sizeof(*ifactory));
 	ifactory->root = g_strdup(path ? path : "<menu>");
-	ifactory->menu = gtk_menu_new();
+	ifactory->menu = rox_menu_new();
 	ifactory->accel = accel_group;
 	ifactory->widgets = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	ifactory->submenus = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
@@ -197,8 +197,12 @@ void rox_item_factory_create_items(RoxItemFactory *ifactory, guint n_entries,
 			GtkWidget *submenu;
 			GtkWidget *mi;
 
-			mi = menu_item_new_label(label);
-			submenu = gtk_menu_new();
+			if (e->extra_data)
+				mi = menu_item_new_with_icon(label,
+					(const char *) e->extra_data);
+			else
+				mi = menu_item_new_label(label);
+			submenu = rox_menu_new();
 			gtk_menu_item_set_submenu(GTK_MENU_ITEM(mi), submenu);
 			gtk_menu_shell_append(GTK_MENU_SHELL(parent_menu), mi);
 			gtk_widget_show(mi);
@@ -218,6 +222,8 @@ void rox_item_factory_create_items(RoxItemFactory *ifactory, guint n_entries,
 		else if (rox_if_is(e->item_type, "<ToggleItem>"))
 		{
 			item = check_menu_item_new_label(label);
+			if (e->extra_data)
+				menu_item_set_icon(item, (const char *) e->extra_data);
 			gtk_menu_shell_append(GTK_MENU_SHELL(parent_menu), item);
 			gtk_widget_show(item);
 		}

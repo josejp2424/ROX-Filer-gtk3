@@ -38,6 +38,7 @@
 #include <dirent.h>
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 #include "global.h"
 
@@ -70,6 +71,7 @@
 #include "xtypes.h"
 #include "log.h"
 #include "dnd.h"
+#include "desktop.h"
 
 static gboolean input_trace_enabled(void)
 {
@@ -91,6 +93,7 @@ typedef enum {
 	FILE_LINK_ITEM,
 	FILE_OPEN_FILE,
 	FILE_PROPERTIES,
+	FILE_COPY_TO_BACKGROUNDS,
 	FILE_RUN_ACTION,
 	FILE_SET_ICON,
 	FILE_SEND_TO,
@@ -147,7 +150,7 @@ static GList *selected_paths = NULL;
 static void save_menus(void);
 static void menu_closed(GtkWidget *widget);
 static void shade_file_menu_items(gboolean shaded);
-static void savebox_show(const gchar *action, const gchar *path,
+static GtkWidget *savebox_show(const gchar *action, const gchar *path,
 			 MaskedPixmap *image, SaveCb callback,
 			 GdkDragAction dnd_action);
 static gint save_to_file(GObject *savebox,
@@ -181,6 +184,10 @@ static void refresh(gpointer data, guint action, GtkWidget *widget);
 static void save_settings(gpointer data, guint action, GtkWidget *widget);
 
 static void file_op(gpointer data, guint action, GtkWidget *widget);
+/* Agregado por josejp2424 (2026): integración nativa para copiar imágenes
+ * a /usr/share/backgrounds y seleccionarlas como wallpaper. */
+static gboolean item_is_wallpaper_image(const DirItem *item);
+static void copy_image_to_backgrounds(const gchar *source_path);
 
 static void select_all(gpointer data, guint action, GtkWidget *widget);
 static void clear_selection(gpointer data, guint action, GtkWidget *widget);
@@ -226,6 +233,11 @@ static GtkWidget	*filer_menu;		/* The popup filer menu */
 static GtkWidget	*filer_file_item;	/* The File '' label */
 static GtkWidget	*filer_file_menu;	/* The File '' menu */
 static GtkWidget	*file_shift_item;	/* Shift Open label */
+static GtkWidget    *filer_duplicate_item;
+static GtkWidget    *filer_link_item;
+static GtkWidget    *filer_shift_open_item;
+static GtkWidget    *filer_set_run_action_item;
+static GtkWidget    *filer_set_icon_item;
 static GtkWidget	*filer_auto_size_menu;	/* The Automatic item */
 static GtkWidget	*filer_hidden_menu;	/* The Show Hidden item */
 static GtkWidget	*filer_filter_dirs_menu;/* The Filter Dirs item */
@@ -237,6 +249,7 @@ static GtkWidget    *filer_follow_sym;      /* Follow symbolic links item */
 static GtkWidget    *filer_set_type;        /* Set type item */
 static GtkWidget    *filer_open_terminal_here; /* Open terminal in selected folder */
 static GtkWidget    *filer_run_in_terminal;    /* Run selected executable/script */
+static GtkWidget    *filer_copy_to_backgrounds; /* Copiar imagen y aplicar wallpaper */
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 static GtkWidget	*filer_xattrs;	/* Extended attributes item */
 #endif
@@ -245,93 +258,96 @@ static GtkWidget	*filer_xattrs;	/* Extended attributes item */
 #define N_(x) x
 
 static RoxItemFactoryEntry filer_menu_def[] = {
-{N_("Display"),			NULL, NULL, 0, "<Branch>"},
-{">" N_("Icons View"),   	NULL, view_type, VIEW_TYPE_COLLECTION, NULL},
-{">" N_("Icons, With..."),	NULL, NULL, 0, "<Branch>"},
-{">>" N_("Sizes"),		NULL, set_with, DETAILS_SIZE, NULL},
-{">>" N_("Permissions"),	NULL, set_with, DETAILS_PERMISSIONS, NULL},
-{">>" N_("Types"),		NULL, set_with, DETAILS_TYPE, NULL},
-{">>" N_("Times"),		NULL, set_with, DETAILS_TIMES, NULL},
+{N_("Display"),			NULL, NULL, 0, "<Branch>", "video-display"},
+{">" N_("Icons View"),   	NULL, view_type, VIEW_TYPE_COLLECTION, "<IconItem>", "view-grid"},
+{">" N_("Icons, With..."),	NULL, NULL, 0, "<Branch>", "view-list-details"},
+{">>" N_("Sizes"),		NULL, set_with, DETAILS_SIZE, "<IconItem>", "view-list-details"},
+{">>" N_("Permissions"),	NULL, set_with, DETAILS_PERMISSIONS, "<IconItem>", "dialog-password"},
+{">>" N_("Types"),		NULL, set_with, DETAILS_TYPE, "<IconItem>", "text-x-generic"},
+{">>" N_("Times"),		NULL, set_with, DETAILS_TIMES, "<IconItem>", "appointment-new"},
 {">" N_("List View"),   	NULL, view_type, VIEW_TYPE_DETAILS, "<IconItem>", ROX_ICON_SHOW_DETAILS},
 {">",				NULL, NULL, 0, "<Separator>"},
 {">" N_("Bigger Icons"),   	"equal", change_size, 1, "<IconItem>", ROX_ICON_ZOOM_IN},
 {">" N_("Smaller Icons"),   	"minus", change_size, -1, "<IconItem>", ROX_ICON_ZOOM_OUT},
-{">" N_("Automatic"),   	NULL, change_size_auto, 0, "<ToggleItem>"},
+{">" N_("Automatic"),   	NULL, change_size_auto, 0, "<ToggleItem>", ROX_ICON_ZOOM_FIT},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Sort by Name"),	NULL, set_sort, SORT_NAME, NULL},
-{">" N_("Sort by Type"),	NULL, set_sort, SORT_TYPE, NULL},
-{">" N_("Sort by Date (atime)"),	NULL, set_sort, SORT_DATEA, NULL},
-{">" N_("Sort by Date (ctime)"),	NULL, set_sort, SORT_DATEC, NULL},
-{">" N_("Sort by Date (mtime)"),	NULL, set_sort, SORT_DATEM, NULL},
-{">" N_("Sort by Size"),	NULL, set_sort, SORT_SIZE, NULL},
-{">" N_("Sort by Owner"),	NULL, set_sort, SORT_OWNER, NULL},
-{">" N_("Sort by Group"),	NULL, set_sort, SORT_GROUP, NULL},
-{">" N_("Reversed"),		NULL, reverse_sort, 0, "<ToggleItem>"},
+{">" N_("Sort by Name"),	NULL, set_sort, SORT_NAME, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Type"),	NULL, set_sort, SORT_TYPE, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Date (atime)"),	NULL, set_sort, SORT_DATEA, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Date (ctime)"),	NULL, set_sort, SORT_DATEC, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Date (mtime)"),	NULL, set_sort, SORT_DATEM, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Size"),	NULL, set_sort, SORT_SIZE, "<IconItem>", "view-sort-ascending"},
+{">" N_("Sort by Owner"),	NULL, set_sort, SORT_OWNER, "<IconItem>", "system-users"},
+{">" N_("Sort by Group"),	NULL, set_sort, SORT_GROUP, "<IconItem>", "system-users"},
+{">" N_("Reversed"),		NULL, reverse_sort, 0, "<ToggleItem>", "view-sort-descending"},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Show Hidden"),   	"<Ctrl>H", hidden, 0, "<ToggleItem>"},
-{">" N_("Filter Files..."),   	NULL, mini_buffer, MINI_FILTER, NULL},
-{">" N_("Filter Directories With Files"),	NULL, filter_directories, 0, "<ToggleItem>"},
-{">" N_("Show Thumbnails"),	NULL, show_thumbs, 0, "<ToggleItem>"},
+{">" N_("Show Hidden"),   	"<Ctrl>H", hidden, 0, "<ToggleItem>", ROX_ICON_SHOW_HIDDEN},
+{">" N_("Filter Files..."),   	NULL, mini_buffer, MINI_FILTER, "<IconItem>", ROX_ICON_FIND},
+{">" N_("Filter Directories With Files"),	NULL, filter_directories, 0, "<ToggleItem>", ROX_ICON_DIRECTORY},
+{">" N_("Show Thumbnails"),	NULL, show_thumbs, 0, "<ToggleItem>", "image-x-generic"},
 {">" N_("Refresh"),		"F5", refresh, 0, "<IconItem>", ROX_ICON_REFRESH},
-{">" N_("Save Current Display Settings..."),	 NULL, save_settings, 0, NULL},
-{N_("File"),			NULL, NULL, 0, "<Branch>"},
+{">" N_("Save Current Display Settings..."),	 NULL, save_settings, 0, "<IconItem>", ROX_ICON_SAVE},
+{N_("File"),			NULL, NULL, 0, "<Branch>", "text-x-generic"},
 {">" N_("Copy"),		"<Ctrl>C", file_op, FILE_COPY_TO_CLIPBOARD, "<IconItem>", ROX_ICON_COPY},
 {">" N_("Cut"),		"<Ctrl>X", file_op, FILE_CUT_TO_CLIPBOARD, "<IconItem>", ROX_ICON_CUT},
 {">" N_("Duplicate..."),	"<Ctrl>D", file_op, FILE_DUPLICATE_ITEM, "<IconItem>", ROX_ICON_COPY},
-{">" N_("Rename..."),		"F2", file_op, FILE_RENAME_ITEM, NULL},
-{">" N_("Link..."),		NULL, file_op, FILE_LINK_ITEM, NULL},
+{">" N_("Rename..."),		"F2", file_op, FILE_RENAME_ITEM, "<IconItem>", "document-edit"},
+{">" N_("Link..."),		NULL, file_op, FILE_LINK_ITEM, "<IconItem>", ROX_ICON_SYMLINK},
 /* Modificado por josejp2424 (2026): Delete usa la papelera estándar y
  * Shift+Delete conserva el borrado permanente tradicional. */
 {">" N_("Move to Trash"),	"Delete", file_op, FILE_TRASH, "<IconItem>", ROX_ICON_TRASH},
 {">" N_("Delete Permanently..."), "<Shift>Delete", file_op, FILE_DELETE, "<IconItem>", ROX_ICON_DELETE},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Shift Open"),   	NULL, file_op, FILE_OPEN_FILE},
-{">" N_("Open With..."),		NULL, file_op, FILE_SEND_TO, NULL},
+{">" N_("Shift Open"),   	NULL, file_op, FILE_OPEN_FILE, "<IconItem>", ROX_ICON_OPEN},
+{">" N_("Open With..."),		NULL, file_op, FILE_SEND_TO, "<IconItem>", ROX_ICON_EXECUTE},
+/* Agregado por josejp2424 (2026): visible sólo para imágenes compatibles y
+ * situado inmediatamente debajo de Open With. */
+{">" N_("Copy to Backgrounds..."), NULL, file_op, FILE_COPY_TO_BACKGROUNDS, "<IconItem>", "preferences-desktop-wallpaper"},
 {">",				NULL, NULL, 0, "<Separator>"},
 /* Agregado por josejp2424: opciones de terminal en el menú contextual. */
 {">" N_("Open Terminal Here"),	NULL, open_terminal_selected, 0, "<IconItem>", ROX_ICON_TERMINAL},
 {">" N_("Run in Terminal"),	NULL, run_in_terminal, 0, "<IconItem>", ROX_ICON_TERMINAL},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Set Run Action..."),	"asterisk", file_op, FILE_RUN_ACTION, "<IconItem>", ROX_ICON_EXECUTE},
-{">" N_("Set Icon..."),		NULL, file_op, FILE_SET_ICON, NULL},
+{">" N_("Set Default Application..."),	"asterisk", file_op, FILE_RUN_ACTION, "<IconItem>", ROX_ICON_EXECUTE},
+{">" N_("Set Icon..."),		NULL, file_op, FILE_SET_ICON, "<IconItem>", "image-x-generic"},
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 {">" N_("Extended attributes..."),		NULL, file_op, FILE_XATTRS, "<IconItem>", ROX_ICON_XATTR},
 #endif
 {">" N_("Properties"),		"<Ctrl>P", file_op, FILE_PROPERTIES, "<IconItem>", ROX_ICON_PROPERTIES},
-{">" N_("Count"),		NULL, file_op, FILE_USAGE, NULL},
-{">" N_("Set Type..."),		NULL, file_op, FILE_SET_TYPE, NULL},
-{">" N_("Permissions"),		NULL, file_op, FILE_CHMOD_ITEMS, NULL},
+{">" N_("Count"),		NULL, file_op, FILE_USAGE, "<IconItem>", "accessories-calculator"},
+{">" N_("Set Type..."),		NULL, file_op, FILE_SET_TYPE, "<IconItem>", "text-x-generic"},
+{">" N_("Permissions"),		NULL, file_op, FILE_CHMOD_ITEMS, "<IconItem>", "dialog-password"},
 {">",				NULL, NULL, 0, "<Separator>"},
 {">" N_("Find"),		"<Ctrl>F", file_op, FILE_FIND, "<IconItem>", ROX_ICON_FIND},
-{N_("Select"),	    		NULL, NULL, 0, "<Branch>"},
-{">" N_("Select All"),	    	"<Ctrl>A", select_all, 0, NULL},
-{">" N_("Clear Selection"),	NULL, clear_selection, 0, NULL},
-{">" N_("Invert Selection"),	NULL, invert_selection, 0, NULL},
-{">" N_("Select by Name..."),	"period", mini_buffer, MINI_SELECT_BY_NAME, NULL},
-{">" N_("Select If..."),	"<Shift>question", mini_buffer, MINI_SELECT_IF, NULL},
+{N_("Select"),	    		NULL, NULL, 0, "<Branch>", ROX_ICON_SELECT},
+{">" N_("Select All"),	    	"<Ctrl>A", select_all, 0, "<IconItem>", ROX_ICON_SELECT},
+{">" N_("Clear Selection"),	NULL, clear_selection, 0, "<IconItem>", ROX_ICON_CLEAR},
+{">" N_("Invert Selection"),	NULL, invert_selection, 0, "<IconItem>", ROX_ICON_SELECT},
+{">" N_("Select by Name..."),	"period", mini_buffer, MINI_SELECT_BY_NAME, "<IconItem>", ROX_ICON_FIND},
+{">" N_("Select If..."),	"<Shift>question", mini_buffer, MINI_SELECT_IF, "<IconItem>", ROX_ICON_FIND},
 {N_("Options..."),		NULL, menu_show_options, 0, "<IconItem>", ROX_ICON_PREFERENCES},
 {"",				NULL, NULL, 0, "<Separator>"},
 {N_("Paste"),			"<Ctrl>V", paste_from_clipboard, 0, "<IconItem>", ROX_ICON_PASTE},
 {"",				NULL, NULL, 0, "<Separator>"},
-{N_("New"),			NULL, NULL, 0, "<Branch>"},
-{">" N_("Directory"),		"Insert", new_directory, 0, NULL},
+{N_("New"),			NULL, NULL, 0, "<Branch>", ROX_ICON_NEW},
+{">" N_("Directory"),		"Insert", new_directory, 0, "<IconItem>", "folder-new"},
 {">" N_("Blank file"),		NULL, new_file, 0, "<IconItem>", ROX_ICON_NEW},
-{">" N_("Customise Menu..."),	NULL, customise_new, 0, NULL},
-{N_("Window"),			NULL, NULL, 0, "<Branch>"},
+{">" N_("Customise Menu..."),	NULL, customise_new, 0, "<IconItem>", ROX_ICON_PREFERENCES},
+{N_("Window"),			NULL, NULL, 0, "<Branch>", "window-new"},
 {">" N_("Parent, New Window"), 	NULL, open_parent, 0, "<IconItem>", ROX_ICON_GO_UP},
-{">" N_("Parent, Same Window"), NULL, open_parent_same, 0, NULL},
-{">" N_("New Window"),		NULL, new_window, 0, NULL},
+{">" N_("Parent, Same Window"), NULL, open_parent_same, 0, "<IconItem>", ROX_ICON_GO_UP},
+{">" N_("New Window"),		NULL, new_window, 0, "<IconItem>", "window-new"},
 {">" N_("Home Directory"),	"<Ctrl>Home", home_directory, 0, "<IconItem>", ROX_ICON_HOME},
 {">" N_("Show Bookmarks"),	"<Ctrl>B", show_bookmarks, 0, "<IconItem>", ROX_ICON_BOOKMARKS},
 {">" N_("Show Log"),		NULL, show_log, 0, "<IconItem>", ROX_ICON_INFO},
-{">" N_("Follow Symbolic Links"),	NULL, follow_symlinks, 0, NULL},
-{">" N_("Resize Window"),	"<Ctrl>E", resize, 0, NULL},
+{">" N_("Follow Symbolic Links"),	NULL, follow_symlinks, 0, "<IconItem>", ROX_ICON_SYMLINK},
+{">" N_("Resize Window"),	"<Ctrl>E", resize, 0, "<IconItem>", "view-fullscreen"},
 /* {">" N_("New, As User..."),	NULL, new_user, 0, NULL}, */
 
 {">" N_("Close Window"),	"<Ctrl>Q", close_window, 0, "<IconItem>", ROX_ICON_CLOSE},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Enter Path..."),	"slash", mini_buffer, MINI_PATH, NULL},
-{">" N_("Shell Command..."),	"<Shift>exclam", mini_buffer, MINI_SHELL, NULL},
+{">" N_("Enter Path..."),	"slash", mini_buffer, MINI_PATH, "<IconItem>", ROX_ICON_JUMP_TO},
+{">" N_("Shell Command..."),	"<Shift>exclam", mini_buffer, MINI_SHELL, "<IconItem>", ROX_ICON_TERMINAL},
 {">" N_("Open Terminal Here"),	"F4", xterm_here, FALSE, "<IconItem>", ROX_ICON_TERMINAL},
 {">" N_("Switch to Terminal"),	NULL, xterm_here, TRUE, "<IconItem>", ROX_ICON_TERMINAL},
 {N_("About ROX-Filer..."),	NULL, menu_rox_help, HELP_ABOUT, "<IconItem>", ROX_ICON_DIALOG_INFO},
@@ -373,6 +389,11 @@ gboolean ensure_filer_menu(void)
 
 	GET_MENU_ITEM(filer_menu, "filer");
 	GET_SMENU_ITEM(filer_file_menu, "filer", "File");
+	GET_SSMENU_ITEM(filer_duplicate_item, "filer", "File", "Duplicate...");
+	GET_SSMENU_ITEM(filer_link_item, "filer", "File", "Link...");
+	GET_SSMENU_ITEM(filer_shift_open_item, "filer", "File", "Shift Open");
+	GET_SSMENU_ITEM(filer_set_run_action_item, "filer", "File", "Set Default Application...");
+	GET_SSMENU_ITEM(filer_set_icon_item, "filer", "File", "Set Icon...");
 	GET_SSMENU_ITEM(filer_hidden_menu, "filer", "Display", "Show Hidden");
 	GET_SSMENU_ITEM(filer_filter_dirs_menu, "filer", "Display", "Filter Directories With Files");
 	GET_SSMENU_ITEM(filer_reverse_menu, "filer", "Display", "Reversed");
@@ -385,6 +406,12 @@ gboolean ensure_filer_menu(void)
 	filer_open_terminal_here = item;
 	GET_SSMENU_ITEM(item, "filer", "File", "Run in Terminal");
 	filer_run_in_terminal = item;
+	GET_SSMENU_ITEM(item, "filer", "File", "Copy to Backgrounds...");
+	filer_copy_to_backgrounds = item;
+	/* Modificado por josejp2424 (2026): show_popup_menu() usa show_all();
+	 * no-show-all permite ocultar esta acción para archivos no compatibles. */
+	gtk_widget_set_no_show_all(filer_copy_to_backgrounds, TRUE);
+	gtk_widget_hide(filer_copy_to_backgrounds);
 
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 	GET_SSMENU_ITEM(item, "filer", "File", "Extended attributes...");
@@ -400,10 +427,8 @@ gboolean ensure_filer_menu(void)
 	filer_file_item = menu_item_get_label_widget(GTK_WIDGET(g_list_nth(items, 1)->data));
 	g_list_free(items);
 
-	/* Shift Open... label */
-	items = gtk_container_get_children(GTK_CONTAINER(filer_file_menu));
-	file_shift_item = menu_item_get_label_widget(GTK_WIDGET(g_list_nth(items, 7)->data));
-	g_list_free(items);
+	/* Shift Open... label: obtenerlo por ruta, sin depender del orden del menú. */
+	file_shift_item = menu_item_get_label_widget(filer_shift_open_item);
 
 	GET_SSMENU_ITEM(item, "filer", "Window", "New Window");
 	filer_new_window = item; /* Modificado por josejp2424: conservar el GtkMenuItem GTK3 */
@@ -492,12 +517,19 @@ static void menuitem_no_shortcuts(GtkWidget *item)
 /* Shade items that only work on single files */
 static void shade_file_menu_items(gboolean shaded)
 {
-	menu_set_items_shaded(filer_file_menu, shaded, 2, 1); /* Duplicate... */
-	menu_set_items_shaded(filer_file_menu, shaded, 4, 1); /* Link... */
-	menu_set_items_shaded(filer_file_menu, shaded, 7, 1); /* Shift Open */
-	menu_set_items_shaded(filer_file_menu, shaded, 13, 2); /* Set Run Action... + Set Icon... */
+	if (filer_duplicate_item)
+		gtk_widget_set_sensitive(filer_duplicate_item, !shaded);
+	if (filer_link_item)
+		gtk_widget_set_sensitive(filer_link_item, !shaded);
+	if (filer_shift_open_item)
+		gtk_widget_set_sensitive(filer_shift_open_item, !shaded);
+	if (filer_set_run_action_item)
+		gtk_widget_set_sensitive(filer_set_run_action_item, !shaded);
+	if (filer_set_icon_item)
+		gtk_widget_set_sensitive(filer_set_icon_item, !shaded);
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
-	menu_set_items_shaded(filer_file_menu, shaded, 15, 1); /* Extended Attributes... */
+	if (filer_xattrs)
+		gtk_widget_set_sensitive(filer_xattrs, !shaded);
 #endif
 }
 
@@ -650,7 +682,7 @@ static GList *menu_from_dir(GtkWidget *menu, GHashTable *menu_entries,
 			GtkWidget *sub;
 			GList *new_widgets;
 
-			sub = gtk_menu_new();
+			sub = rox_menu_new();
 			new_widgets = menu_from_dir(sub, menu_entries, fname, style, func,
 						separator, strip_ext, TRUE);
 			g_list_free(new_widgets);
@@ -677,32 +709,50 @@ out:
 	return widgets;
 }
 
-/* Scan the templates dir and create entries for the New menu */
+/* Scan the user template directory and the templates bundled with ROX-Filer.
+ * User templates are added first and override bundled templates with the same
+ * visible name. This keeps the New menu useful on a fresh installation while
+ * still allowing complete user customisation. */
 static void update_new_files_menu(MenuIconStyle style)
 {
 	static GList *widgets = NULL;
-
-	gchar	*templ_dname = NULL;
+	gchar *user_dir = NULL;
+	gchar *bundled_dir = NULL;
+	GHashTable *entries;
+	gboolean need_separator = TRUE;
+	GList *added;
 
 	if (widgets)
 	{
-		GList	*next;
-
+		GList *next;
 		for (next = widgets; next; next = next->next)
 			gtk_widget_destroy((GtkWidget *) next->data);
-
 		g_list_free(widgets);
 		widgets = NULL;
 	}
 
-	templ_dname = choices_find_xdg_path_load("Templates", "", SITE);
-	if (templ_dname)
+	entries = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	user_dir = choices_find_xdg_path_load("Templates", "", SITE);
+	if (user_dir)
 	{
-		widgets = menu_from_dir(filer_new_menu, NULL, templ_dname, style,
-					(CallbackFn) new_file_type, TRUE, TRUE,
-					FALSE);
-		g_free(templ_dname);
+		added = menu_from_dir(filer_new_menu, entries, user_dir, style,
+				(CallbackFn) new_file_type, need_separator, TRUE, FALSE);
+		if (added)
+			need_separator = FALSE;
+		widgets = g_list_concat(widgets, added);
 	}
+
+	bundled_dir = g_build_filename(app_dir, "Templates", NULL);
+	if (g_file_test(bundled_dir, G_FILE_TEST_IS_DIR))
+	{
+		added = menu_from_dir(filer_new_menu, entries, bundled_dir, style,
+				(CallbackFn) new_file_type, need_separator, TRUE, FALSE);
+		widgets = g_list_concat(widgets, added);
+	}
+
+	g_hash_table_destroy(entries);
+	g_free(bundled_dir);
+	g_free(user_dir);
 	gtk_widget_show_all(filer_new_menu);
 }
 
@@ -874,6 +924,7 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 
 		gtk_widget_set_sensitive(filer_open_terminal_here, FALSE);
 		gtk_widget_set_sensitive(filer_run_in_terminal, FALSE);
+		gtk_widget_hide(filer_copy_to_backgrounds);
 
 		switch (n_selected)
 		{
@@ -888,6 +939,8 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 							item->leafname);
 				shade_file_menu_items(FALSE);
 				file_item = filer_selected_item(filer_window);
+				if (item_is_wallpaper_image(file_item))
+					gtk_widget_show(filer_copy_to_backgrounds);
 				{
 					const gchar *terminal_path = (const gchar *) make_path(
 						filer_window->sym_path, file_item->leafname);
@@ -904,9 +957,8 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 							-1, NULL)
 						? file_item->leafname
 						: _("(bad utf-8)"));
-				if (!can_set_run_action(file_item))
-					menu_set_items_shaded(filer_file_menu,
-							TRUE, 13, 1);
+				if (!can_set_run_action(file_item) && filer_set_run_action_item)
+					gtk_widget_set_sensitive(filer_set_run_action_item, FALSE);
 				break;
 			default:
 				shade_file_menu_items(TRUE);
@@ -1221,14 +1273,14 @@ static gboolean last_symlink_check_relative = TRUE;
  * both the current and new paths.
  * NOTE: This function unrefs 'image'!
  */
-static void savebox_show(const gchar *action, const gchar *path,
+static GtkWidget *savebox_show(const gchar *action, const gchar *path,
 			 MaskedPixmap *image, SaveCb callback,
 			 GdkDragAction dnd_action)
 {
 	GtkWidget *savebox = NULL;
 	GtkWidget *check_relative = NULL;
 
-	g_return_if_fail(image != NULL);
+	g_return_val_if_fail(image != NULL, NULL);
 
 	savebox = gtk_savebox_new(action);
 	gtk_savebox_set_action(GTK_SAVEBOX(savebox), dnd_action);
@@ -1280,6 +1332,7 @@ static void savebox_show(const gchar *action, const gchar *path,
 	g_object_unref(image);
 
 	gtk_widget_show(savebox);
+	return savebox;
 }
 
 static gint save_to_file(GObject *savebox,
@@ -1385,7 +1438,7 @@ static gboolean link_cb(GObject *savebox,
 				"Replace it with a link to '%s'?"),
 				path, link_path);
 
-		gtk_window_set_position(GTK_WINDOW(box), GTK_WIN_POS_MOUSE);
+		gtk_window_set_position(GTK_WINDOW(box), GTK_WIN_POS_CENTER);
 
 		button = button_new_mixed(ROX_ICON_YES, _("_Replace"));
 		gtk_widget_show(button);
@@ -1427,7 +1480,7 @@ static void run_action(DirItem *item)
 		type_set_handler_dialog(item->mime_type);
 	else
 		report_error(
-			_("You can only set the run action for a "
+			_("You can only set the default application for a "
 			"regular file"));
 }
 
@@ -1569,27 +1622,24 @@ static void new_file(gpointer data, guint action, GtkWidget *widget)
 static gboolean new_file_type_cb(GObject *savebox,
 			         const gchar *initial, const gchar *path)
 {
-	const gchar *oleaf, *leaf;
-	gchar *templ, *rtempl, *templ_dname, *dest, *base;
+	const gchar *leaf;
+	const gchar *template_path;
+	gchar *rtempl, *dest, *base;
 	GList *paths;
 
-	/* We can work out the template path from the initial name */
-	base = g_path_get_basename(initial);
-	oleaf = base;
-	templ_dname = choices_find_xdg_path_load("Templates", "", SITE);
-	if (!templ_dname)
+	/* The exact selected template is stored on the savebox. This supports
+	 * both user templates and the templates bundled in ROX-Filer. */
+	template_path = g_object_get_data(savebox, "template_path");
+	if (!template_path || !g_file_test(template_path, G_FILE_TEST_EXISTS))
 	{
+		base = g_path_get_basename(initial);
 		report_error(
 		_("Error creating file: could not find the template for %s"),
-				oleaf);
+				base);
+		g_free(base);
 		return FALSE;
 	}
-
-	templ = g_strconcat(templ_dname, "/", oleaf, NULL);
-	g_free(templ_dname);
-	rtempl = pathdup(templ);
-	g_free(templ);
-	g_free(base);
+	rtempl = pathdup(template_path);
 
 	base = g_path_get_basename(path);
 	dest = g_path_get_dirname(path);
@@ -1601,10 +1651,10 @@ static gboolean new_file_type_cb(GObject *savebox,
 	g_list_free(paths);
 	g_free(dest);
 	g_free(rtempl);
-	g_free(base);
 
 	if (filer_exists(window_with_focus))
 		display_set_autoselect(window_with_focus, leaf);
+	g_free(base);
 
 	return TRUE;
 }
@@ -1628,19 +1678,107 @@ static void new_file_type(gchar *templ)
 	leaf = base;
 	type = type_get_type(templ);
 
-	savebox_show(_("Create"),
-		make_path(window_with_focus->sym_path, leaf),
-		type_to_icon(type),
-		new_file_type_cb, GDK_ACTION_COPY);
+	{
+		GtkWidget *savebox = savebox_show(_("Create"),
+			make_path(window_with_focus->sym_path, leaf),
+			type_to_icon(type),
+			new_file_type_cb, GDK_ACTION_COPY);
+		if (savebox)
+			g_object_set_data_full(G_OBJECT(savebox), "template_path",
+				g_strdup(templ), g_free);
+	}
 	g_free(base);
 }
 
-void show_menu_new(FilerWindow *filer_window)
+static void new_menu_directory_activate(GtkMenuItem *item, gpointer data)
+{
+	(void)item;
+	show_new_directory((FilerWindow *)data);
+}
+
+static void new_menu_file_activate(GtkMenuItem *item, gpointer data)
+{
+	(void)item;
+	show_new_file((FilerWindow *)data);
+}
+
+static void new_menu_customise_activate(GtkMenuItem *item, gpointer data)
+{
+	(void)item;
+	window_with_focus = (FilerWindow *)data;
+	customise_new(NULL, 0, NULL);
+}
+
+GtkWidget *create_menu_new(FilerWindow *filer_window)
+{
+	GtkWidget *menu;
+	GtkWidget *item;
+	GHashTable *entries;
+	gchar *user_dir;
+	gchar *bundled_dir;
+	GList *added;
+	gboolean separator = TRUE;
+
+	window_with_focus = filer_window;
+	menu = rox_menu_new();
+
+	item = menu_item_new_with_icon(_("Directory"), "folder-new");
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(item, "activate",
+		G_CALLBACK(new_menu_directory_activate), filer_window);
+
+	item = menu_item_new_with_icon(_("Blank file"), ROX_ICON_NEW);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(item, "activate",
+		G_CALLBACK(new_menu_file_activate), filer_window);
+
+	entries = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	user_dir = choices_find_xdg_path_load("Templates", "", SITE);
+	if (user_dir)
+	{
+		added = menu_from_dir(menu, entries, user_dir,
+			get_menu_icon_style(), (CallbackFn)new_file_type,
+			separator, TRUE, FALSE);
+		if (added)
+			separator = FALSE;
+		g_list_free(added);
+	}
+	bundled_dir = g_build_filename(app_dir, "Templates", NULL);
+	if (g_file_test(bundled_dir, G_FILE_TEST_IS_DIR))
+	{
+		added = menu_from_dir(menu, entries, bundled_dir,
+			get_menu_icon_style(), (CallbackFn)new_file_type,
+			separator, TRUE, FALSE);
+		g_list_free(added);
+	}
+	g_hash_table_destroy(entries);
+	g_free(bundled_dir);
+	g_free(user_dir);
+
+	item = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	item = menu_item_new_with_icon(_("Customise Menu..."),
+		ROX_ICON_PREFERENCES);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(item, "activate",
+		G_CALLBACK(new_menu_customise_activate), filer_window);
+
+	gtk_widget_show_all(menu);
+	return menu;
+}
+
+GtkWidget *prepare_menu_new(FilerWindow *filer_window)
 {
 	window_with_focus = filer_window;
 	ensure_filer_menu();
 	update_new_files_menu(get_menu_icon_style());
-	show_popup_menu(filer_new_menu, NULL, 1);
+	return filer_new_menu;
+}
+
+void show_menu_new(FilerWindow *filer_window)
+{
+	GtkWidget *menu = prepare_menu_new(filer_window);
+	show_popup_menu(menu, NULL, 1);
 }
 
 static void customise_send_to(gpointer data)
@@ -2033,7 +2171,7 @@ static void show_send_to_menu(GList *paths, GdkEvent *event)
 {
 	GtkWidget	*menu, *item;
 
-	menu = gtk_menu_new();
+	menu = rox_menu_new();
 
 	if (g_list_length(paths) == 1)
 	{
@@ -2507,28 +2645,55 @@ static void show_rox_about_dialog(void)
 		NULL
 	};
 	GtkWindow *parent = NULL;
+	GtkWidget *dialog;
+	GdkPixbuf *logo = NULL;
+	gchar *logo_path;
 
 	if (window_with_focus && window_with_focus->window)
 		parent = GTK_WINDOW(window_with_focus->window);
 
-	gtk_show_about_dialog(parent,
-		"program-name", "ROX-Filer",
-		"version", "2.12 GTK3",
-		"comments", _("Fast and lightweight file manager, ported to GTK3."),
-		"copyright",
-			"Copyright (C) 2005 Thomas Leonard and contributors\n"
-			"GTK3 port and additions (C) 2026 josejp2424",
-		"authors", authors,
-		"license",
-			_("This modified GTK3 version is free software; you can redistribute it "
-			  "and/or modify it under the terms of the GNU General Public License "
-			  "as published by the Free Software Foundation; either version 3 "
-			  "of the License, or (at your option) any later version."),
-		"wrap-license", TRUE,
-		"website", "http://rox.sourceforge.net",
-		"website-label", _("Original ROX Desktop website"),
-		"logo-icon-name", "system-file-manager",
-		NULL);
+	dialog = gtk_about_dialog_new();
+	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "ROX-Filer");
+	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
+	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
+		_("Fast and lightweight file manager, ported to GTK3."));
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
+		"Copyright (C) 2005 Thomas Leonard and contributors\n"
+		"GTK3 port and additions (C) 2026 josejp2424");
+	gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), authors);
+	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
+		_("This modified GTK3 version is free software; you can redistribute it "
+		  "and/or modify it under the terms of the GNU General Public License "
+		  "as published by the Free Software Foundation; either version 3 "
+		  "of the License, or (at your option) any later version."));
+	gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(dialog), TRUE);
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
+		"https://github.com/josejp2424/ROX-Filer-gtk3");
+	gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
+		_("ROX-Filer GTK3 project"));
+
+	/* Usar primero el icono incluido con ROX-Filer. De este modo el About no
+	 * depende de un nombre genérico del tema y siempre muestra el icono real. */
+	logo_path = g_build_filename(app_dir, "ROX-Filer.png", NULL);
+	logo = gdk_pixbuf_new_from_file_at_scale(logo_path, 96, 96, TRUE, NULL);
+	g_free(logo_path);
+	if (logo) {
+		gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
+		g_object_unref(logo);
+	} else {
+		gtk_window_set_icon_name(GTK_WINDOW(dialog), "system-file-manager");
+	}
+
+	if (parent) {
+		gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+		gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
+		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	} else {
+		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	}
+
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 }
 
 void menu_rox_help(gpointer data, guint action, GtkWidget *widget)
@@ -2785,6 +2950,116 @@ static void paste_from_clipboard(gpointer data, guint action, GtkWidget *unused)
 	gtk_selection_data_free(selection);
 }
 
+
+static gboolean item_is_wallpaper_image(const DirItem *item)
+{
+	const gchar *subtype;
+
+	if (!item || item->base_type != TYPE_FILE || !item->mime_type ||
+	    g_strcmp0(item->mime_type->media_type, "image") != 0)
+		return FALSE;
+
+	subtype = item->mime_type->subtype;
+	return g_strcmp0(subtype, "jpeg") == 0 ||
+	       g_strcmp0(subtype, "png") == 0 ||
+	       g_strcmp0(subtype, "svg+xml") == 0;
+}
+
+/* Agregado por josejp2424 (2026): reemplaza el antiguo script SendTo.
+ * Copia la imagen de forma segura, pregunta antes de sobrescribir y ofrece
+ * aplicarla inmediatamente mediante el propio ROX Desktop. */
+static void copy_image_to_backgrounds(const gchar *source_path)
+{
+	const gchar *backgrounds_dir = "/usr/share/backgrounds";
+	GtkWindow *parent = window_with_focus
+		? GTK_WINDOW(window_with_focus->window) : NULL;
+	GFile *source = NULL;
+	GFile *destination = NULL;
+	gchar *leaf = NULL;
+	gchar *destination_path = NULL;
+	GError *error = NULL;
+	gboolean already_there = FALSE;
+	gboolean overwrite = FALSE;
+	GtkWidget *dialog;
+	gint response;
+
+	if (g_mkdir_with_parents(backgrounds_dir, 0755) != 0 && errno != EEXIST) {
+		report_error(_("Unable to create backgrounds folder '%s': %s"),
+		             backgrounds_dir, g_strerror(errno));
+		return;
+	}
+
+	leaf = g_path_get_basename(source_path);
+	destination_path = g_build_filename(backgrounds_dir, leaf, NULL);
+	source = g_file_new_for_path(source_path);
+	destination = g_file_new_for_path(destination_path);
+	already_there = g_file_equal(source, destination);
+
+	if (!already_there && g_file_query_exists(destination, NULL)) {
+		dialog = gtk_message_dialog_new(parent,
+			GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+			_("A file named '%s' already exists in the backgrounds folder."),
+			leaf);
+		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
+			"%s", _("Replace the existing file?"));
+		gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"),
+		                      GTK_RESPONSE_CANCEL);
+		gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Replace"),
+		                      GTK_RESPONSE_ACCEPT);
+		gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
+		response = gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		if (response != GTK_RESPONSE_ACCEPT)
+			goto out;
+		overwrite = TRUE;
+	}
+
+	if (!already_there && !g_file_copy(source, destination,
+		G_FILE_COPY_ALL_METADATA |
+		(overwrite ? G_FILE_COPY_OVERWRITE : G_FILE_COPY_NONE),
+		NULL, NULL, NULL, &error)) {
+		report_error(_("Unable to copy '%s' to '%s': %s"),
+		             source_path, destination_path,
+		             error ? error->message : _("The command failed."));
+		g_clear_error(&error);
+		goto out;
+	}
+
+	dialog = gtk_message_dialog_new(parent,
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+		"%s", already_there
+			? _("The image is already in the backgrounds folder.")
+			: _("The image was copied to the backgrounds folder."));
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
+		"%s", _("Would you like to use it as the desktop wallpaper now?"));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Not now"),
+	                      GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Use as Wallpaper"),
+	                      GTK_RESPONSE_ACCEPT);
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+	response = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+
+	if (response == GTK_RESPONSE_ACCEPT &&
+	    !desktop_set_wallpaper(destination_path, TRUE, &error)) {
+		report_error(_("Unable to set wallpaper: %s"),
+		             error ? error->message : _("The command failed."));
+		g_clear_error(&error);
+	}
+
+out:
+	if (source)
+		g_object_unref(source);
+	if (destination)
+		g_object_unref(destination);
+	g_free(destination_path);
+	g_free(leaf);
+}
+
 static void file_op(gpointer data, guint action, GtkWidget *unused)
 {
 	DirItem	*item;
@@ -2817,6 +3092,9 @@ static void file_op(gpointer data, guint action, GtkWidget *unused)
 			case FILE_PROPERTIES:
 				prompt = _("Properties of ... ?");
 				break;
+			case FILE_COPY_TO_BACKGROUNDS:
+				prompt = _("Copy ... to Backgrounds ?");
+				break;
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 			case FILE_XATTRS:
 				prompt = _("Extended attributes of ... ?");
@@ -2826,7 +3104,7 @@ static void file_op(gpointer data, guint action, GtkWidget *unused)
 				prompt = _("Set type of ... ?");
 				break;
 			case FILE_RUN_ACTION:
-				prompt = _("Set run action for ... ?");
+				prompt = _("Set default application for ... ?");
 				break;
 			case FILE_SET_ICON:
 				prompt = _("Set icon for ... ?");
@@ -2984,6 +3262,13 @@ static void file_op(gpointer data, guint action, GtkWidget *unused)
 			break;
 		case FILE_SET_ICON:
 			icon_set_handler_dialog(item, path);
+			break;
+		case FILE_COPY_TO_BACKGROUNDS:
+			if (!item_is_wallpaper_image(item)) {
+				report_error("%s", _("Only JPEG, PNG and SVG images can be copied to the backgrounds folder."));
+				break;
+			}
+			copy_image_to_backgrounds((const gchar *) path);
 			break;
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 		case FILE_XATTRS:

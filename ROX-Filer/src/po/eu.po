@@ -5,19 +5,18 @@
 # Piarres Beobide <pi@beobide.net>, 2005.
 msgid ""
 msgstr ""
-"Project-Id-Version: rox-es\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2005-06-05 23:09+0200\n"
-"Last-Translator: Piarres Beobide <pi@beobide.net>\n"
-"Language-Team:  librezale.org <librezale@librezale.org>\n"
-"Language: \n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Basque\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.9.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<dir>"
 
@@ -763,8 +762,8 @@ msgid ""
 "Symlink any programs you want into this directory. They will appear in the "
 "menu for all items of this type (%s/%s)."
 msgstr ""
-"Crea enlaces simbólicos a los programas que quieras en éste directorio. "
-"Ellos aparecerán en el menú para todos los elementos de éste tipo (%s/%s)."
+"Crea enlaces simbï¿½licos a los programas que quieras en ï¿½ste directorio. "
+"Ellos aparecerï¿½n en el menï¿½ para todos los elementos de ï¿½ste tipo (%s/%s)."
 
 #: appmenu.c:347 menu.c:275
 msgid "Customise Menu..."
@@ -1006,7 +1005,7 @@ msgid ""
 "XdndDirectSave0 target provided, but the atom XdndDirectSave0 (type text/"
 "plain) did not contain a leafname\n"
 msgstr ""
-"Destino XdndDirectSave0 provisto, pero el átomo XdndDirectSave0 (tipo text/"
+"Destino XdndDirectSave0 provisto, pero el ï¿½tomo XdndDirectSave0 (tipo text/"
 "plain) no contiene un nombre de archivo\n"
 
 #: dnd.c:619
@@ -1029,7 +1028,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Fallo al agregar algunos elementos al escritorio porque están en una máquina "
+"Fallo al agregar algunos elementos al escritorio porque estï¿½n en una mï¿½quina "
 "remota. Por ejemplo:\n"
 "\n"
 "%s"
@@ -1120,7 +1119,7 @@ msgstr ""
 #: dropbox.c:261
 msgid "Sorry, you need to drop exactly one file onto the drop area."
 msgstr ""
-"Lo siento, tienes que arrastrar exactamente un archvo sobre el área de "
+"Lo siento, tienes que arrastrar exactamente un archvo sobre el ï¿½rea de "
 "arrastre."
 
 #: dropbox.c:271
@@ -1152,7 +1151,7 @@ msgid ""
 "\n"
 "Unmounting a device makes it safe to remove the disk."
 msgstr ""
-"¿Gailu hau desmuntatu nahi al duzu?\n"
+"ï¿½Gailu hau desmuntatu nahi al duzu?\n"
 "\n"
 "Gailua desmuntatu eta gero diska era ziur batetan atera dezakezu."
 
@@ -1175,10 +1174,10 @@ msgid ""
 "Press %s on its own to reselect the files later.\n"
 "Make sure NumLock is on if you use the keypad."
 msgstr ""
-"El grupo %s no está definido. Selecciona algunos archivos y presiona Ctrl+%s "
+"El grupo %s no estï¿½ definido. Selecciona algunos archivos y presiona Ctrl+%s "
 "para definir el grupo. Presiona %s para seleccionar de nuevo los archivos "
-"después.\n"
-"Aségurate que NumLock está activado si utilizas el teclado numérico."
+"despuï¿½s.\n"
+"Asï¿½gurate que NumLock estï¿½ activado si utilizas el teclado numï¿½rico."
 
 #: filer.c:1822
 msgid "Cancel"
@@ -1740,7 +1739,7 @@ msgstr ""
 #: infobox.c:113
 #, c-format
 msgid "Are you sure you want to open %d windows?"
-msgstr "¿Estás seguro que quieres abrir %d ventanas?"
+msgstr "ï¿½Estï¿½s seguro que quieres abrir %d ventanas?"
 
 #: infobox.c:114
 msgid "Show Info"
@@ -1778,7 +1777,7 @@ msgstr "Huts tamaina irakurtzerakoan"
 #: infobox.c:536
 #, c-format
 msgid "'%s' is no longer a symlink"
-msgstr "'%s' ya no es un enlace simbólico"
+msgstr "'%s' ya no es un enlace simbï¿½lico"
 
 #: infobox.c:543
 #, c-format
@@ -1786,7 +1785,7 @@ msgid ""
 "Failed to unlink '%s':\n"
 "%s"
 msgstr ""
-"Falló la eliminación de '%s':\n"
+"Fallï¿½ la eliminaciï¿½n de '%s':\n"
 "%s"
 
 #: infobox.c:548
@@ -1796,7 +1795,7 @@ msgid ""
 "%s\n"
 "(note: old link has been deleted)"
 msgstr ""
-"Falló la creación del enlace simbólico '%s':\n"
+"Fallï¿½ la creaciï¿½n del enlace simbï¿½lico '%s':\n"
 "%s\n"
 "(nota: el antiguo enlace has sido borrado)"
 
@@ -2465,7 +2464,7 @@ msgstr "Bide berria ez da absolutua"
 #, c-format
 msgid "Symlink from '%s' already exists. Replace it with a link to '%s'?"
 msgstr ""
-"Dagoeneko badago '%s'-ren esteka sinboliko bat. ¿'%s'-ra estekaz aldatu?"
+"Dagoeneko badago '%s'-ren esteka sinboliko bat. ï¿½'%s'-ra estekaz aldatu?"
 
 #: menu.c:1331
 msgid "_Replace"
@@ -2884,7 +2883,7 @@ msgstr ""
 #: panel.c:2690
 #, fuzzy
 msgid "Are you sure you want to remove this panel from the desktop?"
-msgstr "¿Estás seguro que quieres abrir %d ventanas?"
+msgstr "ï¿½Estï¿½s seguro que quieres abrir %d ventanas?"
 
 #: panel.c:2693 panel.c:2720
 #, fuzzy
@@ -3058,7 +3057,7 @@ msgid ""
 "%s\n"
 "Backdrop removed."
 msgstr ""
-"Error cargando imágen de fondo de pantala:\n"
+"Error cargando imï¿½gen de fondo de pantala:\n"
 "%s\n"
 "Fondo de pantalla eliminado."
 
@@ -3097,7 +3096,7 @@ msgstr "'%s' sailkapen mota ezezaguna"
 #: remote.c:1243
 #, c-format
 msgid "Attempt to invoke unknown SOAP method '%s'"
-msgstr "Intento de invocar un método SOAP desconocido '%s'"
+msgstr "Intento de invocar un mï¿½todo SOAP desconocido '%s'"
 
 #: run.c:99 run.c:152
 #, c-format
@@ -3117,7 +3116,7 @@ msgstr "Ez dakit '%s' nola ireki"
 #: run.c:338
 #, fuzzy, c-format
 msgid "'%s' is not a valid URI"
-msgstr "'%s' ya no es un enlace simbólico"
+msgstr "'%s' ya no es un enlace simbï¿½lico"
 
 #: run.c:349
 #, fuzzy, c-format
@@ -3194,17 +3193,17 @@ msgid ""
 "Otherwise, you should check, or even just delete, all the existing run "
 "actions."
 msgstr ""
-"¡El ejecutable '%s' es modificable por todos! Me niego a ejecutar. Por favor "
-"modifica los permisos ahora (éste problema puede haber sido causado por un "
+"ï¿½El ejecutable '%s' es modificable por todos! Me niego a ejecutar. Por favor "
+"modifica los permisos ahora (ï¿½ste problema puede haber sido causado por un "
 "bug en versiones anteriores del filer).\n"
 "\n"
-"Tener accions de ejecución (no enlaces simbólicos) modificables por todos "
+"Tener accions de ejecuciï¿½n (no enlaces simbï¿½licos) modificables por todos "
 "significa que otras personas que usen tu computadora pueden reemplazar tus "
-"acciones de ejecución con versiones maliciosas.\n"
+"acciones de ejecuciï¿½n con versiones maliciosas.\n"
 "\n"
-"Si confías en todos los que puedan escribir en ésos archivos, entonces no "
-"necesitas preocuparte. Sino, deberías verificar, o incluso sólo eliminar, "
-"todas las acciones de ejecución existentes."
+"Si confï¿½as en todos los que puedan escribir en ï¿½sos archivos, entonces no "
+"necesitas preocuparte. Sino, deberï¿½as verificar, o incluso sï¿½lo eliminar, "
+"todas las acciones de ejecuciï¿½n existentes."
 
 #: run.c:766
 msgid "go-w (Fix security problem)"
@@ -3453,7 +3452,7 @@ msgstr "Huts kudeatzaielan (handler) %s: %s"
 #: type.c:946
 #, c-format
 msgid "Invalid application %s (bad AppRun)"
-msgstr "Aplicación inválida %s (AppRun incorrecto)"
+msgstr "Aplicaciï¿½n invï¿½lida %s (AppRun incorrecto)"
 
 #: type.c:957
 #, c-format
@@ -3524,7 +3523,7 @@ msgid ""
 "Failed to create symlink '%s':\n"
 "%s"
 msgstr ""
-"Falló la eliminación de '%s':\n"
+"Fallï¿½ la eliminaciï¿½n de '%s':\n"
 "%s"
 
 #: usericons.c:189
@@ -3544,7 +3543,7 @@ msgstr ""
 #: usericons.c:245
 #, c-format
 msgid "Really delete icon '%s'?"
-msgstr "¿'%s' ikonoa benetan ezabatu?"
+msgstr "ï¿½'%s' ikonoa benetan ezabatu?"
 
 #: usericons.c:249
 #, c-format
@@ -5217,11 +5216,11 @@ msgstr "<b>Baimenak</b>"
 #~ msgstr "Panelak"
 
 #~ msgid "Invalid .gmo translation file (too short): %s"
-#~ msgstr "Archivo de traducción .gmo no válido (demasiado corto): %s"
+#~ msgstr "Archivo de traducciï¿½n .gmo no vï¿½lido (demasiado corto): %s"
 
 #~ msgid "Invalid .gmo translation file (GNU magic number not found): %s"
 #~ msgstr ""
-#~ "Archivo de traducción .gmo no válido (no se encontró el número mágico "
+#~ "Archivo de traducciï¿½n .gmo no vï¿½lido (no se encontrï¿½ el nï¿½mero mï¿½gico "
 #~ "GNU): %s"
 
 #~ msgid "Show/hide hidden files"
@@ -5388,3 +5387,85 @@ msgstr "<b>Baimenak</b>"
 #~ "alde batetar utziko da. Windows motako fitxategi sistema batetako "
 #~ "fitxategiak badituzu oso erabilgarri programa abiarazgarriak bezala "
 #~ "bistaratzen ari bait dira."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] ""
+msgstr[1] ""
+
+#: trash.c
+msgid "%u items were restored."
+msgstr ""

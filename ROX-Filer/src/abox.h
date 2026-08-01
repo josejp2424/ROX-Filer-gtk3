@@ -31,6 +31,14 @@ struct _ABox
 	GtkWidget	*dir_label;	/* Shows what is being processed now */
 	GtkWidget	*log;		/* The TextView for the messages */
 	GtkWidget	*log_hbox;
+	/* Agregado por josejp2424 (2026): control de detalles para mantener
+	 * compactas las ventanas animadas de copia, movimiento y borrado. */
+	GtkWidget	*details;
+	gboolean	 compact_log;
+	/* Agregado por josejp2424 (2026): área opcional para mostrar las
+	 * animaciones de copia y borrado incluidas en ROX-Filer/images. */
+	GtkWidget	*operation_animation_box;
+	GtkWidget	*operation_animation;
 	GtkWidget	*results;	/* List of filenames found */
 	GtkWidget	*entry;		/* Plain entry, or part of combo */
 	FilerWindow	*preview;
@@ -97,5 +105,8 @@ void	abox_show_compare		(ABox *abox, gboolean show);
 void	abox_set_file			(ABox *abox, int file,
 					 const gchar *path);
 void    abox_set_percentage             (ABox *abox, int per);
+void    abox_set_operation_animation    (ABox *abox,
+					 const gchar *filename);
+void    abox_stop_operation_animation   (ABox *abox);
 
 #endif /* __ABOX_H__ */

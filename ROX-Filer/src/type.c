@@ -66,38 +66,15 @@
 #include "run.h"
 
 #define TYPE_NS "http://www.freedesktop.org/standards/shared-mime-info"
-enum {SET_MEDIA, SET_TYPE};
 
-/* Colours for file types (same order as base types) */
-static gchar *opt_type_colours[][2] = {
-	{"display_err_colour",  "#ff0000"},
-	{"display_unkn_colour", "#000000"},
-	{"display_dir_colour",  "#000080"},
-	{"display_pipe_colour", "#444444"},
-	{"display_sock_colour", "#ff00ff"},
-	{"display_file_colour", "#000000"},
-	{"display_cdev_colour", "#000000"},
-	{"display_bdev_colour", "#000000"},
-	{"display_door_colour", "#ff00ff"},
-	{"display_exec_colour", "#006000"},
-	{"display_adir_colour", "#006000"}
-};
-#define NUM_TYPE_COLOURS\
-		(sizeof(opt_type_colours) / sizeof(opt_type_colours[0]))
-
-/* Parsed colours for file types */
-static Option o_type_colours[NUM_TYPE_COLOURS];
-static GdkRGBA	type_colours[NUM_TYPE_COLOURS];
+/* File and directory text colours are provided by the active GTK theme.
+ * ROX no longer keeps private per-file-type colour options. */
 
 /* Static prototypes */
-static void alloc_type_colours(void);
 static void options_changed(void);
-static char *get_action_save_path(GtkWidget *dialog);
 static MIME_type *get_mime_type(const gchar *type_name, gboolean can_create);
-static gboolean remove_handler_with_confirm(const guchar *path);
 static void set_icon_theme(void);
 static GList *build_icon_theme(Option *option, xmlNode *node, guchar *label);
-static char *find_default_desktop_app(MIME_type *type);
 /* Agregado por josejp2424 (2026): mantener los iconos de carpetas normales
  * sincronizados con el tema de iconos GTK3 activo. */
 static GdkPixbuf *load_system_folder_icon(void);
@@ -124,7 +101,6 @@ MIME_type *application_x_desktop;
 MIME_type *inode_unknown;
 MIME_type *inode_door;
 
-static Option o_display_colour_types;
 static Option o_icon_theme;
 
 static GtkIconTheme *icon_theme = NULL;
@@ -133,7 +109,6 @@ static GtkIconTheme *gnome_theme = NULL;
 
 void type_init(void)
 {
-	int	    i;
 
 	icon_theme = gtk_icon_theme_new();
 
@@ -162,14 +137,8 @@ void type_init(void)
 	inode_door = get_mime_type("inode/door", TRUE);
 
 	option_add_string(&o_icon_theme, "icon_theme", "ROX");
-	option_add_int(&o_display_colour_types, "display_colour_types", TRUE);
 	option_register_widget("icon-theme-chooser", build_icon_theme);
 
-	for (i = 0; i < NUM_TYPE_COLOURS; i++)
-		option_add_string(&o_type_colours[i],
-				  opt_type_colours[i][0],
-				  opt_type_colours[i][1]);
-	alloc_type_colours();
 
 	set_icon_theme();
 
@@ -339,195 +308,42 @@ MIME_type *type_from_path(const char *path)
 	return NULL;
 }
 
-static char *find_default_desktop_app(MIME_type *type)
+/* Return the default application selected by the standard XDG/GIO stack.
+ * The caller owns the returned reference. Parent MIME types are considered
+ * only when the exact type has no configured application. */
+GAppInfo *type_get_default_application(MIME_type *type)
 {
-	GError *error = NULL;
-	const gchar *xdg_data_dirs_env;
-	gchar **xdg_data_dirs;
-	gchar *xdg_data_home;
-	GList *apps_dirs = NULL;
-	GList *list_iter;
-	GList *list_iter2;
-	gchar **iter;
-	gchar *mimeappslist_path;
-	gchar *desktop_files_str;
-	gchar **desktop_files;
-	gchar *mime_type;
-	gchar *handler = NULL;
+	GAppInfo *app;
+	gchar *type_name;
+	gchar **parents;
+	gchar **parent;
 
-	if (!type->media_type || !type->subtype)
-		return NULL;
+	g_return_val_if_fail(type != NULL, NULL);
 
-	mime_type = g_strjoin("/", type->media_type, type->subtype, NULL);
-
-	xdg_data_dirs_env = g_getenv("XDG_DATA_DIRS");
-
-    if (!xdg_data_dirs_env || !strcmp(xdg_data_dirs_env, ""))
-        xdg_data_dirs_env = "/usr/local/share:/usr/share";
-
-	xdg_data_dirs = g_strsplit(xdg_data_dirs_env, ":", -1);
-
-	xdg_data_home = g_strdup(g_getenv("XDG_DATA_HOME"));
-
-	if (xdg_data_home && !strcmp(xdg_data_home, "")) {
-		g_free(xdg_data_home);
-		xdg_data_home = NULL;
-	}
-
-	if (!xdg_data_home)
-		xdg_data_home = g_strjoin("/", g_getenv("HOME"), ".local", "share", NULL);
-
-	apps_dirs = g_list_append(apps_dirs,
-			g_strjoin("/", xdg_data_home, "applications", NULL));
-
-	for (iter = xdg_data_dirs; *iter; iter++) {
-		apps_dirs = g_list_append(
-				apps_dirs, g_strjoin("/", *iter, "applications", NULL));
-	}
-	g_strfreev(xdg_data_dirs);
-
-	/* Iterate over applications dirs in XDG_DATA_HOME and XDG_DATA_DIRS. */
-	for (list_iter = apps_dirs; list_iter; list_iter = g_list_next(list_iter)) {
-		if (!list_iter->data)
-			continue;
-
-		mimeappslist_path = g_strjoin("/", list_iter->data, "mimeapps.list", NULL);
-		printf("%s\n", mimeappslist_path);
-		error = NULL;
-		desktop_files_str = get_value_from_desktop_file(
-				mimeappslist_path, "Default Applications", mime_type, &error);
-
-		g_free(mimeappslist_path);
-
-		if (error) {
-			g_error_free(error);
-			continue;
-		}
-
-		if (!desktop_files_str) {
-			continue;
-		}
-
-		desktop_files = g_strsplit(desktop_files_str, ";", -1);
-		g_free(desktop_files_str);
-
-		/* Iterate over all desktop files associated with the given MIME type. */
-		for (iter = desktop_files; *iter; iter++) {
-			if (!strcmp(*iter, "")) {
-				continue;
-			}
-			/* Look for .desktop file in applications subdir of XDG_DATA_HOME and XDG_DATA_DIRS. */
-			for (list_iter2 = apps_dirs; list_iter2; list_iter2 = g_list_next(list_iter2)) {
-				if (!list_iter2->data)
-					continue;
-				handler = g_strjoin("/", list_iter2->data, *iter, NULL);
-				if (g_file_test(handler, G_FILE_TEST_EXISTS)) {
-					break;
-				}
-				g_free(handler);
-				handler = NULL;
-			}
-			if (handler) {
-				break;
-			}
-		}
-		g_strfreev(desktop_files);
-
-		if (handler) {
-			break;
-		}
-	}
-
-	for (list_iter = apps_dirs; list_iter; list_iter = g_list_next(list_iter)) {
-		g_free(list_iter->data);
-	}
-	g_list_free(apps_dirs);
-
-	g_free(mime_type);
-	g_free(xdg_data_home);
-
-	return handler;
-}
-
-
-/* Returns the file/dir in Choices for handling this type.
- * NULL if there isn't one. g_free() the result.
- */
-char *handler_for(MIME_type *type)
-{
-	char	*type_name;
-	char	*open;
-	char	*target;
-	char	**parents;
-	char	**parent;
-
-	type_name = g_strconcat(type->media_type, "_", type->subtype, NULL);
-	open = choices_find_xdg_path_load(type_name, "MIME-types", SITE);
-	g_free(type_name);
-
-	if (!open)
-		open = choices_find_xdg_path_load(type->media_type,
-						  "MIME-types", SITE);
-
-	if (!open)
-		open = find_default_desktop_app(type);
-
-	if (!open)
-	{
-		type_name = g_strconcat(type->media_type, "/", type->subtype, NULL);
-		parents = xdg_mime_list_mime_parents(type_name);
+	/* GIO reads $XDG_CONFIG_HOME/mimeapps.list (normally
+	 * ~/.config/mimeapps.list), the system XDG mimeapps.list files and the
+	 * associations declared by installed .desktop files. */
+	type_name = g_strconcat(type->media_type, "/", type->subtype, NULL);
+	app = g_app_info_get_default_for_type(type_name, FALSE);
+	if (app) {
 		g_free(type_name);
-
-		if (!parents)
-			return NULL;
-
-		for (parent = parents; *parent; parent++)
-		{
-			type = mime_type_lookup(*parent);
-			if (!type)
-				continue;
-			open = handler_for(type);
-			if (open)
-				return open;
-		}
-
-		g_strfreev(parents);
+		return app;
 	}
 
-	if (!open)
+	parents = xdg_mime_list_mime_parents(type_name);
+	g_free(type_name);
+	if (!parents)
 		return NULL;
 
-	/* Some programs behave differently depending on the command
-	 * name (e.g., 'vim' vs 'gvim'), so symlinks need to be followed here.
-	 */
-	target = readlink_dup(open);
-	if (!target)
-	{
-		return open;
+	for (parent = parents; *parent; parent++) {
+		app = g_app_info_get_default_for_type(*parent, FALSE);
+		if (app)
+			break;
 	}
-
-	if (target[0] == '/')
-	{
-		/* Absolute path */
-		g_free(open);
-		return target;
-	}
-	else
-	{
-		/* Relative path (shouldn't normally be needed) */
-		gchar *dir;
-		char *abs_path;
-
-		dir = g_path_get_dirname(open);
-		g_free(open);
-
-		abs_path = g_strconcat(dir, "/", target, NULL);
-		g_free(target);
-		g_free(dir);
-
-		return abs_path;
-	}
+	g_strfreev(parents);
+	return app;
 }
+
 
 MIME_type *mime_type_lookup(const char *type)
 {
@@ -753,470 +569,91 @@ GdkAtom type_to_atom(MIME_type *type)
 	return retval;
 }
 
-static void show_shell_help(gpointer data)
-{
-	info_message(_("Enter a shell command which will load \"$@\" into "
-			"a suitable program. Eg:\n\n"
-			"gimp \"$@\""));
-}
-
-/* Called if the user clicks on the OK button. Returns FALSE if an error
- * was displayed instead of performing the action.
- */
-static gboolean set_shell_action(GtkWidget *dialog)
-{
-	GtkEntry *entry;
-	const guchar *command;
-	gchar	*tmp, *path;
-	int	error = 0, len;
-	int	fd;
-
-	entry = g_object_get_data(G_OBJECT(dialog), "shell_command");
-
-	g_return_val_if_fail(entry != NULL, FALSE);
-
-	command = gtk_entry_get_text(entry);
-
-	if (!strchr(command, '$'))
-	{
-		show_shell_help(NULL);
-		return FALSE;
-	}
-
-	path = get_action_save_path(dialog);
-	if (!path)
-		return FALSE;
-
-	tmp = g_strdup_printf("#! /bin/sh\nexec %s\n", command);
-	len = strlen(tmp);
-
-	fd = open(path, O_CREAT | O_WRONLY, 0755);
-	if (fd == -1)
-		error = errno;
-	else
-	{
-		FILE *file;
-
-		file = fdopen(fd, "w");
-		if (file)
-		{
-			if (fwrite(tmp, 1, len, file) < len)
-				error = errno;
-			if (fclose(file) && error == 0)
-				error = errno;
-		}
-		else
-			error = errno;
-	}
-
-	if (error)
-		report_error(g_strerror(error));
-
-	g_free(tmp);
-	g_free(path);
-
-	gtk_widget_destroy(dialog);
-
-	return TRUE;
-}
-
-static void set_action_response(GtkWidget *dialog, gint response, gpointer data)
-{
-	if (response == GTK_RESPONSE_OK)
-		if (!set_shell_action(dialog))
-			return;
-	gtk_widget_destroy(dialog);
-}
-
-/* Return the path of the file in choices that handles this type and
- * radio setting.
- * NULL if nothing is defined for it.
- */
-static guchar *handler_for_radios(GObject *dialog)
-{
-	Radios	*radios;
-	MIME_type *type;
-
-	radios = g_object_get_data(G_OBJECT(dialog), "rox-radios");
-	type = g_object_get_data(G_OBJECT(dialog), "mime_type");
-
-	g_return_val_if_fail(radios != NULL, NULL);
-	g_return_val_if_fail(type != NULL, NULL);
-
-	switch (radios_get_value(radios))
-	{
-		case SET_MEDIA:
-			return choices_find_xdg_path_load(type->media_type,
-							  "MIME-types", SITE);
-		case SET_TYPE:
-		{
-			return handler_for(type);
-		}
-		default:
-			g_warning("Bad type");
-			return NULL;
-	}
-}
-
-/* (radios can be NULL if called from clear_run_action) */
-static void run_action_update(Radios *radios, gpointer data)
-{
-	guchar *handler;
-	DropBox *drop_box;
-	GObject *dialog = G_OBJECT(data);
-
-	drop_box = g_object_get_data(dialog, "rox-dropbox");
-
-	g_return_if_fail(drop_box != NULL);
-
-	handler = handler_for_radios(dialog);
-
-	if (handler)
-	{
-		char *old = handler;
-
-		handler = readlink_dup(old);
-		if (handler)
-			g_free(old);
-		else
-			handler = old;
-	}
-
-	drop_box_set_path(DROP_BOX(drop_box), handler);
-	g_free(handler);
-}
-
-static void clear_run_action(GtkWidget *drop_box, GtkWidget *dialog)
-{
-	guchar *handler;
-
-	handler = handler_for_radios(G_OBJECT(dialog));
-
-	if (handler)
-		remove_handler_with_confirm(handler);
-
-	run_action_update(NULL, dialog);
-}
-
-/* Called when a URI list is dropped onto the box in the Set Run Action
- * dialog. Make sure it's an application, and make that the default
- * handler.
- */
-static void drag_app_dropped(GtkWidget	*drop_box,
-			     const guchar *app,
-			     GtkWidget	*dialog)
-{
-	DirItem	*item;
-
-	item = diritem_new("");
-	diritem_restat(app, item, NULL);
-	if (item->flags & ITEM_FLAG_APPDIR || EXECUTABLE_FILE(item))
-	{
-		guchar	*path;
-
-		path = get_action_save_path(dialog);
-
-		if (path)
-		{
-			if (symlink(app, path))
-				delayed_error("symlink: %s",
-						g_strerror(errno));
-			else
-				destroy_on_idle(dialog);
-
-			g_free(path);
-		}
-	}
-	else
-		delayed_error(
-			_("This is not a program! Give me an application "
-			"instead!"));
-
-	diritem_free(item);
-}
-
-/* Find the current command which is used to run files of this type.
- * Returns NULL on failure. g_free() the result.
- */
-static guchar *get_current_command(MIME_type *type)
-{
-	struct stat	info;
-	char *handler, *nl, *data = NULL;
-	long len;
-	guchar *command = NULL;
-
-	handler = handler_for(type);
-
-	if (!handler)
-		return NULL;		/* No current handler */
-
-	if (stat(handler, &info))
-		goto out;		/* Can't stat */
-
-	if ((!S_ISREG(info.st_mode)) || info.st_size > 256)
-		goto out;		/* Only use small regular files */
-
-	if (!load_file(handler, &data, &len))
-		goto out;		/* Didn't load OK */
-
-	if (strncmp(data, "#! /bin/sh\nexec ", 16) != 0)
-		goto out;		/* Not one of ours */
-
-	nl = strchr(data + 16, '\n');
-	if (!nl)
-		goto out;		/* No newline! */
-
-	command = g_strndup(data + 16, nl - data - 16);
-out:
-	g_free(handler);
-	g_free(data);
-	return command;
-}
-
-/* Find the current command which is used to run files of this type,
- * and return a textual description of it.
- * Only call for non-executable files.
- * g_free() the result.
- */
+/* Return a human-readable description of the XDG default application. */
 gchar *describe_current_command(MIME_type *type)
 {
-	char *handler;
-	char *desc = NULL;
-	struct stat info;
+	GAppInfo *app;
+	const gchar *name;
+	const gchar *command;
+	gchar *description;
 
 	g_return_val_if_fail(type != NULL, NULL);
 
-	handler = handler_for(type);
+	app = type_get_default_application(type);
+	if (!app)
+		return g_strdup(_("No default application defined"));
 
-	if (!handler)
-		return g_strdup(_("No run action defined"));
-
-	if (mc_stat(handler, &info) !=0 )
-	{
-		desc = g_strdup_printf(_("Error in handler %s: %s"), handler,
-					g_strerror(errno));
-		goto out;
-	}
-
-	if (S_ISDIR(info.st_mode))
-	{
-		const guchar *tmp;
-		uid_t dir_uid = info.st_uid;
-
-		tmp = make_path(handler, "AppRun");
-
-		if (mc_lstat(tmp, &info) != 0 || info.st_uid != dir_uid
-			|| !(info.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))
-			desc = g_strdup_printf(
-				_("Invalid application %s (bad AppRun)"),
-				handler);
-		/* Else, just report handler... */
-
-		goto out;
-	}
-
-	/* It's not an application directory, and it's not a symlink... */
-
-	if (access(handler, X_OK) != 0)
-	{
-		desc = g_strdup_printf(_("Non-executable %s"), handler);
-		goto out;
-	}
-
-	desc = get_current_command(type);
-out:
-	if (!desc)
-		desc = handler;
+	name = g_app_info_get_display_name(app);
+	command = g_app_info_get_commandline(app);
+	if (name && *name && command && *command)
+		description = g_strdup_printf("%s — %s", name, command);
+	else if (name && *name)
+		description = g_strdup(name);
+	else if (command && *command)
+		description = g_strdup(command);
 	else
-		g_free(handler);
+		description = g_strdup(_("Default XDG application"));
 
-	return desc;
+	g_object_unref(app);
+	return description;
 }
 
-/* Display a dialog box allowing the user to set the default run action
- * for this type.
- */
+
+/* Display the standard GTK/XDG application chooser for this MIME type. */
 void type_set_handler_dialog(MIME_type *type)
 {
-	guchar		*tmp;
-	GtkDialog	*dialog;
-	GtkWidget	*frame, *entry, *label, *button;
-	GtkWidget	*hbox;
-	Radios		*radios;
+	GtkWidget *dialog;
+	GtkWindow *parent = NULL;
+	GList *windows;
+	GList *node;
+	gchar *mime_type;
+	gint response;
 
 	g_return_if_fail(type != NULL);
 
-	dialog = GTK_DIALOG(gtk_dialog_new());
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
-
-	g_object_set_data(G_OBJECT(dialog), "mime_type", type);
-
-	gtk_window_set_title(GTK_WINDOW(dialog), _("Set run action"));
-
-	radios = radios_new(run_action_update, dialog);
-	g_object_set_data(G_OBJECT(dialog), "rox-radios", radios);
-
-	radios_add(radios,
-			_("If a handler for the specific type isn't set up, "
-			  "use this as the default."), SET_MEDIA,
-			_("Set default for all `%s/<anything>'"),
-			type->media_type);
-
-	radios_add(radios,
-			_("Use this application for all files with this MIME "
-			  "type."), SET_TYPE,
-			_("Only for the type `%s' (%s/%s)"),
-			mime_type_comment(type),
-			type->media_type, type->subtype);
-
-	radios_set_value(radios, SET_TYPE);
-
-	frame = drop_box_new(_("Drop a suitable application here"));
-
-	g_object_set_data(G_OBJECT(dialog), "rox-dropbox", frame);
-
-	radios_pack(radios, GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))));
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), frame, TRUE, TRUE, 0);
-
-	g_signal_connect(frame, "path_dropped",
-			G_CALLBACK(drag_app_dropped), dialog);
-	g_signal_connect(frame, "clear",
-			G_CALLBACK(clear_run_action), dialog);
-
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), hbox, FALSE, TRUE, 4);
-	gtk_box_pack_start(GTK_BOX(hbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(hbox), gtk_label_new(_("OR")),
-						FALSE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(hbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), TRUE, TRUE, 0);
-
-
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), hbox, FALSE, TRUE, 0);
-
-	label = gtk_label_new(_("Enter a shell command:")),
-	gtk_label_set_xalign(GTK_LABEL(label), 0.0);
-	gtk_label_set_yalign(GTK_LABEL(label), 0.5);
-	gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
-
-	gtk_box_pack_start(GTK_BOX(hbox),
-			new_help_button(show_shell_help, NULL), FALSE, TRUE, 0);
-
-	entry = gtk_entry_new();
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), entry, FALSE, TRUE, 0);
-	gtk_widget_grab_focus(entry);
-	g_object_set_data(G_OBJECT(dialog), "shell_command", entry);
-	gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
-
-	/* If possible, fill in the entry box with the current command */
-	tmp = get_current_command(type);
-	if (tmp)
-	{
-		gtk_entry_set_text(GTK_ENTRY(entry), tmp);
-		gtk_editable_set_position(GTK_EDITABLE(entry), -1);
-		g_free(tmp);
+	/* Elegir como padre la ventana activa de ROX para que el selector quede
+	 * centrado y no pueda ocultarse detrás del gestor. */
+	windows = gtk_window_list_toplevels();
+	for (node = windows; node; node = node->next) {
+		if (GTK_IS_WINDOW(node->data) && gtk_window_is_active(GTK_WINDOW(node->data))) {
+			parent = GTK_WINDOW(node->data);
+			break;
+		}
 	}
-	else
-	{
-		gtk_entry_set_text(GTK_ENTRY(entry), " \"$@\"");
-		gtk_editable_set_position(GTK_EDITABLE(entry), 0);
-	}
+	g_list_free(windows);
 
-	dialog_add_icon_button(GTK_DIALOG(dialog), ROX_ICON_CLOSE,
-			_("_Close"), GTK_RESPONSE_CANCEL);
+	mime_type = g_strconcat(type->media_type, "/", type->subtype, NULL);
+	dialog = gtk_app_chooser_dialog_new_for_content_type(parent,
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, mime_type);
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Choose Default Application"));
+	gtk_window_set_position(GTK_WINDOW(dialog), parent
+		? GTK_WIN_POS_CENTER_ON_PARENT : GTK_WIN_POS_CENTER);
+	gtk_app_chooser_dialog_set_heading(GTK_APP_CHOOSER_DIALOG(dialog),
+		_("Select the default application for this file type"));
 
-	button = button_new_mixed(ROX_ICON_OK, _("_Use Command"));
-	gtk_widget_set_can_default(button, TRUE); /* Modificado por josejp2424: GTK3 */
-	gtk_dialog_add_action_widget(dialog, button, GTK_RESPONSE_OK);
-
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_set_homogeneous(GTK_BOX(hbox), TRUE);
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), hbox, FALSE, TRUE, 0);
-
-	gtk_dialog_set_default_response(dialog, GTK_RESPONSE_OK);
-
-	g_signal_connect(dialog, "response",
-			G_CALLBACK(set_action_response), NULL);
-
-	gtk_widget_show_all(GTK_WIDGET(dialog));
-}
-
-/* path is an entry in Choices. If it's a symlink or a very small executable
- * then just get rid of it, otherwise confirm first. It it doesn't exist,
- * do nothing.
- *
- * FALSE on error (abort operation).
- */
-static gboolean remove_handler_with_confirm(const guchar *path)
-{
-	struct stat info;
-
-	if (lstat(path, &info) == 0)
-	{
-		/* A binding already exists... */
-		if (S_ISREG(info.st_mode) && info.st_size > 256)
-		{
-			if (!confirm(_("A run action already exists and is "
-				      "quite a big program - are you sure "
-				      "you want to delete it?"),
-				    ROX_ICON_DELETE, NULL))
-			{
-				return FALSE;
+	response = gtk_dialog_run(GTK_DIALOG(dialog));
+	if (response == GTK_RESPONSE_OK) {
+		GAppInfo *app = gtk_app_chooser_get_app_info(GTK_APP_CHOOSER(dialog));
+		if (app) {
+			GError *error = NULL;
+			if (!g_app_info_set_as_default_for_type(app, mime_type, &error)) {
+				report_error(_("Unable to set the default application for %s: %s"),
+					mime_type, error ? error->message : _("Unknown error"));
+				g_clear_error(&error);
+			} else {
+				/* También la registra como última usada para que los menús
+				 * Open With de aplicaciones XDG mantengan el mismo orden. */
+				g_app_info_set_as_last_used_for_type(app, mime_type, NULL);
 			}
-		}
-
-		if (unlink(path))
-		{
-			report_error(_("Can't remove %s: %s"),
-				path, g_strerror(errno));
-			return FALSE;
+			g_object_unref(app);
 		}
 	}
 
-	return TRUE;
+	gtk_widget_destroy(dialog);
+	g_free(mime_type);
 }
 
-/* The user wants to set a new default action for files of this type (or just
- * clear the action). Removes the current binding if possible and returns the
- * path to save the new one to. NULL means cancel. g_free() the result.
- */
-static char *get_action_save_path(GtkWidget *dialog)
-{
-	guchar		*path = NULL;
-	guchar 		*type_name = NULL;
-	MIME_type	*type;
-	Radios		*radios;
 
-	g_return_val_if_fail(dialog != NULL, NULL);
-
-	type = g_object_get_data(G_OBJECT(dialog), "mime_type");
-	radios = g_object_get_data(G_OBJECT(dialog), "rox-radios");
-
-	g_return_val_if_fail(radios != NULL && type != NULL, NULL);
-
-	if (radios_get_value(radios) == SET_MEDIA)
-		type_name = g_strdup(type->media_type);
-	else
-		type_name = g_strconcat(type->media_type, "_",
-				type->subtype, NULL);
-
-	path = choices_find_xdg_path_save("", PROJECT, SITE, FALSE);
-	if (!path)
-	{
-		report_error(
-		_("Choices saving is disabled by CHOICESPATH variable"));
-		goto out;
-	}
-	g_free(path);
-
-	path = choices_find_xdg_path_save(type_name, "MIME-types", SITE, TRUE);
-
-	if (!remove_handler_with_confirm(path))
-		null_g_free(&path);
-out:
-	g_free(type_name);
-	return path;
-}
 
 MIME_type *mime_type_from_base_type(int base_type)
 {
@@ -1263,31 +700,14 @@ int mode_to_base_type(int st_mode)
 	return TYPE_ERROR;
 }
 
-/* Returns TRUE is this is something that is run by looking up its type
- * in MIME-types and, hence, can have its run action set.
+/* Returns TRUE if this regular non-executable file can have its default
+ * application selected through the standard XDG application chooser.
  */
 gboolean can_set_run_action(DirItem *item)
 {
 	g_return_val_if_fail(item != NULL, FALSE);
 
 	return item->base_type == TYPE_FILE && !EXECUTABLE_FILE(item);
-}
-
-/* Parse file type colours and allocate/free them as necessary */
-static void alloc_type_colours(void)
-{
-	int i;
-
-	for (i = 0; i < NUM_TYPE_COLOURS; i++)
-	{
-		if (!gdk_rgba_parse(&type_colours[i],
-				(const gchar *) o_type_colours[i].value))
-		{
-			g_warning("Invalid type colour '%s'; using black",
-				(const gchar *) o_type_colours[i].value);
-			type_colours[i] = (GdkRGBA) {0.0, 0.0, 0.0, 1.0};
-		}
-	}
 }
 
 static void expire_timer(gpointer key, gpointer value, gpointer data)
@@ -1313,7 +733,6 @@ static void system_icon_theme_changed(GtkIconTheme *theme, gpointer data)
 
 static void options_changed(void)
 {
-	alloc_type_colours();
 	if (o_icon_theme.has_changed)
 	{
 		set_icon_theme();
@@ -1322,24 +741,12 @@ static void options_changed(void)
 	}
 }
 
-/* Return a pointer to a (static) colour for this item. If colouring is
- * off, returns normal.
- */
+/* Return the text colour supplied by the active GTK theme.
+ * Legacy ROX per-file-type colours are intentionally ignored. */
 GdkRGBA *type_get_colour(DirItem *item, GdkRGBA *normal)
 {
-	int type = item->base_type;
-
-	if (!o_display_colour_types.int_value)
-		return normal;
-
-	if (EXECUTABLE_FILE(item))
-		type = TYPE_EXEC;
-	else if (item->flags & ITEM_FLAG_APPDIR)
-		type = TYPE_APPDIR;
-
-	g_return_val_if_fail(type >= 0 && type < NUM_TYPE_COLOURS, normal);
-
-	return &type_colours[type];
+	(void) item;
+	return normal;
 }
 
 static char **get_xdg_data_dirs(int *n_dirs)

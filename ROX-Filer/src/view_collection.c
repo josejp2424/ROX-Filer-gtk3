@@ -413,8 +413,19 @@ static void draw_item(GtkWidget *widget,
 				   : GTK_STATE_FLAG_NORMAL;
 	gtk_style_context_get_color(context, GTK_STATE_FLAG_NORMAL,
 			&normal_colour);
+	/* Modificado por josejp2424 (2026): no adivinar colores simbólicos.
+	 * La vista de iconos se dibuja a mano, por lo que hay que colocar
+	 * temporalmente el GtkStyleContext en el estado seleccionado y dejar que
+	 * el tema GTK entregue el color real que usa para ese estado. */
+	gtk_style_context_save(context);
+	gtk_style_context_set_state(context, selection_state);
 	rox_style_context_get_background(context, selection_state,
 			&selection_colour);
+	if (selection_colour.alpha <= 0.01 &&
+	    !gtk_style_context_lookup_color(context, "theme_selected_bg_color",
+			&selection_colour))
+		selection_colour = normal_colour;
+	gtk_style_context_restore(context);
 	normal_colour.alpha = 1.0;
 	selection_colour.alpha = 1.0;
 	type_colour = type_get_colour(item, &normal_colour);
@@ -709,16 +720,25 @@ static void draw_string(GtkWidget *widget,
 
 	if (selection_state != GTK_STATE_FLAG_NORMAL)
 	{
+		gint render_width = MAX(1, MIN(width, area->width));
+
+		/* Modificado por josejp2424 (2026): GtkDrawingArea no pinta por sí
+		 * solo el estado SELECTED. Renderizar el fondo y el marco con las
+		 * funciones del tema GTK evita texto gris sobre blanco en temas claros
+		 * y mantiene exactamente los colores definidos por el tema activo. */
+		gtk_style_context_save(context);
+		gtk_style_context_set_state(context, selection_state);
 		gtk_style_context_get_color(context, selection_state, &text_colour);
 		if (box)
 		{
-			gtk_style_context_save(context);
-			gtk_style_context_set_state(context, selection_state);
-			gtk_render_background(context, cr,
-					area->x, area->y,
-					MIN(width, area->width), area->height);
-			gtk_style_context_restore(context);
+			cairo_save(cr);
+			gtk_render_background(context, cr, area->x, area->y,
+					render_width, area->height);
+			gtk_render_frame(context, cr, area->x, area->y,
+					render_width, area->height);
+			cairo_restore(cr);
 		}
+		gtk_style_context_restore(context);
 	}
 	else if (normal_colour)
 		text_colour = *normal_colour;

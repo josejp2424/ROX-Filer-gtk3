@@ -2,7 +2,18 @@
 # ROX-Filer 2.12 GTK3 translation
 # GTK3 port maintained by josejp2424
 msgid ""
-msgstr "Project-Id-Version: ROX-Filer 2.12 GTK3\nLanguage: ar\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+msgstr ""
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 msgid "\nProcess terminated.\n"
 msgstr "\nتم إنهاء العملية.\n"
@@ -803,3 +814,558 @@ msgstr "عرض الأقسام وتحميلها وإلغاء تحميلها وف�
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "فشل الأمر."
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "سطح مكتب ROX"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "تعذر فتح عنصر سطح المكتب"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "لا يوجد تطبيق مرتبط بهذا الملف"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "نسخ إلى مجلد الخلفيات..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "نسخ ... إلى مجلد الخلفيات؟"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "يمكن نسخ صور JPEG وPNG وSVG فقط إلى مجلد الخلفيات."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "تعذر إنشاء مجلد الخلفيات '%s': %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "يوجد ملف باسم '%s' بالفعل في مجلد الخلفيات."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "هل تريد استبدال الملف الموجود؟"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "الصورة موجودة بالفعل في مجلد الخلفيات."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "تم نسخ الصورة إلى مجلد الخلفيات."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "هل تريد استخدامها الآن كخلفية لسطح المكتب؟"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "ليس الآن"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "استخدام كخلفية"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "تعذر نسخ '%s' إلى '%s': %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "تعذر تعيين الخلفية: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "خطأ في سطح مكتب ROX"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "تعذرت قراءة الجهاز"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "خلفية سطح المكتب"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "اختر _صورة..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_تطبيق"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "اختر خلفية من /usr/share/backgrounds"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "اختر خلفية سطح المكتب"
+
+#: desktop.c
+msgid "Image files"
+msgstr "ملفات الصور"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "تعذر تعيين خلفية سطح المكتب"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "تغيير خلفية سطح المكتب..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "فتح مجلد سطح المكتب"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "تحديث سطح المكتب"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "نمط الخلفية:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "ملء"
+
+#: desktop.c
+msgid "Fit"
+msgstr "ملاءمة"
+
+#: desktop.c
+msgid "Stretch"
+msgstr "تمديد"
+
+#: desktop.c
+msgid "Center"
+msgstr "توسيط"
+
+#: desktop.c
+msgid "Tile"
+msgstr "تجانب"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "تعذر حفظ إعدادات سطح المكتب"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "إظهار أيقونات الأقراص"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "أسفل اليسار"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "أسفل اليمين"
+
+#: desktop.c
+msgid "Top left"
+msgstr "أعلى اليسار"
+
+#: desktop.c
+msgid "Top right"
+msgstr "أعلى اليمين"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "أفقي"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "عمودي"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "أيقونات الأقراص"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "فتح وحدة التخزين المركبة"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "تركيب وحدة التخزين وفتحها"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "إضافة برامج إلى سطح المكتب..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "برامج سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "بحث:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "التطبيق"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "الوصف"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "على سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "تعذر إنشاء مجلد سطح المكتب"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "تعذرت إضافة التطبيق: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "تمت الإضافة إلى سطح المكتب"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "إزالة «%s» من سطح المكتب؟"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "تعذرت إزالة التطبيق من سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "مشغّل سطح المكتب غير صالح"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_إضافة"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_إزالة"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "لم يتم العثور على مشغلات تطبيقات"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "اختر تطبيقًا لإضافته إلى سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "هذا التطبيق موجود بالفعل على سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "هذا التطبيق غير موجود على سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "تمت الإزالة من سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "سلوك أيقونات سطح المكتب"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "حجم الأيقونة:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "فتح بنقرة واحدة"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "فتح بنقرتين"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "تفضيلات سطح مكتب ROX"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "حجم أيقونات سطح المكتب:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "فتح أيقونات سطح المكتب:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "بنقرة واحدة"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "بنقرتين"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "محاذاة أيقونات سطح المكتب إلى الشبكة"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "حجم أيقونات الأقراص:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "إظهار زر إلغاء التركيب السريع على الأقراص المركبة"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "موضع الأقراص:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "اتجاه الأقراص:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "تفضيلات سطح المكتب..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "إظهار زر إلغاء التركيب السريع"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "حجم الأيقونة"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "تعيين التطبيق الافتراضي..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "تعيين التطبيق الافتراضي لـ ...؟"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "يمكن تعيين التطبيق الافتراضي لملف عادي فقط"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "اختر التطبيق الافتراضي"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "حدد التطبيق الافتراضي لهذا النوع من الملفات"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "تعذر تعيين التطبيق الافتراضي لـ %s: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "لم يتم تعيين تطبيق افتراضي"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "تطبيق XDG الافتراضي"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "تعذر فتح '%s' باستخدام تطبيق XDG الافتراضي: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "لم يتم تعيين تطبيق افتراضي للملفات من هذا النوع (%s/%s) - يمكنك اختيار تطبيق من «تعيين التطبيق الافتراضي» في قائمة الملف، أو سحب الملف إلى أحد التطبيقات.%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "تخطيط أيقونات محركات الأقراص"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "الإعدادات الافتراضية"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "الظهور"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "محركات الأقراص الداخلية"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "محركات الأقراص القابلة للإزالة"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "محركات أقراص الشبكة"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "إظهار التسميات"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "إطار التسمية"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "ترتيب عكسي"
+
+#: desktop.c
+msgid "Layout"
+msgstr "التخطيط"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "الاتجاه"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "الموضع الأفقي"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "الموضع العمودي"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "التباعد الأفقي"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "التباعد العمودي"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "الإزاحة الأفقية"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "الإزاحة العمودية"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "ترتيب أيقونات محركات الأقراص..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "إعادة محاذاة أيقونات محركات الأقراص"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "حرّك أيقونات الوحدات إلى اليسار أو اليمين بكسلاً واحداً في كل مرة"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "حرّك أيقونات الوحدات إلى الأعلى أو الأسفل بكسلاً واحداً في كل مرة"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "حدد عنصراً واحداً أو أكثر لاستعادته."
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "سلة المهملات فارغة بالفعل."
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "إ_فراغ سلة المهملات"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "سلة المهملات"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "فتح سلة المهملات"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "استعادة المحدد"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "إفراغ سلة المهملات"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "استعادة العناصر..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "تمت استعادة عنصر واحد."
+msgstr[1] "تمت استعادة عنصر واحد."
+msgstr[2] "تمت استعادة عنصرين."
+msgstr[3] "تمت استعادة %u عناصر."
+msgstr[4] "تمت استعادة %u عنصراً."
+msgstr[5] "تمت استعادة %u عنصر."
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "تمت استعادة %u عنصر."

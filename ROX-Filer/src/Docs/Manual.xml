@@ -2381,56 +2381,25 @@ generated.
   </para>
 
   <sect1>
-   <title><anchor id="RunAction" xreflabel="the Set Run Action box"/>
-    The Set Run Action box
+   <title><anchor id="RunAction" xreflabel="the Set Default Application dialog"/>
+    The Set Default Application dialog
    </title>
    <para>
-    This box appears when you choose <guimenuitem>Set Run Action...</guimenuitem>
-    from the File menu, and is used to set which application is loaded when you click
-    on a file.
-    </para><para>
-    For example, let's say you want to set things up so that opening a
-    <filename>.gif</filename> file loads it into the Gimp.
-    First, right-click over a gif image to open the menu and choose
-    <guimenuitem>Set Run Action...</guimenuitem> from the
-    <guimenuitem>File</guimenuitem> submenu.
-    Then, you have a choice of two methods to set the run action:
+    This dialog appears when you choose
+    <guimenuitem>Set Default Application...</guimenuitem> from the File menu.
+    It uses the standard GTK application chooser to select the program that
+    opens the file's MIME type.
+   </para><para>
+    The selection is stored through GIO in the Freedesktop XDG association
+    system. For a normal user this means
+    <filename>~/.config/mimeapps.list</filename>. Applications selected in
+    another XDG-compliant file manager are therefore also recognized by
+    ROX-Filer, and changes made in ROX-Filer are visible to those applications.
+   </para><para>
+    ROX-Filer no longer creates or reads private run-action links in
+    <filename>~/.config/rox.sourceforge.net/MIME-types</filename> or
+    <filename>~/Choices/MIME-types</filename>.
    </para>
-
-   <sect2><title>Setting the run action by drag-and-drop</title>
-    <para>
-     Drag the Gimp (from a filer window, a panel or the pinboard) onto
-     the area marked <guilabel>Drop a suitable application here</guilabel>.
-     From now on, clicking on a GIF file will load it into the Gimp.
-    </para>
-   </sect2>
-
-   <sect2><title>Setting the run action by entering a shell command</title>
-    <para>
-     Type: <userinput>gimp "$@"</userinput>
-     into the box labelled <guilabel>Enter a shell command</guilabel> and press
-     <keycap>Return</keycap>. <userinput>$@</userinput>
-     will be replaced by the name of the file you click on when this command
-     is used. As before, clicking on any GIF image will now load it into
-     the Gimp.
-    </para>
-   </sect2>
-
-   <sect2><title>Setting the default media-type handlers</title>
-    <para>
-     Whichever method you use to set the action you have the choice of
-     setting the run action just for that type, or setting the default
-     for all files with that media-type which don't already have a specific
-     action.
-     </para><para>
-     Since the Gimp can load many types of image, it makes sense
-     to select the <guilabel>Set default for all `image/&lt;anything&gt;'</guilabel>
-     option so you don't have to do it again for image/jpeg files and so on. However,
-     this only affects types that don't already have a specific action
-     (ie, those that would have brought up an error box if you tried to
-     open them).
-    </para>
-   </sect2>
   </sect1>
 
   <sect1>
@@ -2443,8 +2412,8 @@ generated.
     from the File menu, and is used to set which image to use to represent
     the file.
     </para><para>
-    It works much like the Set Run Action box described above, except that
-    you may specifiy an icon for one file individually (by name) as well as
+    This is separate from the standard application association described above. You
+    may specify an icon for one file individually (by name) as well as
     for all files of a particular type. When setting the icon for a single
     file, the filer stores the name of the file and the name of the icon inside
     your <filename>~/.config/rox.sourceforge.net/MIME-icons</filename>
@@ -2463,54 +2432,20 @@ generated.
   </sect1>
 
   <sect1>
-   <title>How filetypes are stored</title>
+   <title>How file associations and icons are stored</title>
    <para>
-
-    <application>ROX-Filer</application> uses two sub-directories in your
-    <filename>~/.config/rox.sourceforge.net</filename> directory for filetypes:
-
-    <variablelist>
-
-     <varlistentry><term><filename>MIME-types</filename></term><listitem><para>
-        contains symlinks, one for each MIME type, which point
-        to programs that can handle files of that type. To set what program
-        is run when you click on the file you should normally use the <guimenuitem>Set
-         Run Action...</guimenuitem> feature (see the <xref linkend="RunAction"/> section).
-        However, you can also set the actions manually &mdash; for example, to make
-        opening an HTML file load it into Netscape:
-
-        <orderedlist>
-         <listitem><para>
-           Find the Netscape application and go to <guimenuitem>Link...</guimenuitem>
-           on the menu.
-         </para></listitem>
-
-         <listitem><para>
-           Enter <userinput>text_html</userinput> as the name for the link and drag the
-           icon from the Link box into the <filename>MIME-types</filename> directory.
-         </para></listitem>
-
-        </orderedlist>
-
-        You can also put actual programs in here as well as links if you want
-        to.
-     </para></listitem></varlistentry>
-
-     <varlistentry><term><filename>MIME-icons</filename></term><listitem><para>
-        contains the images used to display each type of file.
-        So the filer will try to display an HTML file using the icon
-        <filename>MIME-icons/text_html.png</filename>. If no icon is set here,
-	the filer will use the currently selected icon theme (as set in the options
-	box); see <citation>IconTheme</citation> for details.
-     </para></listitem></varlistentry>
-
-    </variablelist>
-
-    In <filename>MIME-types</filename> you can also provide default actions for each media type.
-    For example, if <filename>text_html</filename> isn't found then the filer
-    will try simply using <filename>text</filename>.
+    Default applications are stored using the Freedesktop XDG standard.
+    User-specific choices are normally written to
+    <filename>~/.config/mimeapps.list</filename>, while system defaults and
+    installed <filename>.desktop</filename> files are found through the usual
+    XDG data directories. ROX-Filer accesses these associations through GIO.
+   </para><para>
+    Custom MIME icons remain separate from application associations. They may
+    be stored in
+    <filename>~/.config/rox.sourceforge.net/MIME-icons</filename>. If no custom
+    image is present, ROX-Filer asks the selected GTK icon theme for the
+    standard MIME icon name.
    </para>
-
   </sect1>
 
   <sect1>

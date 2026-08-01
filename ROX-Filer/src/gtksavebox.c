@@ -241,7 +241,7 @@ gtk_savebox_init (GtkSavebox *savebox)
   savebox->icon = NULL;
 
   gtk_window_set_title (GTK_WINDOW (savebox), _("Save As:"));
-  gtk_window_set_position (GTK_WINDOW (savebox), GTK_WIN_POS_MOUSE);
+  gtk_window_set_position (GTK_WINDOW (savebox), GTK_WIN_POS_CENTER);
   rox_window_set_wmclass(GTK_WINDOW(savebox), "savebox", "Savebox");
   savebox->drag_box = gtk_event_box_new ();
   gtk_container_set_border_width (GTK_CONTAINER (savebox->drag_box), 4);

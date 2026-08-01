@@ -40,6 +40,8 @@ GList *add_sendto_desktop_items(GtkWidget *menu, GHashTable *menu_entries,
 /* For "New" toolbar button */
 void show_new_directory(FilerWindow *filer_window);
 void show_new_file(FilerWindow *filer_window);
+GtkWidget *create_menu_new(FilerWindow *filer_window);
+GtkWidget *prepare_menu_new(FilerWindow *filer_window);
 void show_menu_new(FilerWindow *filer_window);
 
 /* Public menu handlers */

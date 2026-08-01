@@ -147,7 +147,7 @@ void infobox_new(const gchar *pathname)
 	dialog_add_icon_button(GTK_DIALOG(window), ROX_ICON_REFRESH,
 			_("_Refresh"), GTK_RESPONSE_APPLY);
 
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_MOUSE);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	owindow = G_OBJECT(window);
 	details = make_vbox(path, owindow);

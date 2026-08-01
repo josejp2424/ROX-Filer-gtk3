@@ -146,7 +146,7 @@ static GtkWidget *appmenu_add_submenu(xmlNode *subm_node)
 	GtkWidget *sub_menu;
 
         /* Create the new submenu */
-	sub_menu = gtk_menu_new();
+	sub_menu = rox_menu_new();
 
 	/* Add the menu entries */
 	for (node = subm_node->xmlChildrenNode; node; node = node->next)

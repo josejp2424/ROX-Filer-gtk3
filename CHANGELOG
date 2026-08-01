@@ -1,3 +1,460 @@
+2.12-r56 (2026-07-31)
+
+- Added application-pet.svg, application-x-sfs.svg and
+  application-x-squashfs-image.svg to ROX-Filer/ROX/MIME.
+- Added DEBIAN/postinst to create missing hicolor mimetypes directories,
+  install the three SVG MIME icons in 16x16, 24x24, 48x48 and scalable,
+  and refresh the GTK icon cache.
+- Added DEBIAN/postrm to remove the postinst-created icon copies cleanly.
+
+2.12-r54 (2026-07-29)
+
+- Added real --desktop-wallpaper and --desktop-apps command-line options.
+- Both desktop managers can run without starting a second desktop window.
+- Fixed --help printing gettext catalogue metadata after the normal help text.
+- Kept the existing translated help block and inserted the new commands safely.
+
+2.12-r53 (2026-07-29)
+
+- Added a standard Freedesktop Trash button at the end of the filer toolbar.
+- Added Open Trash, Restore Selected and Empty Trash actions.
+- Added a movable Trash icon to ROX Desktop, with empty/full theme icons.
+- Added a fallback standard ~/.local/share/Trash implementation for Puppy systems without a GIO trash backend.
+- Changed New into a drop-down toolbar button with Directory, Blank File and templates.
+- Bundled Script, Text, WebPage and Python 3 templates under ROX-Filer/Templates.
+- User templates override bundled templates with the same name.
+- Updated translation metadata and bundled MO catalogs.
+- Corrected the long --url option to use the same action as -U.
+
+ROX-Filer 2.12-r52
+====================
+
+- Fixed a full-screen drive overlay that intercepted desktop icon input.
+- Desktop launchers can again be opened, dragged and removed.
+- Ctrl-click, Shift-click and Ctrl+Alt-click provide multiple selection.
+- Dragging one selected icon moves the whole selected group.
+- Delete moves all selected desktop items to Trash; Enter opens them.
+- Drives and desktop items now share one GtkFixed without overlapping input.
+
+ROX-Filer 2.12-r51
+--------------------
+- Force square styling on every GtkMenu, including the overflow menu created
+  internally by GtkToolbar.
+- Apply the same square styling to GtkPopover, popup windows and tooltips.
+- Keep all colours, fonts, spacing and selection states controlled by the
+  active GTK3 theme.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r49 - 2026-07-29
+
+Transparent popup corner correction
+-----------------------------------
+
+- Keeps the themed rounded popup appearance introduced for the main context
+  menu and shared by all ROX menus and submenus.
+- Clears every native GTK popup surface to transparent before the active theme
+  renders the menu. This removes the four black rectangular corner remnants
+  visible around rounded menus on light backgrounds.
+- Sets the popup GdkWindow background to fully transparent when it is realized.
+- Adds an X11 window-shape fallback so the rounded corners are physically cut
+  away even when no compositor is running and RGBA alpha would otherwise show
+  as black.
+- Does not force menu foreground, background or selection colours; those remain
+  controlled by the active GTK3 theme.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r48 - 2026-07-29
+
+Menu and popup regression correction
+------------------------------------
+
+- Restored the r46 menu constructor that gave the main context menu its
+  correct themed appearance.
+- The same constructor is used by main menus, submenus, drag-and-drop action
+  menus, bookmarks, drive menus, desktop menus and application menus.
+- Removed the custom black tooltip drawing and app-paintable tooltip window.
+  Tooltips now use the active GTK3 theme for background, border and text.
+- Keeps the r47 drive offset controls, About icon and version tracking.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r47 - 2026-07-29
+
+GTK menus and submenus
+- Removed the application-paintable RGBA popup implementation introduced in
+  r46. Every popup now uses GTK3's normal menu rendering from the active theme.
+- Fixed black submenu backgrounds, unreadable submenu text, stale black popup
+  rectangles and unwanted custom outlines around popup corners.
+
+Drive icon fine adjustment
+- XOffset and YOffset controls now move the complete drive group one pixel per
+  arrow press and preview the result immediately while the dialog remains open.
+- Closing without Apply restores the last confirmed offsets; Apply saves the
+  current fine position to desktop.conf.
+
+About and version
+- The About dialog now uses ROX-Filer/ROX-Filer.png and reports version
+  2.12-r47 from AppInfo.xml/VERSION.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r46 - 2026-07-29
+
+GTK theme selection
+- The custom icon view now asks GtkStyleContext to render the selected
+  background, frame and text instead of reading symbolic colours manually.
+- File selections remain in GTK_STATE_FLAG_SELECTED while a context menu is
+  open, preventing light themes from turning the selected filename into faint
+  grey text on a white background.
+- Normal, selected and inactive colours continue to come from the active GTK3
+  theme; no ROX colour options were restored.
+
+Drive icon arrangement
+- Added a complete EssoraWM-style Drive Icon Layout dialog.
+- It provides internal/removable/network filters, labels, frame, reverse order,
+  quick unmount, horizontal/vertical orientation, left/centre/right and
+  top/centre/bottom alignment, icon size, spacing and X/Y offsets.
+- Added Arrange Drive Icons... and Realign Drive Icons to the desktop Drive
+  Icons submenu. Applying or realigning reserves the drive area again and
+  moves desktop launchers only when they overlap it.
+- The dialog remains open after Apply and includes a Defaults button using the
+  supplied 32/87/87/20/-40 Essora layout.
+
+GTK menu corners
+- All ROX menus now use one RGBA-aware constructor so rounded theme corners are
+  transparent instead of leaving square popup corners.
+- Removed the forced outer menu border and shadow while leaving menu colours,
+  typography and selected-item styling under control of the active GTK theme.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r45 - 2026-07-29
+
+GTK theme colours
+- The icon collection now uses the active GTK theme's selected foreground and
+  selected background as one matched pair.
+- Fixed unreadable selected filenames with light GTK themes.
+- The details view no longer overrides GtkTreeView text colours.
+- No private ROX file-type colour is reintroduced.
+
+Drive layout
+- Added EssoraWM-compatible drive geometry keys: Vertical, ReversePack,
+  SpacingX, SpacingY, XOffset, YOffset, XPos and YPos.
+- Added internal, removable and network filters plus ShowLabels and ShowFrame.
+- Defaults match the supplied EssoraWM configuration: 32 px, horizontal,
+  bottom-left, 87 px spacing, XOffset 20 and YOffset -40.
+- The calculated drive rectangle remains reserved from the desktop icon grid.
+- Opening Desktop Preferences no longer destroys custom XPos/YPos values when
+  the selected corner was not changed.
+
+Wallpaper selector
+- Apply and thumbnail double-click no longer close the wallpaper selector.
+- The dialog remains open until Close or the window-frame close control is used.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r44 - 2026-07-29
+
+Desktop labels
+- Removed the custom Cairo/Pango draw callback from native desktop and drive labels.
+- GtkLabel now performs normal glyph rendering on every supported Puppy GTK3 build.
+- Added dedicated CSS classes for desktop and drive labels.
+- Labels use white text with an eight-direction black text-shadow and no rectangular backing.
+- Selected desktop items retain the active GTK theme selection colours.
+- Includes the r41/r42 out-of-tree and path-with-spaces build fixes.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r42 - 2026-07-29
+
+Build system
+- AppRun --compile now invokes configure as ../src/configure from ROX-Filer/build.
+- This keeps srcdir relative and prevents GNU make from splitting source paths
+  when the extracted package is located inside a directory containing spaces.
+- Prevents circular and missing-target errors involving paths such as
+  /initrd/mnt/dev_save/... and src/configure.in.
+
+---------------------------------------------------------
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r41 - 2026-07-29
+
+Build system
+- Fixed AppRun --compile when using the separate ROX-Filer/build directory.
+- Makefile.in now references Makefile.in, config.h.in, configure and configure.in through $(srcdir).
+- Prevents: "No rule to make target 'Makefile.in', needed by 'Makefile'."
+
+---------------------------------------------------------
+
+- Removed the file-type colour controls from ROX Options. File and directory
+  names now use the normal foreground colour supplied by the active GTK theme.
+- Removed the classic pinboard foreground, background and shadow colour
+  controls. Legacy saved colour keys are ignored.
+- Normal filer backgrounds, text and selected states are now controlled by the
+  current GTK theme instead of private ROX colour values.
+- Removed the dark translucent rectangles behind native desktop labels.
+- Desktop application, file, folder and drive labels are now drawn as white
+  text with a thin black outline for reliable contrast over any wallpaper.
+- Selected desktop items keep the active GTK theme's selected foreground and
+  background colours.
+- The classic ROX pinboard follows the same transparent outlined-label style
+  and uses the GTK theme background as its no-wallpaper fallback.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r39 - 2026-07-29
+---------------------------------------------------------
+
+- File associations now use GIO and the Freedesktop XDG standard exclusively.
+  The user default is read from `$XDG_CONFIG_HOME/mimeapps.list`, normally
+  `~/.config/mimeapps.list`, with the normal system XDG fallbacks.
+- ROX no longer reads or writes its private `MIME-types` associations under
+  `~/.config/rox.sourceforge.net` or `/root/Choices`.
+- “Set Default Application...” now opens the standard GTK application chooser
+  and writes the selected default through `g_app_info_set_as_default_for_type`.
+- Desktop launchers, files and drive icons now share one collision model.
+  The actual drive-box rectangle is reserved in whichever corner it occupies,
+  and desktop items that overlap it are moved to the next free grid cell.
+- Saved duplicate or invalid positions are repaired automatically without
+  resetting valid manually placed icons.
+- Delayed work-area refreshes were restored for system startup and after wbar
+  restarts, so panel margins and drive positions settle correctly.
+- Added Ctrl+click multiple selection for desktop files and launchers.
+- Desktop labels now use a translucent dark backing and text shadow for
+  readability on both light and dark wallpapers.
+- The internal Close toolbar item beside Partitions is removed from the actual
+  source and toolbar list; only the window-frame close control remains.
+- Added translations for the new XDG default-application interface in Arabic,
+  Catalan, German, Spanish, French, Italian, Portuguese, Hungarian, Japanese,
+  Russian, Simplified Chinese and Traditional Chinese.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r38 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): every normal ROX-Filer window and dialog
+  is centred after it is mapped, using the actual monitor work area rather
+  than the full-screen desktop parent. Panels, pinboard, menus, tooltips and
+  DND surfaces remain position-exempt.
+- GtkDialog windows no longer inherit the global 640x400 minimum. Compact
+  confirmations such as Remove from desktop keep their natural size, so their
+  buttons remain visible above the taskbar/panel.
+- Added generic active-theme icons to every entry in the main filer context
+  menu, including branch and toggle items. The item factory now supports icons
+  on branches and check/radio entries.
+- Copy to Backgrounds is now directly below Open With and uses
+  preferences-desktop-wallpaper.
+- Added icons to native desktop item, desktop root and drive-settings context
+  menus.
+- ROX Desktop now unconditionally uses ~/Desktop, ignoring translated XDG
+  paths such as ~/Escritorio and old saved directory values.
+- Replaced fragile numeric menu positions with direct widget lookups for
+  Duplicate, Link, Shift Open, Set Run Action and Set Icon.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r37 - 2026-07-28
+---------------------------------------------------------
+
+- Desktop refreshes are scheduled after wallpaper/wbar changes and during
+  startup while the final work area settles.
+- Duplicate desktop positions are repaired and new launchers are arranged from
+  top to bottom before starting the next column.
+- The filer toolbar no longer shows its internal Close button beside
+  Partitions; the window-frame close control remains available.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r36 - 2026-07-28
+
+- Drive icons now remain inside the active GTK icon theme selected by
+  gtk-icon-theme-name.
+- Removed the filesystem scan across all installed themes, which could load
+  GNOME artwork even when another theme was selected.
+- USB uses drive-removable-media, sr0/optical uses media-cdrw, and SD/MMC uses
+  media-flash as their canonical names.
+- Removed GNOME-specific drive icon aliases and hard-disk fallbacks for
+  removable, optical and flash media.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r35 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): corrected the normal Rename window. The
+  GtkSavebox used by Rename, Duplicate, Symlink and Create no longer requests
+  placement beside the mouse and now opens centred.
+- Removed every remaining `GTK_WIN_POS_MOUSE` request from normal ROX-Filer
+  dialogs. Bulk Rename, item editing, properties, type/icon dialogs, panel
+  confirmations, bookmarks, help windows and file-manager windows now request
+  centred placement consistently.
+- Added explicit centring to dialogs that previously relied entirely on the
+  window manager, including unmount prompts, display-setting dialogs, desktop
+  wallpaper/preferences dialogs and desktop application confirmations.
+- Desktop, pinboard, panel, tooltip and popup surfaces retain their special
+  placement and are not treated as ordinary centred application windows.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r34 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): standardized the primary device icon names
+  on the names commonly available in Puppy icon themes: `drive-removable-media`
+  for USB/removable drives, `media-cdrw` for optical drives such as `sr0`, and
+  `media-flash` for SD/MMC cards.
+- More specific Freedesktop, GNOME and Puppy icon names remain as secondary
+  fallbacks. `drive-harddisk` is still restricted to the final fallback and is
+  never preferred for USB, optical or flash media.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r33 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): corrected the final drive-icon resolver.
+  USB, SD/MMC, optical (including sr0), floppy, SSD/NVMe, network and internal
+  units now keep their semantic icon order instead of moving drive-harddisk to
+  the front whenever the active GTK theme lacks a specific name.
+- ROX now mirrors EssoraWM's fallback search through Puppy pixmap directories
+  and all installed icon themes. An incomplete custom theme can no longer make
+  a USB stick or optical drive appear as an internal hard disk.
+- Added symbolic and legacy Puppy/GNOME icon-name fallbacks while preserving
+  the selected icon theme whenever it provides the correct device icon.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r32 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): removed the global map-time
+  `GTK_WIN_POS_CENTER_ALWAYS` hook introduced with the operation dialogs.
+  Dialogs are centred before being shown, avoiding repeated window-manager
+  geometry negotiations that delayed right-click menus.
+- Copy, move, Trash and Delete GIFs now stop and are released when the
+  operation finishes, so completed dialogs do not continue repainting.
+- ROX Desktop drive scans now run in a worker thread. The periodic
+  `lsblk`/sysfs scan no longer blocks GTK's main loop or delays the desktop
+  context menu. Desktop-folder changes no longer trigger a drive rescan.
+- Partitions inherit transport, removable, model, optical and rotational data
+  from their physical parent through `lsblk PKNAME` and sysfs. This fixes USB
+  partitions whose own `TRAN` field is empty.
+- ROX Desktop and the Partitions GUI now call the same icon function. It first
+  uses the icon supplied by GIO when available, then resolves USB, SD/MMC,
+  optical, SSD/NVMe, network and internal fallback names from the active GTK
+  icon theme.
+- Agregado por josejp2424 (2026): on X11, wallpaper changes also update the
+  root pixmap through hsetroot, feh or xwallpaper. When wbar is already
+  running, ROX performs the EssoraWM-style verified refresh asynchronously:
+  stop live non-zombie instances, reapply the wallpaper and start one fresh
+  wbar process.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r31 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): the shared drive icon resolver checks the
+  active GTK icon theme explicitly and selects the first icon that exists.
+- Added additional Puppy-compatible icon-name fallbacks while keeping standard
+  Freedesktop icon names as the preferred choices.
+- Agregado por josejp2424 (2026): right-clicking a desktop launcher opens an
+  item-specific menu with Open and Remove. Remove deletes only the copied
+  launcher from XDG_DESKTOP_DIR and removes its saved desktop position.
+- Modificado por josejp2424 (2026): animated copy, move and delete windows
+  start in compact mode with the empty operation log hidden. A Details control
+  reveals the log when requested; questions and errors reveal it automatically.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r30 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): all GtkDialog-based operation and
+  auxiliary windows are now requested at the centre of the screen instead of
+  appearing beside the mouse pointer. This includes copy, move, delete,
+  create/save, properties, confirmation and file-selection dialogs.
+- Agregado por josejp2424 (2026): copy and move operation windows display the
+  bundled animated `ROX-Filer/images/rox_copi.gif` while the operation runs.
+- Agregado por josejp2424 (2026): Trash, Delete and Delete Permanently windows
+  display the bundled animated `ROX-Filer/images/rox_delet.gif`.
+- The animations are loaded directly by ROX-Filer through
+  `GdkPixbufAnimation`; no script, external image viewer or additional runtime
+  command is required.
+- The existing real progress bar, operation log, conflict controls and error
+  reporting remain available below the animation.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r29 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): replaced the automatic `GtkIconView`
+  desktop layout with a movable `GtkFixed` icon layer. Files and `.desktop`
+  launchers can now be dragged to any position and their coordinates are
+  restored from `desktop-positions.conf`.
+- Added optional grid snapping and clamping to the primary monitor work area,
+  so icons remain visible after resolution or monitor-layout changes.
+- Added independent 24, 32, 48 and 64 pixel size settings for desktop icons
+  and drive icons.
+- Added one-click or double-click activation for desktop items. The basic
+  icon size and click behaviour can also be selected directly from the
+  **Add Programs to Desktop** manager.
+- Added a compact **ROX Desktop Preferences** dialog for desktop icon size,
+  click behaviour, grid snapping, drive visibility, drive size, quick
+  unmount button, position and orientation.
+- Added an icon-size submenu to **Drive Icons** and made the quick unmount
+  overlay optional.
+- Modificado por josejp2424 (2026): created one shared `GThemedIcon` resolver
+  for both ROX Desktop and the normal Partitions GUI. USB, SD/MMC, optical,
+  SSD/NVMe, network and internal drives now use the same ordered theme-icon
+  fallback list in both interfaces.
+- Added and rebuilt translations for the maintained languages.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r28 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): fixed the r27 build failure in
+  `desktop_apps.c` by including `global.h` before `i18n.h`, so the GTK3
+  compatibility type `RoxItemFactoryEntry` is defined when the translation
+  declarations are parsed.
+- Removed the deprecated `gdk_screen_get_width()` and
+  `gdk_screen_get_height()` fallback from the desktop monitor geometry code.
+  Monitor dimensions continue to come from the GTK3 `GdkMonitor` API.
+- No desktop behaviour or build workflow was changed.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r27 - 2026-07-28
+---------------------------------------------------------
+
+- Agregado por josejp2424 (2026): replaced **Open Desktop Folder** in the
+  desktop context menu with **Add Programs to Desktop...**.
+- Added an integrated GTK3 application manager inspired by the EssoraWM
+  desktop manager. It scans the user and system XDG application directories,
+  provides live search, shows application names, descriptions and theme icons,
+  and indicates which launchers are already on the desktop.
+- Add copies the selected `.desktop` launcher into the real
+  `XDG_DESKTOP_DIR`; Remove deletes that desktop copy after confirmation.
+  PuppyPin and external scripts are not used.
+- Desktop launchers now display their XDG Name and Icon instead of a generic
+  document icon and are executed through `GDesktopAppInfo` when activated.
+- Added `gio-unix-2.0` to the existing build dependencies. This is supplied by
+  the same GLib development package normally installed with GTK3 development
+  files.
+- Added translations and rebuilt the bundled message catalogues for the
+  maintained languages.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r26 - 2026-07-28
+---------------------------------------------------------
+
+- Modificado por josejp2424 (2026): ROX Desktop now reads the complete
+  monitor layout through GDK/XRandR and creates a desktop window covering the
+  full virtual screen instead of relying on a fixed-size fullscreen request.
+- The wallpaper is drawn independently on every monitor and supports Fill,
+  Fit, Stretch, Center and Tile modes.
+- Resolution, monitor and work-area changes are detected at runtime; the
+  desktop geometry, wallpaper and drive placement are refreshed automatically.
+- Desktop drive icons now start horizontally at the bottom-left of the primary
+  monitor work area, above the panel. Users can move the group to any corner
+  and choose horizontal or vertical orientation from the desktop menu.
+- Mounted drives display a compact theme-icon button in the upper-right corner
+  for quick unmounting. Optical media use the same button for Eject.
+- Desktop files and drive icons now use separate GTK layers, allowing their
+  layout and actions to evolve independently.
+- Partitions inherit USB, SD/MMC, NVMe/SSD, removable and optical metadata from
+  their parent block device through sysfs. ROX Desktop and the Partitions GUI
+  therefore use the same device classification and the same theme icon.
+- Improved USB icon fallback order with drive-harddisk-usb and other standard
+  theme names.
+- Desktop configuration remains in
+  ~/.config/rox.sourceforge.net/ROX-Filer/desktop.conf.
+- Added translations and rebuilt bundled message catalogues for the maintained
+  languages.
+
+ROX Desktop base (2026-07-27)
+--------------------------------
+* Agregado por josejp2424: nuevo modo experimental `--desktop`.
+* Agregado por josejp2424: configuración XDG en ~/.config/rox-filer.
+* Agregado por josejp2424: monitor de XDG Desktop y volúmenes GIO.
+* Agregado por josejp2424: apertura mediante asociaciones XDG.
+
 ROX-Filer 2.12 GTK3 - r21 - 2026-07-26
 
 Back/Forward navigation and complete partition actions
@@ -355,3 +812,39 @@ About dialog and metadata
 Source cleanup
 * Removed the individual STEP, STATUS, compile-fix and verification documents.
 * Consolidated the port history into this single CHANGELOG file.
+
+2026-07-27  josejp2424
+
+	* Modificado el arranque para que el binario ROX-Filer pueda ejecutarse
+	  directamente sin depender de la variable APP_DIR definida por AppRun.
+	* Corregida la ayuda para documentar el uso directo de
+	  `ROX-Filer --desktop`.
+	* Confirmado el procesamiento de la opción larga --desktop en main.c.
+
+2026-07-28  josejp2424
+
+	* Agregada la acción nativa "Copy to Backgrounds..." al menú contextual
+	  de imágenes JPEG, PNG y SVG. Ya no requiere el script SendTo externo.
+	* La copia se realiza en /usr/share/backgrounds, pregunta antes de
+	  reemplazar un archivo existente y ofrece aplicar la imagen como fondo.
+	* ROX Desktop guarda el wallpaper en desktop.conf y vigila los cambios de
+	  configuración para actualizar el fondo sin reiniciar el escritorio.
+	* Modificada la configuración nueva para usar la ubicación tradicional:
+	  ~/.config/rox.sourceforge.net/ROX-Filer/.
+	* Actualizados los catálogos PO y MO de árabe, catalán, alemán, español,
+	  francés, húngaro, italiano, japonés, portugués, ruso y chino.
+
+ROX-Filer 2.12 GTK3 - ROX Desktop r25 (2026)
+------------------------------------------------
+* Added a visible desktop context menu with a native GTK3 wallpaper chooser.
+* ROX Desktop now lists mounted and unmounted partitions using the same
+  lsblk/sysfs model as the Partitions GUI, so it does not depend on a GVfs or
+  UDisks volume-monitor backend.
+* Added periodic drive-change detection and immediate GVolumeMonitor updates.
+* Added standard themed icons for optical, USB, SD/MMC, SSD/NVMe, network and
+  internal storage, shared by ROX Desktop and the Partitions GUI.
+* Restricted Eject to optical drives; USB storage uses Mount/Unmount.
+* Moved the hidden-drive list to
+  ~/.config/rox.sourceforge.net/ROX-Filer/hidden-drives.
+* Reorganized --help into current file-manager, ROX Desktop and legacy
+  compatibility sections; updated project and maintainer information.

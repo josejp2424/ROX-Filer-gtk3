@@ -1134,9 +1134,11 @@ static void set_column_mono_font(GtkWidget *widget, GObject *object)
 #define ADD_TEXT_COLUMN(name, model_column) \
 	G_STMT_START { \
 		cell = gtk_cell_renderer_text_new(); \
+		/* El color normal y el color de selección los resuelve el tema GTK.
+		 * No enlazar foreground-rgba evita sobrescribir el contraste que
+		 * GtkTreeView calcula para temas claros y oscuros. */ \
 		column = gtk_tree_view_column_new_with_attributes((name), cell, \
 				"text", (model_column), \
-				"foreground-rgba", COL_COLOUR, \
 				"weight", COL_WEIGHT, NULL); \
 		gtk_tree_view_append_column(treeview, column); \
 	} G_STMT_END

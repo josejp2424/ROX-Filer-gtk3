@@ -824,6 +824,7 @@ static void may_offer_unmount(FilerWindow *filer_window, char *mount)
 			_("Do you want to unmount this device?\n\n"
 			"Unmounting a device makes it safe to remove "
 			"the disk."));
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 
 	unmount_mem_btn = gtk_check_button_new_with_label(
 			_("Perform the same action in future for this mount point"));
@@ -1788,7 +1789,7 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 	filer_window->toolbar_text = NULL;
 	filer_window->target_cb = NULL;
 	filer_window->mini_type = MINI_NONE;
-	filer_window->selection_state = GTK_STATE_FLAG_INSENSITIVE;
+	filer_window->selection_state = GTK_STATE_FLAG_SELECTED;
 	filer_window->toolbar = NULL;
 	/* Agregado por josejp2424 (2026): cada ventana comienza con un historial
 	 * de navegación vacío e independiente. */
@@ -1915,7 +1916,7 @@ FilerWindow *filer_opendir(const char *path, FilerWindow *src_win,
 	filer_add_widgets(filer_window, wm_class);
 	if (src_win)
 		gtk_window_set_position(GTK_WINDOW(filer_window->window),
-					GTK_WIN_POS_MOUSE);
+					GTK_WIN_POS_CENTER);
 
 	if (dir_settings)
 	{
@@ -2083,6 +2084,7 @@ static void filer_add_widgets(FilerWindow *filer_window, const gchar *wm_class)
 	 * overrides this value.
 	 */
 	filer_window->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_position(GTK_WINDOW(filer_window->window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(filer_window->window),
 			DEFAULT_FILER_WIDTH, DEFAULT_FILER_HEIGHT);
 	/* Agregado por josejp2424 (2026): solicitud mínima directa adicional.
@@ -2593,8 +2595,12 @@ static void set_selection_state(FilerWindow *filer_window, gboolean normal)
 {
 	GtkStateFlags old_state = filer_window->selection_state;
 
-	filer_window->selection_state = normal
-			? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_INSENSITIVE;
+	/* Modificado por josejp2424 (2026): abrir un menú contextual no debe
+	 * transformar la selección en texto atenuado. La selección de archivos
+	 * permanece en GTK_STATE_FLAG_SELECTED y el tema activo decide todos sus
+	 * colores. La propiedad PRIMARY sólo afecta al portapapeles, no al aspecto. */
+	(void) normal;
+	filer_window->selection_state = GTK_STATE_FLAG_SELECTED;
 
 	if (old_state != filer_window->selection_state
 	    && view_count_selected(filer_window->view))
@@ -3949,6 +3955,7 @@ void filer_save_settings(FilerWindow *fwin)
 	set_win=g_new(SettingsWindow, 1);
 
 	set_win->window=gtk_dialog_new();
+	gtk_window_set_position(GTK_WINDOW(set_win->window), GTK_WIN_POS_CENTER);
 	number_of_windows++;
 
 	dialog_add_icon_button(GTK_DIALOG(set_win->window), ROX_ICON_CANCEL,

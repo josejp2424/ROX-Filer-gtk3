@@ -10,19 +10,18 @@
 # Nikita E. Shalaev <smacker@mail.ru>, 2008: update for 2.7 (2008-01-18)
 msgid ""
 msgstr ""
-"Project-Id-Version: ru\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2006-03-30 21:14+0400\n"
-"Last-Translator: Nikita E. Shalaev <smacker@mail.ru>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.2\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<каталог>"
 
@@ -5709,3 +5708,551 @@ msgstr "Показать, смонтировать, размонтировать
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "Не удалось выполнить команду."
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "Рабочий стол ROX"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "Не удалось открыть объект рабочего стола"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "Для этого файла не назначено приложение"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "Копировать в папку фонов..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "Копировать ... в папку фонов?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "В папку фонов можно копировать только изображения JPEG, PNG и SVG."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "Не удалось создать папку фонов «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "Файл с именем «%s» уже существует в папке фонов."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "Заменить существующий файл?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "Изображение уже находится в папке фонов."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "Изображение скопировано в папку фонов."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "Использовать его сейчас как обои рабочего стола?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_Не сейчас"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_Использовать как обои"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "Не удалось скопировать «%s» в «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "Не удалось установить обои: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "Ошибка рабочего стола ROX"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "Не удалось прочитать устройство"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "Фон рабочего стола"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "Выбрать _изображение..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_Применить"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "Выберите обои из /usr/share/backgrounds"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "Выбрать фон рабочего стола"
+
+#: desktop.c
+msgid "Image files"
+msgstr "Файлы изображений"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "Не удалось установить фон рабочего стола"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "Изменить фон рабочего стола..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "Открыть папку рабочего стола"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "Обновить рабочий стол"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "Использование: ROX-Filer [ПАРАМЕТР]... [ФАЙЛ]...\nОткрывает каждый указанный каталог или файл, либо текущий рабочий\nкаталог, если аргументы не заданы.\n\nROX Desktop:\n      --desktop\tзапустить ROX Desktop с обоями, файлами рабочего стола и дисками\n\nФайловый менеджер:\n  -c, --client-id=ID\tиспользуется для управления сеансом\n  -d, --dir=DIR\t\tоткрыть DIR как каталог (не как приложение)\n  -D, --close=DIR\tзакрыть DIR и его подкаталоги\n  -h, --help\t\tпоказать эту справку и выйти\n  -m, --mime-type=FILE\tвывести MIME-тип FILE и выйти\n  -n, --new\t\tзапустить отдельный экземпляр\n  -R, --RPC\t\tвыполнить вызов метода из стандартного ввода\n  -s, --show=FILE\tоткрыть каталог с показом FILE\n  -u, --user\t\tпоказывать имя пользователя в каждом окне\n  -U, --url=URL\t\tоткрыть файл или каталог в форме URI\n  -v, --version\t\tпоказать версию и выйти\n  -x, --examine=FILE\tFILE изменён; проверить снова\n\nСовместимость с классическим рабочим столом ROX:\n  -b, --border=PANEL\tоткрыть PANEL как граничную панель\n  -B, --bottom=PANEL\tоткрыть PANEL у нижнего края\n  -l, --left=PANEL\tоткрыть PANEL у левого края\n  -p, --pinboard=PIN\tиспользовать классический pinboard ROX\n  -r, --right=PANEL\tоткрыть PANEL у правого края\n  -S, --rox-session\tиспользовать классический сеанс панели и pinboard\n  -t, --top=PANEL\tоткрыть PANEL у верхнего края\n\nСообщайте об ошибках: %s.\nПроект: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "Стиль обоев:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "Заполнение"
+
+#: desktop.c
+msgid "Center"
+msgstr "По центру"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "Не удалось сохранить настройки рабочего стола"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "Показывать значки дисков"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "Снизу слева"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "Снизу справа"
+
+#: desktop.c
+msgid "Top left"
+msgstr "Сверху слева"
+
+#: desktop.c
+msgid "Top right"
+msgstr "Сверху справа"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "Горизонтально"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "Вертикально"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "Значки дисков"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "Открыть подключённый том"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "Подключить и открыть том"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "Добавить программы на рабочий стол..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "Программы рабочего стола"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "Поиск:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "Приложение"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "Описание"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "На рабочем столе"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "Не удалось создать папку рабочего стола"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "Не удалось добавить приложение: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "Добавлено на рабочий стол"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "Удалить «%s» с рабочего стола?"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "Не удалось удалить приложение с рабочего стола"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "Некорректный ярлык рабочего стола"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_Добавить"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_Удалить"
+
+#: desktop.c desktop_apps.c
+msgid "_Close"
+msgstr "_Закрыть"
+
+#: desktop.c desktop_apps.c
+msgid "_Cancel"
+msgstr "_Отмена"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "Панели запуска приложений не найдены"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "Выберите приложение для добавления на рабочий стол"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "Это приложение уже находится на рабочем столе"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "Этого приложения нет на рабочем столе"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "Удалено с рабочего стола"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "Поведение значков рабочего стола"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "Размер значка:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "Открывать одним щелчком"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "Открывать двойным щелчком"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "Параметры ROX Desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "Размер значков рабочего стола:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "Открывать значки рабочего стола:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "Одним щелчком"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "Двойным щелчком"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "Привязывать значки рабочего стола к сетке"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "Размер значков дисков:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "Показывать кнопку быстрого отключения на подключённых дисках"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "Расположение дисков:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "Ориентация дисков:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "Параметры рабочего стола..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "Показывать кнопку быстрого отключения"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "Размер значка"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "Выбрать приложение по умолчанию..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "Назначить приложение по умолчанию для ...?"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "Приложение по умолчанию можно назначить только обычному файлу"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "Выбор приложения по умолчанию"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "Выберите приложение по умолчанию для этого типа файлов"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "Не удалось назначить приложение по умолчанию для %s: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "Приложение по умолчанию не задано"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "Приложение XDG по умолчанию"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "Не удалось открыть '%s' приложением XDG по умолчанию: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "Для файлов этого типа (%s/%s) не назначено приложение по умолчанию. Выберите его через пункт «Выбрать приложение по умолчанию» в меню «Файл» или перетащите файл на приложение.%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "Расположение значков дисков"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "По умолчанию"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "Видимость"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "Внутренние диски"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "Съёмные диски"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "Сетевые диски"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "Показывать подписи"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "Рамка подписи"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "Обратный порядок"
+
+#: desktop.c
+msgid "Layout"
+msgstr "Расположение"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "Ориентация"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "Положение по горизонтали"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "Положение по вертикали"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "Горизонтальный интервал"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "Вертикальный интервал"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "Горизонтальное смещение"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "Вертикальное смещение"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "Расположить значки дисков..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "Выровнять значки дисков заново"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "Перемещать значки накопителей влево или вправо по одному пикселю"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "Перемещать значки накопителей вверх или вниз по одному пикселю"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr "Откройте корзину и выберите элементы для восстановления."
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "Выберите один или несколько элементов для восстановления."
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "Корзина уже пуста."
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "_Очистить корзину"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "Корзина"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "Открыть корзину"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "Восстановить выбранное"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "Очистить корзину"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "Восстановить элементы..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "Восстановлен один элемент."
+msgstr[1] "Восстановлено %u элемента."
+msgstr[2] "Восстановлено %u элементов."
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "Восстановлено %u элементов."

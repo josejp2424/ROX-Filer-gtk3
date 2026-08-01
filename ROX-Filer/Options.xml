@@ -142,21 +142,6 @@ indicator'>If this is on then files which have one or more extended attributes s
   <section title='Pinboard'>
     <label help='1'>When using a pinboard, you can drag files and applications onto the desktop background to create shortcuts to them.</label>
     <frame label='Appearance'>
-      <hbox>
-        <vbox>
-	  <colour name='pinboard_fg_colour' label='Foreground:'/>
-	  <colour name='pinboard_shadow_colour' label='Text shadow:'/>
-	  <colour name='pinboard_bg_colour' label='Background:'/>
-        </vbox>
-	<hbox>
-          <radio-group name='pinboard_shadow_labels'>
-            <radio label='No shadow' value='0'/>
-            <radio label='Thin' value='1'/>
-            <radio label='Thick' value='2'/>
-          </radio-group>
-	</hbox>
-      </hbox>
-      <spacer/>
       <font override='1' label='Use custom font:' name='label_font'>The font used for the text displayed under the icons</font>
       <spacer/>
       <toggle name='pinboard_image_scaling' label='Fast scaling of images'>Choose between the fast or slow method of scaling backdrop images.  The slow method can give better results.</toggle>
@@ -321,30 +306,6 @@ xterm -e wget $1</entry>
       <label help='1'>Themes should be placed inside the ~/.icons directory.</label>
       <label help='1'>Use the 'Set Icon...' dialog box to set the icon for each MIME type. Note that icons set this way override those from the selected theme.</label>
     </frame>
-    <section title='Colours'>
-      <frame label='File type colours'>
-        <toggle name='display_colour_types' label='Colour files based on their types'>Filenames (and details) are coloured according to the file's type.</toggle>
-	<spacer/>
-        <hbox>
-          <vbox>
-            <colour name='display_dir_colour'  label='Directory:'/>
-            <colour name='display_file_colour' label='Regular file:'/>
-            <colour name='display_pipe_colour' label='Pipe:'/>
-            <colour name='display_sock_colour' label='Socket:'/>
-            <colour name='display_err_colour'  label='Error:'>Error, such as a symlink which points to a non-existant file, or a file which the filer does not have permission to examine.</colour>
-          </vbox>
-	  <spacer/>
-          <vbox>
-            <colour name='display_cdev_colour' label='Character device:'/>
-            <colour name='display_bdev_colour' label='Block device:'/>
-            <colour name='display_door_colour' label='Door:'>Door files are a bit like sockets or pipes, and have only been seen on Solaris.</colour>
-            <colour name='display_exec_colour' label='Executable file:'/>
-            <colour name='display_adir_colour' label='Application directory:'/>
-            <colour name='display_unkn_colour' label='Unknown type:'/>
-          </vbox>
-        </hbox>
-      </frame>
-    </section>
   </section>
   <section title='Compatibility'>
     <frame label='Command line program'>

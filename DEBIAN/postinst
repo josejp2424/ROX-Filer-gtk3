@@ -1,0 +1,54 @@
+#!/bin/sh
+set -e
+
+SOURCE_DIR="/usr/local/apps/ROX-Filer/ROX/MIME"
+HICOLOR_DIR="/usr/share/icons/hicolor"
+
+ICONS="
+application-pet.svg
+application-x-sfs.svg
+application-x-squashfs-image.svg
+"
+
+SIZES="
+48x48
+24x24
+scalable
+16x16
+"
+
+case "${1:-configure}" in
+    configure|abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+# Some Puppy/Devuan installations do not create the mimetypes directories.
+for size in $SIZES; do
+    mkdir -p "$HICOLOR_DIR/$size/mimetypes"
+done
+
+# Copy the bundled SVG MIME icons to every requested hicolor directory.
+for icon in $ICONS; do
+    source_file="$SOURCE_DIR/$icon"
+
+    if [ ! -f "$source_file" ]; then
+        echo "ROX-Filer postinst: required icon not found: $source_file" >&2
+        exit 1
+    fi
+
+    for size in $SIZES; do
+        install -m 0644 \
+            "$source_file" \
+            "$HICOLOR_DIR/$size/mimetypes/$icon"
+    done
+done
+
+# Refresh the icon cache when the tool is available.
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f -t "$HICOLOR_DIR" >/dev/null 2>&1 || true
+fi
+
+exit 0

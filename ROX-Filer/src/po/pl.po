@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: rox 2.3\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2003-02-23 16:34--100\n"
-"Last-Translator: Wit Wiliński <madman@berlios.de>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Polish\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<katalog>"
 
@@ -5192,3 +5192,86 @@ msgstr "<b>Uprawnienia</b>"
 
 #~ msgid "(thick)"
 #~ msgstr "(szeroki)"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: trash.c
+msgid "%u items were restored."
+msgstr ""

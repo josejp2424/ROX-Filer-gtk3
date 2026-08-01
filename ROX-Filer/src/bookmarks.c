@@ -106,6 +106,7 @@ void bookmarks_edit(void)
 	update_bookmarks();
 
 	bookmarks_window = gtk_dialog_new();
+	gtk_window_set_position(GTK_WINDOW(bookmarks_window), GTK_WIN_POS_CENTER);
 	number_of_windows++;
 
 	dialog_add_icon_button(GTK_DIALOG(bookmarks_window), ROX_ICON_CLOSE,
@@ -706,7 +707,7 @@ static GtkWidget *build_history_menu(FilerWindow *filer_window)
 	GList	  *next;
 	int	  i;
 
-	menu = gtk_menu_new();
+	menu = rox_menu_new();
 
 	if (!history)
 		return menu;
@@ -760,7 +761,7 @@ static GtkWidget *bookmarks_build_menu(FilerWindow *filer_window)
 	xmlNode *node;
 	gboolean need_separator = TRUE;
 
-	menu = gtk_menu_new();
+	menu = rox_menu_new();
 
 	item = gtk_menu_item_new_with_label(_("Add New Bookmark"));
 	g_signal_connect(item, "activate",

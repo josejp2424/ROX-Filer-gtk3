@@ -54,6 +54,7 @@ static gboolean abox_delete(GtkWidget *dialog, GdkEventAny *event);
 static void response(GtkDialog *dialog, gint response_id);
 static void abox_finalise(GObject *object);
 static void shade(ABox *abox);
+static void abox_set_log_visible(ABox *abox, gboolean visible);
 
 GType abox_get_type(void)
 {
@@ -131,7 +132,9 @@ static void abox_init(GTypeInstance *object, gpointer gclass)
 	GtkWidget *content = gtk_dialog_get_content_area(dialog);
 	int i;
 
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+	/* Modificado por josejp2424 (2026): los diálogos de operaciones deben
+	 * aparecer siempre centrados y no junto al puntero. */
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 
 	abox->dir_label = gtk_label_new(_("<dir>"));
 	gtk_widget_set_size_request(abox->dir_label, 8, -1);
@@ -145,6 +148,17 @@ static void abox_init(GTypeInstance *object, gpointer gclass)
 	gtk_box_pack_start(GTK_BOX(content),
 				abox->dir_label, FALSE, TRUE, 0);
 
+	/* Agregado por josejp2424 (2026): contenedor oculto para las animaciones
+	 * nativas de copia y borrado. Se muestra sólo en esas operaciones. */
+	abox->operation_animation_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_widget_set_halign(abox->operation_animation_box, GTK_ALIGN_CENTER);
+	gtk_widget_set_no_show_all(abox->operation_animation_box, TRUE);
+	gtk_box_pack_start(GTK_BOX(content), abox->operation_animation_box,
+			FALSE, FALSE, 4);
+	abox->operation_animation = NULL;
+
+	abox->details = NULL;
+	abox->compact_log = FALSE;
 	abox->log_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(content),
 				abox->log_hbox, TRUE, TRUE, 4);
@@ -260,6 +274,24 @@ static void abox_init(GTypeInstance *object, gpointer gclass)
 	shade(abox);
 }
 
+/* Agregado por josejp2424 (2026): ocultar completamente el registro
+ * cuando no se solicitan detalles. Esto elimina la franja gris vacía que
+ * quedaba debajo de las animaciones. La ventana vuelve a calcular su tamaño
+ * y permanece centrada. */
+static void abox_set_log_visible(ABox *abox, gboolean visible)
+{
+	if (!abox || !abox->log_hbox)
+		return;
+
+	if (visible)
+		gtk_widget_show(abox->log_hbox);
+	else
+		gtk_widget_hide(abox->log_hbox);
+
+	if (gtk_widget_get_realized(GTK_WIDGET(abox)))
+		gtk_window_resize(GTK_WINDOW(abox), 1, 1);
+}
+
 static void flag_toggled(GtkToggleButton *toggle, ABox *abox)
 {
 	gint	code;
@@ -269,6 +301,9 @@ static void flag_toggled(GtkToggleButton *toggle, ABox *abox)
 
 	if (code == 'Q')
 		shade(abox);
+	else if (code == 'D')
+		abox_set_log_visible(abox,
+			gtk_toggle_button_get_active(toggle));
 
 	g_signal_emit_by_name(abox, "flag_toggled", code);
 
@@ -372,6 +407,12 @@ void abox_log(ABox *abox, const gchar *message, const gchar *style)
 
 	if (!g_utf8_validate(message, -1, NULL))
 		u8 = to_utf8(message);
+
+	/* Las preguntas y errores deben ser visibles aunque el registro normal
+	 * esté plegado durante una operación animada. */
+	if (abox->compact_log && abox->details && style &&
+	    (!strcmp(style, "error") || !strcmp(style, "question")))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(abox->details), TRUE);
 
 	text_buffer = gtk_text_view_get_buffer(log);
 
@@ -749,3 +790,84 @@ void    abox_set_percentage(ABox *abox, int per)
 				      per/100.);
 }
 
+/* Agregado por josejp2424 (2026): carga una animación GIF desde
+ * ROX-Filer/images y la muestra centrada en la ventana de operación.
+ * GtkImage mantiene viva la GdkPixbufAnimation hasta que el diálogo se
+ * destruye, por lo que no se necesita ningún temporizador externo. */
+void abox_set_operation_animation(ABox *abox, const gchar *filename)
+{
+	GList *children;
+	GList *iter;
+	GdkPixbufAnimation *animation;
+	GError *error = NULL;
+	gchar *path;
+
+	g_return_if_fail(abox != NULL);
+	g_return_if_fail(IS_ABOX(abox));
+
+	children = gtk_container_get_children(
+		GTK_CONTAINER(abox->operation_animation_box));
+	for (iter = children; iter; iter = iter->next)
+		gtk_widget_destroy(GTK_WIDGET(iter->data));
+	g_list_free(children);
+	abox->operation_animation = NULL;
+
+	if (!filename || !*filename)
+	{
+		gtk_widget_hide(abox->operation_animation_box);
+		return;
+	}
+
+	/* Modificado por josejp2424 (2026): las operaciones con animación usan
+	 * un diseño compacto. El registro se pliega por defecto y se puede abrir
+	 * con Detalles. No se reutiliza la opción Brief, porque esa opción sólo
+	 * controla cuánto se registra y no la visibilidad del panel. */
+	abox->compact_log = TRUE;
+	gtk_widget_set_no_show_all(abox->log_hbox, TRUE);
+	if (!abox->details)
+		abox->details = abox_add_flag(abox,
+			_("Details"), _("Show Log"), 'D', FALSE);
+	abox_set_log_visible(abox, FALSE);
+
+	path = g_build_filename(app_dir, "images", filename, NULL);
+	animation = gdk_pixbuf_animation_new_from_file(path, &error);
+	g_free(path);
+
+	if (!animation)
+	{
+		if (error)
+		{
+			g_warning("Unable to load ROX operation animation '%s': %s",
+				filename, error->message);
+			g_error_free(error);
+		}
+		gtk_widget_hide(abox->operation_animation_box);
+		return;
+	}
+
+	abox->operation_animation = gtk_image_new_from_animation(animation);
+	g_object_unref(animation);
+	gtk_widget_set_halign(abox->operation_animation, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(abox->operation_animation, GTK_ALIGN_CENTER);
+	gtk_box_pack_start(GTK_BOX(abox->operation_animation_box),
+		abox->operation_animation, FALSE, FALSE, 0);
+	gtk_widget_show(abox->operation_animation);
+	gtk_widget_show(abox->operation_animation_box);
+}
+
+/* Agregado por josejp2424 (2026): detener y liberar la animación apenas
+ * termina la operación. Dejar un GIF activo en un diálogo de resultados
+ * mantiene repintados periódicos y puede producir lag en equipos modestos. */
+void abox_stop_operation_animation(ABox *abox)
+{
+	GList *children;
+
+	g_return_if_fail(abox != NULL);
+	g_return_if_fail(IS_ABOX(abox));
+
+	children = gtk_container_get_children(
+		GTK_CONTAINER(abox->operation_animation_box));
+	g_list_free_full(children, (GDestroyNotify) gtk_widget_destroy);
+	abox->operation_animation = NULL;
+	gtk_widget_hide(abox->operation_animation_box);
+}

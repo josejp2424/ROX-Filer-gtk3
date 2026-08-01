@@ -1,9 +1,9 @@
 /*
- * ROX-Filer GTK3 partition toolbar integration.
+ * ROX-Filer GTK3 partition and desktop drive integration.
  *
- * Agregado por josejp2424 (2026): botón permanente de particiones,
- * detección de volúmenes, montaje, desmontaje, expulsión y apertura desde la
- * barra principal.
+ * Agregado por josejp2424 (2026): modelo compartido de unidades para que
+ * la barra de Particiones y ROX Desktop utilicen la misma detección,
+ * montaje y selección de iconos del tema GTK.
  *
  * Copyright (C) 2026 josejp2424
  *
@@ -17,13 +17,50 @@
 #define _ROX_DRIVES_H
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
-/* Modificado por josejp2424 (2026): evitar incluir global.h desde este
- * encabezado. global.h se incluye primero desde cada unidad C y no dispone
- * de guardia de inclusión; incluirlo aquí redeclaraba sus enums al compilar
- * drives.c. La declaración adelantada mantiene este encabezado independiente. */
 struct _FilerWindow;
 
+typedef struct _RoxDriveInfo RoxDriveInfo;
+
+struct _RoxDriveInfo
+{
+	gchar *name;
+	gchar *device;
+	gchar *label;
+	gchar *fstype;
+	gchar *mountpoint;
+	gchar *size;
+	gchar *type;
+	gchar *transport;
+	gchar *model;
+	gboolean removable;
+	gboolean optical;
+	gboolean network;
+	gboolean solid_state;
+};
+
 GtkToolItem *drives_toolbar_button_new(struct _FilerWindow *filer_window);
+
+/* Agregado por josejp2424 (2026): API común usada por ROX Desktop y por la
+ * GUI de Particiones. El GPtrArray devuelto libera sus RoxDriveInfo con
+ * rox_drive_info_free(). */
+GPtrArray *rox_drives_read(GError **error);
+RoxDriveInfo *rox_drive_info_copy(const RoxDriveInfo *source);
+void rox_drive_info_free(gpointer data);
+RoxDriveInfo *rox_drive_find_by_device(const gchar *device, GError **error);
+
+gchar *rox_drive_find_mountpoint(const gchar *device);
+gchar *rox_drive_mount(const RoxDriveInfo *drive, gchar **error_text);
+gboolean rox_drive_unmount(const RoxDriveInfo *drive, gchar **error_text);
+gboolean rox_drive_eject(const RoxDriveInfo *drive, gchar **error_text);
+
+/* Agregado por josejp2424 (2026): resolvedor único de iconos.
+ * ROX Desktop y la GUI de Particiones deben usar este mismo GIcon para que
+ * USB, SD/MMC, NVMe/SSD y medios ópticos nunca sigan caminos distintos. */
+const gchar *rox_drive_icon_name(const RoxDriveInfo *drive);
+GIcon *rox_drive_get_icon(const RoxDriveInfo *drive);
+GtkWidget *rox_drive_icon_widget_new(const RoxDriveInfo *drive, gint size);
+const gchar *rox_drive_display_name(const RoxDriveInfo *drive);
 
 #endif /* _ROX_DRIVES_H */

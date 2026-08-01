@@ -7,6 +7,7 @@
 #define _TYPE_H
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 extern MIME_type *text_plain;		/* Often used as a default type */
 extern MIME_type *inode_directory;
@@ -52,7 +53,7 @@ void reread_mime_files(void);
 extern const char *mime_type_comment(MIME_type *type);
 extern MIME_type *mime_type_lookup(const char *type);
 extern GList *mime_type_name_list(gboolean only_regular);
-char *handler_for(MIME_type *type);
+GAppInfo *type_get_default_application(MIME_type *type);
 
 GtkIconInfo *theme_lookup_icon(const gchar *icon_name, gint size,
 		GtkIconLookupFlags flags);

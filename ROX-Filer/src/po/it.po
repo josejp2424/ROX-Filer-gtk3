@@ -6,18 +6,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.10.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2010-01-03 12:00+0100\n"
-"Last-Translator: Yuri Bongiorno http://yuri.bongiorno.googlepages.com <>\n"
-"Language-Team: Italian <tp@lists.linux.it>\n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Italian\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<dir>"
 
@@ -5491,3 +5491,550 @@ msgstr "Mostra, monta, smonta e apri le partizioni"
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "Il comando non è riuscito."
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "Desktop ROX"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "Impossibile aprire l’elemento del desktop"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "Nessuna applicazione è associata a questo file"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "Copia negli sfondi..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "Copiare ... negli sfondi?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "Nella cartella degli sfondi si possono copiare solo immagini JPEG, PNG e SVG."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "Impossibile creare la cartella degli sfondi «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "Nella cartella degli sfondi esiste già un file chiamato «%s»."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "Sostituire il file esistente?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "L’immagine è già nella cartella degli sfondi."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "L’immagine è stata copiata nella cartella degli sfondi."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "Usarla ora come sfondo del desktop?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_Non ora"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_Usa come sfondo"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "Impossibile copiare «%s» in «%s»: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "Impossibile impostare lo sfondo: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "Errore del desktop ROX"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "Impossibile leggere il dispositivo"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "Sfondo del desktop"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "Scegli _immagine..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_Applica"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "Seleziona uno sfondo da /usr/share/backgrounds"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "Scegli sfondo del desktop"
+
+#: desktop.c
+msgid "Image files"
+msgstr "File immagine"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "Impossibile impostare lo sfondo del desktop"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "Cambia sfondo del desktop..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "Apri cartella Desktop"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "Aggiorna desktop"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "Uso: ROX-Filer [OPZIONE]... [FILE]...\nApre ogni directory o file indicato, oppure la directory di lavoro\ncorrente se non vengono forniti argomenti.\n\nROX Desktop:\n      --desktop\tavvia ROX Desktop con sfondo, file del Desktop e unità\n\nGestore file:\n  -c, --client-id=ID\tusato per la gestione della sessione\n  -d, --dir=DIR\t\tapre DIR come directory (non come applicazione)\n  -D, --close=DIR\tchiude DIR e le sue sottodirectory\n  -h, --help\t\tmostra questo aiuto ed esce\n  -m, --mime-type=FILE\tstampa il tipo MIME di FILE ed esce\n  -n, --new\t\tavvia un'istanza separata del gestore\n  -R, --RPC\t\tinvoca la chiamata letta dallo standard input\n  -s, --show=FILE\tapre una directory mostrando FILE\n  -u, --user\t\tmostra il nome utente in ogni finestra\n  -U, --url=URL\t\tapre file o directory in formato URI\n  -v, --version\t\tmostra la versione ed esce\n  -x, --examine=FILE\tFILE è cambiato; riesaminalo\n\nCompatibilità con il desktop ROX classico:\n  -b, --border=PANEL\tapre PANEL come pannello di bordo\n  -B, --bottom=PANEL\tapre PANEL sul bordo inferiore\n  -l, --left=PANEL\tapre PANEL sul bordo sinistro\n  -p, --pinboard=PIN\tusa il pinboard ROX classico\n  -r, --right=PANEL\tapre PANEL sul bordo destro\n  -S, --rox-session\tusa la sessione classica con pannello e pinboard\n  -t, --top=PANEL\tapre PANEL sul bordo superiore\n\nSegnalare errori a %s.\nProgetto: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "Stile dello sfondo:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "Riempi"
+
+#: desktop.c
+msgid "Center"
+msgstr "Centra"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "Impossibile salvare le impostazioni del desktop"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "Mostra le icone delle unità"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "In basso a sinistra"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "In basso a destra"
+
+#: desktop.c
+msgid "Top left"
+msgstr "In alto a sinistra"
+
+#: desktop.c
+msgid "Top right"
+msgstr "In alto a destra"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "Orizzontale"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "Verticale"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "Icone delle unità"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "Apri volume montato"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "Monta e apri volume"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "Aggiungi programmi al desktop..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "Programmi del desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "Cerca:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "Applicazione"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "Descrizione"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "Sul desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "Impossibile creare la cartella Scrivania"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "Impossibile aggiungere l’applicazione: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "Aggiunta al desktop"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "Rimuovere «%s» dal desktop?"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "Impossibile rimuovere l’applicazione dal desktop"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "Il lanciatore del desktop non è valido"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_Aggiungi"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_Rimuovi"
+
+#: desktop.c desktop_apps.c
+msgid "_Close"
+msgstr "_Chiudi"
+
+#: desktop.c desktop_apps.c
+msgid "_Cancel"
+msgstr "_Annulla"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "Nessun lanciatore di applicazioni trovato"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "Seleziona un’applicazione da aggiungere al desktop"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "Questa applicazione è già sul desktop"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "Questa applicazione non è sul desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "Rimossa dal desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "Comportamento delle icone del desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "Dimensione icona:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "Apri con un clic"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "Apri con doppio clic"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "Preferenze di ROX Desktop"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "Dimensione icone del desktop:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "Apri le icone del desktop:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "Con un clic"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "Con doppio clic"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "Allinea le icone del desktop alla griglia"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "Dimensione icone delle unità:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "Mostra il pulsante di smontaggio rapido sulle unità montate"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "Posizione delle unità:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "Orientamento delle unità:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "Preferenze del desktop..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "Mostra il pulsante di smontaggio rapido"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "Dimensione icona"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "Imposta applicazione predefinita..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "Impostare l’applicazione predefinita per ...?"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "È possibile impostare l’applicazione predefinita solo per un file normale"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "Scegli applicazione predefinita"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "Selezionare l’applicazione predefinita per questo tipo di file"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "Impossibile impostare l’applicazione predefinita per %s: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "Nessuna applicazione predefinita impostata"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "Applicazione XDG predefinita"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "Impossibile aprire '%s' con l’applicazione XDG predefinita: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "Nessuna applicazione predefinita è configurata per i file di questo tipo (%s/%s). È possibile sceglierne una con «Imposta applicazione predefinita» nel menu File oppure trascinare il file su un’applicazione.%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "Disposizione icone delle unità"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "Predefiniti"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "Visibilità"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "Unità interne"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "Unità rimovibili"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "Unità di rete"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "Mostra etichette"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "Cornice etichette"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "Ordine inverso"
+
+#: desktop.c
+msgid "Layout"
+msgstr "Disposizione"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "Orientamento"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "Posizione orizzontale"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "Posizione verticale"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "Spaziatura orizzontale"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "Spaziatura verticale"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "Scostamento orizzontale"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "Scostamento verticale"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "Disponi icone delle unità..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "Riallinea icone delle unità"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "Sposta le icone delle unità a sinistra o a destra di un pixel alla volta"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "Sposta le icone delle unità in alto o in basso di un pixel alla volta"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr "Solo i file locali possono essere spostati in questo cestino."
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr "Aprire il cestino e selezionare gli elementi da ripristinare."
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "Selezionare uno o più elementi da ripristinare."
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "Il cestino è già vuoto."
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "_Svuota cestino"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "Cestino"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "Apri cestino"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "Ripristina selezionati"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "Svuota cestino"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "Ripristina elementi..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "È stato ripristinato un elemento."
+msgstr[1] "Sono stati ripristinati %u elementi."
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "Sono stati ripristinati %u elementi."

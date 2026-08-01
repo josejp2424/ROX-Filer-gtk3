@@ -1,0 +1,14 @@
+Package: rox-filer
+Version: @VERSION@
+Section: utils
+Priority: optional
+Architecture: @ARCH@
+Maintainer: josejp2424 <puppylinuxjosejp2424@gmail.com>
+Installed-Size: @INSTALLED_SIZE@
+Depends: libc6, libglib2.0-0, libgtk-3-0, libxml2, shared-mime-info
+Provides: file-manager
+Homepage: https://github.com/josejp2424/ROX-Filer-gtk3
+Description: Lightweight GTK3 file manager and ROX Desktop
+ ROX-Filer is a fast and lightweight GTK3 file manager.
+ This build includes ROX Desktop, wallpaper management, desktop applications,
+ drive icons, standard XDG MIME associations, trash support and templates.

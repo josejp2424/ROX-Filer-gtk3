@@ -34,22 +34,11 @@
 #include "filer.h"
 #include "gui_support.h"
 #include "mount.h"
+#include "rox_config.h"
 
 #define DRIVE_ICON_INTERNAL  "drive-harddisk"
-#define DRIVE_ICON_REMOVABLE "drive-removable-media-usb"
 
-typedef struct _DriveInfo DriveInfo;
-
-struct _DriveInfo
-{
-	gchar *name;
-	gchar *device;
-	gchar *label;
-	gchar *fstype;
-	gchar *mountpoint;
-	gchar *size;
-	gboolean removable;
-};
+typedef RoxDriveInfo DriveInfo;
 
 typedef struct
 {
@@ -57,6 +46,28 @@ typedef struct
 	DriveInfo *drive;
 	GtkWidget *popover;
 } DriveMenuAction;
+
+/* Agregado por josejp2424 (2026): metadatos del dispositivo físico padre.
+ * lsblk suele dejar TRAN/RM/MODEL vacíos en las líneas de particiones, aunque
+ * estén presentes en la línea del disco. Se conservan aquí para heredarlos. */
+typedef struct
+{
+	gchar *transport;
+	gchar *model;
+	gboolean removable;
+	gboolean solid_state;
+	gboolean optical;
+} DriveParentInfo;
+
+static void drive_parent_info_free(gpointer data)
+{
+	DriveParentInfo *info = data;
+	if (!info)
+		return;
+	g_free(info->transport);
+	g_free(info->model);
+	g_free(info);
+}
 
 static gchar *parse_lsblk_value(const gchar *line, const gchar *key);
 static GPtrArray *read_drive_list(GError **error);
@@ -70,7 +81,8 @@ static void append_puppy_runtime_drives(GPtrArray *drives);
 static void append_sysfs_partitions(GPtrArray *drives);
 static gboolean technical_text_match(const gchar *value);
 static gboolean name_looks_removable(const gchar *value);
-static void drive_info_free(gpointer data);
+static void drive_enrich_from_sysfs(DriveInfo *drive);
+void rox_drive_info_free(gpointer data);
 static gchar *find_mountpoint(const gchar *device);
 static gboolean spawn_wait(gchar **argv, gchar **error_text);
 static gchar *mount_drive(const DriveInfo *drive, gchar **error_text);
@@ -162,6 +174,132 @@ static gboolean name_looks_removable(const gchar *value)
 		strstr(lower, "memory card") != NULL;
 	g_free(lower);
 	return result;
+}
+
+/* Agregado por josejp2424 (2026): heredar del dispositivo físico los
+ * metadatos que lsblk suele dejar vacíos en las particiones. Esto permite que
+ * sdb1 conserve TRAN=usb, que mmcblk0p1 se reconozca como tarjeta y que la GUI
+ * de Particiones use exactamente el mismo icono que ROX Desktop. */
+static gchar *read_sysfs_text(const gchar *path)
+{
+	gchar *text = NULL;
+
+	if (!path || !g_file_get_contents(path, &text, NULL, NULL))
+		return NULL;
+	g_strstrip(text);
+	return text;
+}
+
+static gchar *drive_parent_block_name(const gchar *name)
+{
+	gchar *partition_path;
+	gchar *class_path;
+	gchar *directory;
+	gchar *parent;
+	char *resolved;
+
+	if (!name || !*name)
+		return NULL;
+
+	partition_path = g_build_filename("/sys/class/block", name,
+		"partition", NULL);
+	if (!g_file_test(partition_path, G_FILE_TEST_EXISTS))
+	{
+		g_free(partition_path);
+		return g_strdup(name);
+	}
+	g_free(partition_path);
+
+	class_path = g_build_filename("/sys/class/block", name, NULL);
+	resolved = realpath(class_path, NULL);
+	g_free(class_path);
+	if (!resolved)
+		return g_strdup(name);
+
+	directory = g_path_get_dirname(resolved);
+	parent = g_path_get_basename(directory);
+	g_free(directory);
+	free(resolved);
+	return parent;
+}
+
+static void drive_enrich_from_sysfs(DriveInfo *drive)
+{
+	gchar *parent;
+	gchar *path;
+	gchar *value;
+	gchar *class_path;
+	char *resolved;
+
+	if (!drive || !drive->name || !*drive->name)
+		return;
+
+	parent = drive_parent_block_name(drive->name);
+	if (!parent)
+		return;
+
+	path = g_build_filename("/sys/class/block", parent, "removable", NULL);
+	value = read_sysfs_text(path);
+	if (value)
+		drive->removable = drive->removable || atoi(value) != 0;
+	g_free(value);
+	g_free(path);
+
+	path = g_build_filename("/sys/class/block", parent, "queue",
+		"rotational", NULL);
+	value = read_sysfs_text(path);
+	if (value)
+		drive->solid_state = atoi(value) == 0;
+	g_free(value);
+	g_free(path);
+
+	if (!drive->model || !*drive->model)
+	{
+		path = g_build_filename("/sys/class/block", parent, "device",
+			"model", NULL);
+		value = read_sysfs_text(path);
+		if (value && *value)
+		{
+			g_free(drive->model);
+			drive->model = value;
+		}
+		else
+			g_free(value);
+		g_free(path);
+	}
+
+	class_path = g_build_filename("/sys/class/block", parent, NULL);
+	resolved = realpath(class_path, NULL);
+	g_free(class_path);
+	if (resolved)
+	{
+		if ((!drive->transport || !*drive->transport) &&
+		    strstr(resolved, "/usb"))
+		{
+			g_free(drive->transport);
+			drive->transport = g_strdup("usb");
+			drive->removable = TRUE;
+		}
+		else if ((!drive->transport || !*drive->transport) &&
+		         (g_str_has_prefix(parent, "mmc") || strstr(resolved, "/mmc")))
+		{
+			g_free(drive->transport);
+			drive->transport = g_strdup("mmc");
+			drive->removable = TRUE;
+		}
+		else if ((!drive->transport || !*drive->transport) &&
+		         g_str_has_prefix(parent, "nvme"))
+		{
+			g_free(drive->transport);
+			drive->transport = g_strdup("nvme");
+			drive->solid_state = TRUE;
+		}
+		free(resolved);
+	}
+
+	if (g_str_has_prefix(parent, "sr"))
+		drive->optical = TRUE;
+	g_free(parent);
 }
 
 static gboolean technical_text_match(const gchar *value)
@@ -285,8 +423,9 @@ static gboolean drive_is_hidden_by_essorawm(const gchar *name)
 	if (!name || !*name)
 		return FALSE;
 
-	path = g_build_filename(g_get_home_dir(), ".config", "essorawm",
-		"hidden-drives", NULL);
+	/* Modificado por josejp2424 (2026): guardar la lista de unidades ocultas
+	 * junto con la configuración tradicional de ROX-Filer. */
+	path = g_build_filename(rox_config_dir(), "hidden-drives", NULL);
 	if (!g_file_get_contents(path, &contents, NULL, NULL))
 	{
 		g_free(path);
@@ -369,13 +508,18 @@ static DriveInfo *drive_info_from_device(const gchar *device)
 	drive->fstype = command_first_line(argv_type);
 	drive->label = command_first_line(argv_label);
 	drive->size = command_first_line(argv_size);
+	drive->type = g_str_has_prefix(base, "sr") ? g_strdup("rom") : g_strdup("part");
+	drive->optical = g_str_has_prefix(base, "sr") ||
+		(drive->fstype && (!g_ascii_strcasecmp(drive->fstype, "iso9660") ||
+		 !g_ascii_strcasecmp(drive->fstype, "udf")));
+	drive_enrich_from_sysfs(drive);
 
 	{
 		gchar *removable_path = g_build_filename("/sys/class/block", base,
 			"removable", NULL);
 		gchar *value = NULL;
 		if (g_file_get_contents(removable_path, &value, NULL, NULL))
-			drive->removable = atoi(value) != 0;
+			drive->removable = drive->removable || atoi(value) != 0;
 		g_free(value);
 		g_free(removable_path);
 	}
@@ -420,7 +564,7 @@ static void append_puppy_runtime_drives(GPtrArray *drives)
 		if (drive && drive_is_useful(drive, "part", NULL, NULL))
 			g_ptr_array_add(drives, drive);
 		else
-			drive_info_free(drive);
+			rox_drive_info_free(drive);
 		g_free(device);
 	}
 	g_dir_close(dir);
@@ -462,13 +606,13 @@ static void append_sysfs_partitions(GPtrArray *drives)
 		if (drive && drive_is_useful(drive, "part", NULL, NULL))
 			g_ptr_array_add(drives, drive);
 		else
-			drive_info_free(drive);
+			rox_drive_info_free(drive);
 		g_free(device);
 	}
 	g_dir_close(dir);
 }
 
-static void drive_info_free(gpointer data)
+void rox_drive_info_free(gpointer data)
 {
 	DriveInfo *drive = data;
 	if (!drive)
@@ -479,6 +623,9 @@ static void drive_info_free(gpointer data)
 	g_free(drive->fstype);
 	g_free(drive->mountpoint);
 	g_free(drive->size);
+	g_free(drive->type);
+	g_free(drive->transport);
+	g_free(drive->model);
 	g_free(drive);
 }
 
@@ -492,7 +639,7 @@ static GPtrArray *read_drive_list(GError **error)
 	gchar *argv_full[] = {
 		(gchar *) "lsblk", (gchar *) "-P", (gchar *) "-p",
 		(gchar *) "-o",
-		(gchar *) "NAME,PATH,LABEL,FSTYPE,MOUNTPOINT,RM,TYPE,HOTPLUG,TRAN,MODEL,PARTLABEL,PARTTYPE,SIZE",
+		(gchar *) "NAME,PATH,PKNAME,LABEL,FSTYPE,MOUNTPOINT,RM,TYPE,HOTPLUG,TRAN,MODEL,ROTA,PARTLABEL,PARTTYPE,SIZE",
 		NULL
 	};
 	gchar *argv_compat[] = {
@@ -504,9 +651,10 @@ static GPtrArray *read_drive_list(GError **error)
 	gchar **lines;
 	gint i;
 	GPtrArray *drives;
+	GHashTable *parents;
 	GError *spawn_error = NULL;
 
-	drives = g_ptr_array_new_with_free_func(drive_info_free);
+	drives = g_ptr_array_new_with_free_func(rox_drive_info_free);
 
 	/* Modificado por josejp2424: algunos Puppy incluyen una versión antigua
 	 * de lsblk sin PATH, HOTPLUG, PARTLABEL o PARTTYPE. Intentar primero la
@@ -549,16 +697,72 @@ static GPtrArray *read_drive_list(GError **error)
 	g_free(stderr_text);
 
 	lines = g_strsplit(stdout_text ? stdout_text : "", "\n", -1);
+	parents = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
+		drive_parent_info_free);
+
+	/* Agregado por josejp2424 (2026): primera pasada para recordar el bus y
+	 * las propiedades del disco físico. Después cada partición hereda esos
+	 * datos por PKNAME, evitando que un USB termine con icono de disco SATA. */
+	for (i = 0; lines[i]; i++)
+	{
+		gchar *type;
+		gchar *name;
+		gchar *base;
+		gchar *rm;
+		gchar *hotplug;
+		gchar *rota;
+		DriveParentInfo *parent;
+
+		if (!*lines[i])
+			continue;
+		type = parse_lsblk_value(lines[i], "TYPE");
+		if (!type || (g_ascii_strcasecmp(type, "disk") &&
+		              g_ascii_strcasecmp(type, "rom")))
+		{
+			g_free(type);
+			continue;
+		}
+		name = parse_lsblk_value(lines[i], "NAME");
+		if (!name || !*name)
+		{
+			g_free(type);
+			g_free(name);
+			continue;
+		}
+		base = g_path_get_basename(name);
+		parent = g_new0(DriveParentInfo, 1);
+		parent->transport = parse_lsblk_value(lines[i], "TRAN");
+		parent->model = parse_lsblk_value(lines[i], "MODEL");
+		rm = parse_lsblk_value(lines[i], "RM");
+		hotplug = parse_lsblk_value(lines[i], "HOTPLUG");
+		rota = parse_lsblk_value(lines[i], "ROTA");
+		parent->removable = (rm && atoi(rm) != 0) ||
+			(hotplug && atoi(hotplug) != 0) ||
+			(parent->transport &&
+			 (!g_ascii_strcasecmp(parent->transport, "usb") ||
+			  !g_ascii_strcasecmp(parent->transport, "mmc") ||
+			  !g_ascii_strcasecmp(parent->transport, "sd")));
+		parent->solid_state = rota && atoi(rota) == 0;
+		parent->optical = !g_ascii_strcasecmp(type, "rom") ||
+			g_str_has_prefix(base, "sr");
+		g_hash_table_replace(parents, base, parent);
+		g_free(rm);
+		g_free(hotplug);
+		g_free(rota);
+		g_free(name);
+		g_free(type);
+	}
+
 	for (i = 0; lines[i]; i++)
 	{
 		DriveInfo *drive;
 		gchar *rm;
 		gchar *hotplug;
-		gchar *type;
-		gchar *tran;
-		gchar *model;
+		gchar *pkname;
+		gchar *rota;
 		gchar *partlabel;
 		gchar *parttype;
+		DriveParentInfo *parent = NULL;
 
 		if (!*lines[i])
 			continue;
@@ -582,22 +786,59 @@ static GPtrArray *read_drive_list(GError **error)
 		drive->size = parse_lsblk_value(lines[i], "SIZE");
 		rm = parse_lsblk_value(lines[i], "RM");
 		hotplug = parse_lsblk_value(lines[i], "HOTPLUG");
-		type = parse_lsblk_value(lines[i], "TYPE");
-		tran = parse_lsblk_value(lines[i], "TRAN");
-		model = parse_lsblk_value(lines[i], "MODEL");
+		drive->type = parse_lsblk_value(lines[i], "TYPE");
+		drive->transport = parse_lsblk_value(lines[i], "TRAN");
+		drive->model = parse_lsblk_value(lines[i], "MODEL");
+		pkname = parse_lsblk_value(lines[i], "PKNAME");
+		rota = parse_lsblk_value(lines[i], "ROTA");
 		partlabel = parse_lsblk_value(lines[i], "PARTLABEL");
 		parttype = parse_lsblk_value(lines[i], "PARTTYPE");
 
-		drive->removable = (rm && atoi(rm) != 0) ||
+		if (pkname && *pkname)
+		{
+			gchar *parent_name = g_path_get_basename(pkname);
+			parent = g_hash_table_lookup(parents, parent_name);
+			g_free(parent_name);
+		}
+		if (parent)
+		{
+			if ((!drive->transport || !*drive->transport) &&
+			    parent->transport && *parent->transport)
+			{
+				g_free(drive->transport);
+				drive->transport = g_strdup(parent->transport);
+			}
+			if ((!drive->model || !*drive->model) &&
+			    parent->model && *parent->model)
+			{
+				g_free(drive->model);
+				drive->model = g_strdup(parent->model);
+			}
+			drive->removable = parent->removable;
+			drive->solid_state = parent->solid_state;
+			drive->optical = parent->optical;
+		}
+		if (rota && *rota)
+			drive->solid_state = atoi(rota) == 0;
+
+		drive->removable = drive->removable ||
+			(rm && atoi(rm) != 0) ||
 			(hotplug && atoi(hotplug) != 0) ||
-			(tran && (!g_ascii_strcasecmp(tran, "usb") ||
-			          !g_ascii_strcasecmp(tran, "mmc") ||
-			          !g_ascii_strcasecmp(tran, "sd"))) ||
+			(drive->transport && (!g_ascii_strcasecmp(drive->transport, "usb") ||
+			          !g_ascii_strcasecmp(drive->transport, "mmc") ||
+			          !g_ascii_strcasecmp(drive->transport, "sd"))) ||
 			name_looks_removable(drive->label) ||
 			name_looks_removable(partlabel) ||
-			name_looks_removable(model);
+			name_looks_removable(drive->model);
 
-		if (drive_is_useful(drive, type, partlabel, parttype))
+		drive->optical = drive->optical ||
+			(drive->type && !g_ascii_strcasecmp(drive->type, "rom")) ||
+			(drive->name && g_str_has_prefix(drive->name, "sr")) ||
+			(drive->fstype && (!g_ascii_strcasecmp(drive->fstype, "iso9660") ||
+			 !g_ascii_strcasecmp(drive->fstype, "udf")));
+		drive_enrich_from_sysfs(drive);
+
+		if (drive_is_useful(drive, drive->type, partlabel, parttype))
 		{
 			if ((!drive->label || !*drive->label) && partlabel && *partlabel)
 			{
@@ -613,17 +854,17 @@ static GPtrArray *read_drive_list(GError **error)
 			g_ptr_array_add(drives, drive);
 		}
 		else
-			drive_info_free(drive);
+			rox_drive_info_free(drive);
 
 		g_free(rm);
 		g_free(hotplug);
-		g_free(type);
-		g_free(tran);
-		g_free(model);
+		g_free(pkname);
+		g_free(rota);
 		g_free(partlabel);
 		g_free(parttype);
 	}
 
+	g_hash_table_destroy(parents);
 	g_strfreev(lines);
 	g_free(stdout_text);
 
@@ -905,7 +1146,7 @@ static void drive_menu_action_free(gpointer data)
 	DriveMenuAction *action = data;
 	if (!action)
 		return;
-	drive_info_free(action->drive);
+	rox_drive_info_free(action->drive);
 	g_free(action);
 }
 
@@ -921,7 +1162,13 @@ static DriveInfo *drive_info_copy(const DriveInfo *source)
 	copy->fstype = g_strdup(source->fstype);
 	copy->mountpoint = g_strdup(source->mountpoint);
 	copy->size = g_strdup(source->size);
+	copy->type = g_strdup(source->type);
+	copy->transport = g_strdup(source->transport);
+	copy->model = g_strdup(source->model);
 	copy->removable = source->removable;
+	copy->optical = source->optical;
+	copy->network = source->network;
+	copy->solid_state = source->solid_state;
 	return copy;
 }
 
@@ -1067,30 +1314,38 @@ static gboolean drive_grid_button_press(GtkWidget *button,
 	mounted = mountpoint != NULL;
 	g_free(mountpoint);
 
-	menu = gtk_menu_new();
+	menu = rox_menu_new();
 	menu_action = drive_menu_action_copy(action);
 	g_object_set_data_full(G_OBJECT(menu), "rox-drive-menu-action",
 		menu_action, drive_menu_action_free);
 	open_item = gtk_menu_item_new_with_label(_("Open"));
 	mount_item = gtk_menu_item_new_with_label(_("Mount"));
 	unmount_item = gtk_menu_item_new_with_label(_("Unmount"));
-	separator = gtk_separator_menu_item_new();
-	eject_item = gtk_menu_item_new_with_label(_("Eject"));
+	separator = NULL;
+	eject_item = NULL;
 
 	gtk_widget_set_sensitive(mount_item, !mounted);
 	gtk_widget_set_sensitive(unmount_item, mounted);
-	gtk_widget_set_sensitive(eject_item, action->drive->removable);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), open_item);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), mount_item);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), unmount_item);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), separator);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), eject_item);
+
+	/* Modificado por josejp2424 (2026): ocultar Eject por completo para
+	 * discos y memorias USB. La acción sólo tiene sentido en medios ópticos. */
+	if (action->drive->optical)
+	{
+		separator = gtk_separator_menu_item_new();
+		eject_item = gtk_menu_item_new_with_label(_("Eject"));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), separator);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), eject_item);
+	}
 
 	g_signal_connect(open_item, "activate", G_CALLBACK(drive_menu_open), menu_action);
 	g_signal_connect(mount_item, "activate", G_CALLBACK(drive_menu_mount), menu_action);
 	g_signal_connect(unmount_item, "activate", G_CALLBACK(drive_menu_unmount), menu_action);
-	g_signal_connect(eject_item, "activate", G_CALLBACK(drive_menu_eject), menu_action);
+	if (eject_item)
+		g_signal_connect(eject_item, "activate", G_CALLBACK(drive_menu_eject), menu_action);
 	g_signal_connect_swapped(menu, "selection-done",
 		G_CALLBACK(gtk_widget_destroy), menu);
 	gtk_menu_attach_to_widget(GTK_MENU(menu), button, NULL);
@@ -1152,16 +1407,161 @@ static void drive_grid_activate(GtkButton *button, gpointer data)
 	g_free(error_text);
 }
 
-static GtkWidget *drive_icon_widget(const DriveInfo *drive, gint size)
+/* Agregado por josejp2424 (2026): clasificación única de iconos.
+ * ROX no debe convertir un USB, una tarjeta o sr0 en drive-harddisk sólo
+ * porque el tema GTK activo no publique todos los nombres Freedesktop. */
+typedef enum
 {
-	const gchar *icon_name;
+	ROX_DRIVE_ICON_INTERNAL,
+	ROX_DRIVE_ICON_SSD,
+	ROX_DRIVE_ICON_USB,
+	ROX_DRIVE_ICON_SD,
+	ROX_DRIVE_ICON_OPTICAL,
+	ROX_DRIVE_ICON_FLOPPY,
+	ROX_DRIVE_ICON_NETWORK
+} RoxDriveIconKind;
+
+static RoxDriveIconKind drive_icon_kind(const RoxDriveInfo *drive)
+{
+	gchar *lower_model = NULL;
+	gboolean solid_state = FALSE;
+
+	if (!drive)
+		return ROX_DRIVE_ICON_INTERNAL;
+	if (drive->network)
+		return ROX_DRIVE_ICON_NETWORK;
+	if (drive->optical ||
+	    (drive->type && !g_ascii_strcasecmp(drive->type, "rom")) ||
+	    (drive->name && g_str_has_prefix(drive->name, "sr")) ||
+	    (drive->fstype && (!g_ascii_strcasecmp(drive->fstype, "iso9660") ||
+	     !g_ascii_strcasecmp(drive->fstype, "udf"))))
+		return ROX_DRIVE_ICON_OPTICAL;
+	if (drive->name && g_str_has_prefix(drive->name, "fd"))
+		return ROX_DRIVE_ICON_FLOPPY;
+	if ((drive->transport && (!g_ascii_strcasecmp(drive->transport, "mmc") ||
+	     !g_ascii_strcasecmp(drive->transport, "sd"))) ||
+	    (drive->name && g_str_has_prefix(drive->name, "mmc")))
+		return ROX_DRIVE_ICON_SD;
+	if ((drive->transport && !g_ascii_strcasecmp(drive->transport, "usb")) ||
+	    drive->removable || name_looks_removable(drive->label) ||
+	    name_looks_removable(drive->model))
+		return ROX_DRIVE_ICON_USB;
+
+	solid_state = drive->solid_state;
+	if (drive->name && g_str_has_prefix(drive->name, "nvme"))
+		solid_state = TRUE;
+	if (drive->model)
+	{
+		lower_model = g_utf8_strdown(drive->model, -1);
+		if (strstr(lower_model, "ssd") || strstr(lower_model, "solid state"))
+			solid_state = TRUE;
+		g_free(lower_model);
+	}
+	return solid_state ? ROX_DRIVE_ICON_SSD : ROX_DRIVE_ICON_INTERNAL;
+}
+
+/* Los nombres son identificadores semánticos del tema GTK activo.
+ * No se buscan archivos dentro de otros temas: GTK3 lee gtk-icon-theme-name
+ * desde GtkSettings (settings.ini/XSettings) y resuelve cada nombre mediante
+ * el tema seleccionado y su cadena Inherits. */
+static const gchar *const *drive_icon_names_for_kind(RoxDriveIconKind kind)
+{
+	static const gchar *optical[] = {
+		"media-cdrw", "media-optical", "drive-optical", NULL
+	};
+	static const gchar *usb[] = {
+		"drive-removable-media", "drive-removable-media-usb",
+		"media-flash-usb", NULL
+	};
+	static const gchar *sd[] = {
+		"media-flash", "media-flash-sd-mmc", "media-memory-sd", NULL
+	};
+	static const gchar *ssd[] = {
+		"drive-harddisk-solidstate", "drive-harddisk-system",
+		"drive-harddisk", NULL
+	};
+	static const gchar *floppy[] = {
+		"media-floppy", "drive-floppy", NULL
+	};
+	static const gchar *network[] = {
+		"drive-network", "network-server", "folder-remote", NULL
+	};
+	static const gchar *internal[] = {
+		"drive-harddisk", "drive-harddisk-system", NULL
+	};
+
+	switch (kind)
+	{
+		case ROX_DRIVE_ICON_OPTICAL: return optical;
+		case ROX_DRIVE_ICON_USB: return usb;
+		case ROX_DRIVE_ICON_SD: return sd;
+		case ROX_DRIVE_ICON_SSD: return ssd;
+		case ROX_DRIVE_ICON_FLOPPY: return floppy;
+		case ROX_DRIVE_ICON_NETWORK: return network;
+		case ROX_DRIVE_ICON_INTERNAL:
+		default: return internal;
+	}
+}
+
+static const gchar *const *drive_icon_names(const RoxDriveInfo *drive)
+{
+	return drive_icon_names_for_kind(drive_icon_kind(drive));
+}
+
+/* Devuelve el primer nombre disponible dentro del GtkIconTheme activo.
+ * Si todavía no fue indexado, conserva el nombre canónico para que GTK lo
+ * resuelva al dibujar. Nunca devuelve una ruta de otro tema instalado. */
+const gchar *rox_drive_icon_name(const RoxDriveInfo *drive)
+{
+	const gchar *const *names = drive_icon_names(drive);
+	GtkIconTheme *theme = gtk_icon_theme_get_default();
+	gint i;
+
+	if (theme)
+		for (i = 0; names[i]; i++)
+			if (gtk_icon_theme_has_icon(theme, names[i]))
+				return names[i];
+
+	return names[0] ? names[0] : DRIVE_ICON_INTERNAL;
+}
+
+/* Crear siempre un GThemedIcon. GtkImage/GtkIconTheme resolverán el archivo
+ * usando gtk-icon-theme-name del GtkSettings activo. Un GFileIcon apuntando a
+ * /usr/share/icons/<otro-tema>/... ignoraría settings.ini y fue la causa de
+ * que aparecieran iconos de GNOME. */
+GIcon *rox_drive_get_icon(const RoxDriveInfo *drive)
+{
+	const gchar *const *names = drive_icon_names(drive);
+
+	return g_themed_icon_new_from_names((gchar **) names, -1);
+}
+
+GtkWidget *rox_drive_icon_widget_new(const RoxDriveInfo *drive, gint size)
+{
+	GIcon *icon;
 	GtkWidget *image;
 
-	icon_name = drive && drive->removable ? DRIVE_ICON_REMOVABLE :
-		DRIVE_ICON_INTERNAL;
-	image = gtk_image_new_from_icon_name(icon_name, GTK_ICON_SIZE_DIALOG);
-	gtk_image_set_pixel_size(GTK_IMAGE(image), size);
+	icon = rox_drive_get_icon(drive);
+	image = gtk_image_new_from_gicon(icon, GTK_ICON_SIZE_DIALOG);
+	gtk_image_set_pixel_size(GTK_IMAGE(image), MAX(16, size));
+	g_object_unref(icon);
 	return image;
+}
+
+const gchar *rox_drive_display_name(const RoxDriveInfo *drive)
+{
+	if (!drive)
+		return _("Partitions");
+	if (drive->label && *drive->label)
+		return drive->label;
+	if (drive->name && *drive->name)
+		return drive->name;
+	return drive->device ? drive->device : _("Partitions");
+}
+
+static GtkWidget *drive_icon_widget(const DriveInfo *drive, gint size)
+{
+	return rox_drive_icon_widget_new(drive, size);
 }
 
 /* Agregado por josejp2424 (2026): representar cada partición como un botón
@@ -1325,6 +1725,60 @@ static void drives_button_clicked(GtkToolButton *button, gpointer data)
 
 	gtk_widget_show_all(popover);
 	gtk_popover_popup(GTK_POPOVER(popover));
+}
+
+/* Agregado por josejp2424 (2026): API pública compartida con ROX Desktop. */
+GPtrArray *rox_drives_read(GError **error)
+{
+	return read_drive_list(error);
+}
+
+RoxDriveInfo *rox_drive_info_copy(const RoxDriveInfo *source)
+{
+	return drive_info_copy(source);
+}
+
+RoxDriveInfo *rox_drive_find_by_device(const gchar *device, GError **error)
+{
+	GPtrArray *drives;
+	RoxDriveInfo *result = NULL;
+	guint i;
+
+	if (!device)
+		return NULL;
+	drives = read_drive_list(error);
+	for (i = 0; drives && i < drives->len; i++)
+	{
+		RoxDriveInfo *drive = g_ptr_array_index(drives, i);
+		if (g_strcmp0(drive->device, device) == 0)
+		{
+			result = drive_info_copy(drive);
+			break;
+		}
+	}
+	if (drives)
+		g_ptr_array_free(drives, TRUE);
+	return result;
+}
+
+gchar *rox_drive_find_mountpoint(const gchar *device)
+{
+	return find_mountpoint(device);
+}
+
+gchar *rox_drive_mount(const RoxDriveInfo *drive, gchar **error_text)
+{
+	return mount_drive(drive, error_text);
+}
+
+gboolean rox_drive_unmount(const RoxDriveInfo *drive, gchar **error_text)
+{
+	return unmount_drive(drive, error_text);
+}
+
+gboolean rox_drive_eject(const RoxDriveInfo *drive, gchar **error_text)
+{
+	return eject_drive(drive, error_text);
 }
 
 /* Agregado por josejp2424: este botón no pertenece a la lista configurable,

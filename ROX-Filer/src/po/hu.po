@@ -5,18 +5,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.4.1\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2007-09-17 11:26+0100\n"
-"Last-Translator: András Mohari <mayday@vizslamail.hu>\n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
 "Language-Team: Hungarian\n"
-"Language: \n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<könyvtár>"
 
@@ -5674,3 +5674,550 @@ msgstr "Partíciók megjelenítése, csatolása, leválasztása és megnyitása"
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "A parancs végrehajtása sikertelen."
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "ROX asztal"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "Az asztali elem nem nyitható meg"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "Nincs alkalmazás társítva ehhez a fájlhoz"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "Másolás a háttérképek közé..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "... másolása a háttérképek közé?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "Csak JPEG, PNG és SVG képek másolhatók a háttérképek mappájába."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "A háttérképek mappája nem hozható létre: „%s”: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "Már létezik „%s” nevű fájl a háttérképek mappájában."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "Lecseréli a meglévő fájlt?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "A kép már a háttérképek mappájában van."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "A kép át lett másolva a háttérképek mappájába."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "Szeretné most asztali háttérképként használni?"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_Most nem"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_Beállítás háttérképként"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "„%s” nem másolható ide: „%s”: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "A háttérkép nem állítható be: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "ROX asztali hiba"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "Az eszköz nem olvasható"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "Asztal háttere"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "_Kép kiválasztása..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_Alkalmaz"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "Válasszon háttérképet a /usr/share/backgrounds könyvtárból"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "Asztali háttér kiválasztása"
+
+#: desktop.c
+msgid "Image files"
+msgstr "Képfájlok"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "Az asztali háttér nem állítható be"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "Asztali háttér módosítása..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "Asztal mappa megnyitása"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "Asztal frissítése"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "Háttérkép stílusa:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "Kitöltés"
+
+#: desktop.c
+msgid "Center"
+msgstr "Középre"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "Az asztal beállításai nem menthetők"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "Meghajtóikonok megjelenítése"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "Bal alsó"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "Jobb alsó"
+
+#: desktop.c
+msgid "Top left"
+msgstr "Bal felső"
+
+#: desktop.c
+msgid "Top right"
+msgstr "Jobb felső"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "Vízszintes"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "Függőleges"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "Meghajtóikonok"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "Csatolt kötet megnyitása"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "Kötet csatolása és megnyitása"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "Programok hozzáadása az asztalhoz..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "Asztali programok"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "Keresés:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "Alkalmazás"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "Leírás"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "Az asztalon"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "Az Asztal mappa nem hozható létre"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "Az alkalmazás nem adható hozzá: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "Hozzáadva az asztalhoz"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "Eltávolítja ezt az asztalról: „%s”?"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "Az alkalmazás nem távolítható el az asztalról"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "Az asztali indító érvénytelen"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_Hozzáadás"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_Eltávolítás"
+
+#: desktop.c desktop_apps.c
+msgid "_Close"
+msgstr "_Bezárás"
+
+#: desktop.c desktop_apps.c
+msgid "_Cancel"
+msgstr "_Mégse"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "Nem találhatók alkalmazásindítók"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "Válasszon egy alkalmazást az asztalhoz adáshoz"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "Ez az alkalmazás már az asztalon van"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "Ez az alkalmazás nincs az asztalon"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "Eltávolítva az asztalról"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "Asztali ikonok viselkedése"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "Ikonméret:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "Megnyitás egy kattintással"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "Megnyitás dupla kattintással"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "ROX Desktop beállításai"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "Asztali ikonok mérete:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "Asztali ikonok megnyitása:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "Egy kattintással"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "Dupla kattintással"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "Asztali ikonok igazítása a rácshoz"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "Meghajtóikonok mérete:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "Gyors leválasztógomb megjelenítése a csatolt meghajtókon"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "Meghajtók helye:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "Meghajtók tájolása:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "Asztal beállításai..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "Gyors leválasztógomb megjelenítése"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "Ikonméret"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "Alapértelmezett alkalmazás beállítása..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "Beállítja az alapértelmezett alkalmazást ehhez: ...?"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "Alapértelmezett alkalmazás csak szabályos fájlhoz állítható be"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "Alapértelmezett alkalmazás kiválasztása"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "Válassza ki az alapértelmezett alkalmazást ehhez a fájltípushoz"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "Nem sikerült beállítani az alapértelmezett alkalmazást ehhez: %s: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "Nincs alapértelmezett alkalmazás megadva"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "Alapértelmezett XDG-alkalmazás"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "A(z) '%s' nem nyitható meg az alapértelmezett XDG-alkalmazással: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "Nincs alapértelmezett alkalmazás beállítva ehhez a fájltípushoz (%s/%s). A Fájl menü „Alapértelmezett alkalmazás beállítása” pontjával választhat egyet, vagy a fájlt egy alkalmazásra húzhatja.%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "Meghajtóikonok elrendezése"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "Alapértékek"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "Láthatóság"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "Belső meghajtók"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "Cserélhető meghajtók"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "Hálózati meghajtók"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "Címkék megjelenítése"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "Címkekeret"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "Fordított sorrend"
+
+#: desktop.c
+msgid "Layout"
+msgstr "Elrendezés"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "Tájolás"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "Vízszintes pozíció"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "Függőleges pozíció"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "Vízszintes térköz"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "Függőleges térköz"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "Vízszintes eltolás"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "Függőleges eltolás"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "Meghajtóikonok rendezése..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "Meghajtóikonok újraigazítása"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "A meghajtóikonok mozgatása balra vagy jobbra képpontonként"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "A meghajtóikonok mozgatása felfelé vagy lefelé képpontonként"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "Jelöljön ki egy vagy több visszaállítandó elemet."
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "A kuka már üres."
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "Kuka _ürítése"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "Kuka"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "Kuka megnyitása"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "Kijelöltek visszaállítása"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "Kuka ürítése"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "Elemek visszaállítása..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "Egy elem visszaállítva."
+msgstr[1] "%u elem visszaállítva."
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "%u elem visszaállítva."

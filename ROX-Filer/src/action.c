@@ -42,6 +42,7 @@
 #include "global.h"
 
 #include "action.h"
+#include "trash.h"
 #include "abox.h"
 #include "string.h"
 #include "support.h"
@@ -256,6 +257,7 @@ void show_condition_help(gpointer data)
 	GtkWidget *text;
 
 	help = gtk_dialog_new();
+	gtk_window_set_position(GTK_WINDOW(help), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(help), _("Find expression reference"));
 	dialog_add_icon_button(GTK_DIALOG(help), ROX_ICON_CLOSE,
 			_("_Close"), GTK_RESPONSE_CANCEL);
@@ -323,6 +325,7 @@ static void show_chmod_help(gpointer data)
 	GtkWidget *text;
 
 	help = gtk_dialog_new();
+	gtk_window_set_position(GTK_WINDOW(help), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(help), _("Change permissions reference"));
 	dialog_add_icon_button(GTK_DIALOG(help), ROX_ICON_CLOSE,
 			_("_Close"), GTK_RESPONSE_CANCEL);
@@ -374,6 +377,7 @@ static void show_settype_help(gpointer data)
 	GtkWidget *text;
 
 	help = gtk_dialog_new();
+	gtk_window_set_position(GTK_WINDOW(help), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(help), _("Set type reference"));
 	dialog_add_icon_button(GTK_DIALOG(help), ROX_ICON_CLOSE,
 			_("_Close"), GTK_RESPONSE_CANCEL);
@@ -444,6 +448,10 @@ static void finish_action(GUIside *gui_side)
 	}
 
 	abox_cancel_ask(abox);
+	/* Modificado por josejp2424 (2026): el GIF sólo debe animarse mientras
+	 * la operación está activa. Detenerlo antes de dejar abierto un informe
+	 * de errores o información evita consumo continuo de CPU. */
+	abox_stop_operation_animation(abox);
 
 	if (gui_side->errors)
 	{
@@ -2539,7 +2547,7 @@ static void trash_cb(gpointer data)
 		if (total > 1 && index > 0)
 			printf_send("%%%d", (100 * index) / total);
 
-		if (!g_file_trash(file, NULL, &error))
+		if (!rox_trash_file(file, &error))
 		{
 			if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 				printf_send(_("!The filesystem containing '%s' does not support the standard Trash.\n"), path);
@@ -2878,6 +2886,8 @@ void action_trash(GList *paths)
 		return;
 
 	abox = abox_new(_("Move to Trash"), TRUE);
+	/* Agregado por josejp2424 (2026): animación nativa de borrado. */
+	abox_set_operation_animation(ABOX(abox), "rox_delet.gif");
 	if (paths->next)
 		abox_set_percentage(ABOX(abox), 0);
 
@@ -2907,6 +2917,8 @@ void action_delete(GList *paths)
 
 	delete_batch_mode = FALSE;
 	abox = abox_new(_("Delete"), o_action_delete.int_value);
+	/* Agregado por josejp2424 (2026): animación nativa de borrado. */
+	abox_set_operation_animation(ABOX(abox), "rox_delet.gif");
 	if(paths && paths->next)
 		abox_set_percentage(ABOX(abox), 0);
 	gui_side = start_action(abox, delete_cb, paths,
@@ -2945,6 +2957,8 @@ void action_delete_permanently(GList *paths)
 
 	delete_batch_mode = TRUE;
 	abox = abox_new(_("Delete Permanently"), TRUE);
+	/* Agregado por josejp2424 (2026): animación nativa de borrado. */
+	abox_set_operation_animation(ABOX(abox), "rox_delet.gif");
 	if (paths->next)
 		abox_set_percentage(ABOX(abox), 0);
 
@@ -3147,6 +3161,8 @@ void action_copy(GList *paths, const char *dest, const char *leaf, int quiet)
 	action_do_func = use_rsync_engine ? do_copy_fast : do_copy;
 
 	abox = abox_new(_("Copy"), quiet);
+	/* Agregado por josejp2424 (2026): animación nativa de copia. */
+	abox_set_operation_animation(ABOX(abox), "rox_copi.gif");
 	if(paths && paths->next)
 		abox_set_percentage(ABOX(abox), 0);
 	gui_side = start_action(abox,
@@ -3202,6 +3218,9 @@ void action_move(GList *paths, const char *dest, const char *leaf, int quiet)
 	action_do_func = use_rsync_engine ? do_move_fast : do_move;
 
 	abox = abox_new(_("Move"), quiet);
+	/* Agregado por josejp2424 (2026): mover comparte la misma animación de
+	 * transferencia usada por copiar. */
+	abox_set_operation_animation(ABOX(abox), "rox_copi.gif");
 	if(paths && paths->next)
 		abox_set_percentage(ABOX(abox), 0);
 	gui_side = start_action(abox, list_cb, paths,

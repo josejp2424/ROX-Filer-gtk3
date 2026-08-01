@@ -147,11 +147,9 @@ static GHashTable *placed_icons=NULL;
 
 Option o_pinboard_tasklist_per_workspace;
 static Option o_pinboard_clamp_icons, o_pinboard_grid_step;
-static Option o_pinboard_fg_colour, o_pinboard_bg_colour;
 static Option o_pinboard_tasklist, o_forward_buttons_13;
 static Option o_iconify_start, o_iconify_dir;
-static Option o_label_font, o_pinboard_shadow_colour;
-static Option o_pinboard_shadow_labels;
+static Option o_label_font;
 static Option o_blackbox_hack;
 
 static Option o_search_step_x, o_search_step_y;
@@ -242,12 +240,7 @@ static void pinboard_set_backdrop_box(void);
 
 void pinboard_init(void)
 {
-	option_add_string(&o_pinboard_fg_colour, "pinboard_fg_colour", "#fff");
-	option_add_string(&o_pinboard_bg_colour, "pinboard_bg_colour", "#888");
-	option_add_string(&o_pinboard_shadow_colour, "pinboard_shadow_colour",
-			"#000");
 	option_add_string(&o_label_font, "label_font", "");
-	option_add_int(&o_pinboard_shadow_labels, "pinboard_shadow_labels", 1);
 
 	option_add_int(&o_pinboard_clamp_icons, "pinboard_clamp_icons", 1);
 	option_add_int(&o_pinboard_grid_step, "pinboard_grid_step",
@@ -274,9 +267,9 @@ void pinboard_init(void)
 
 	option_add_notify(pinboard_check_options);
 
-	gdk_rgba_parse(&pin_text_fg_col, (const gchar *) o_pinboard_fg_colour.value);
-	gdk_rgba_parse(&pin_text_bg_col, (const gchar *) o_pinboard_bg_colour.value);
-	gdk_rgba_parse(&pin_text_shadow_col, (const gchar *) o_pinboard_shadow_colour.value);
+	pin_text_fg_col = (GdkRGBA) {1.0, 1.0, 1.0, 1.0};
+	pin_text_bg_col = (GdkRGBA) {0.5, 0.5, 0.5, 1.0};
+	pin_text_shadow_col = (GdkRGBA) {0.0, 0.0, 0.0, 0.92};
 	update_pinboard_font();
 
 	placed_icons=g_hash_table_new(g_str_hash, g_str_equal);
@@ -793,7 +786,7 @@ static void pinboard_set_backdrop_box(void)
 			G_CALLBACK(gtk_widget_destroyed), &set_backdrop_dialog);
 	vbox = GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog)));
 
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 
 	label = gtk_label_new(_("Choose a style and drag an image in:"));
 	rox_widget_set_padding(GTK_WIDGET(label), 4, 0);
@@ -850,27 +843,29 @@ static void pinboard_set_backdrop_box(void)
  * GtkImage, WrappedLabel and CSS perform all rendering through public APIs. */
 static void pinboard_update_css(Pinboard *pinboard)
 {
-	gchar *css;
-	gchar fg[8], bg[8], shadow[8];
-	const gchar *shadow_rule;
+	GtkStyleContext *context;
+	GdkRGBA theme_bg = {0.5, 0.5, 0.5, 1.0};
+	const gchar *css =
+		"#rox-pinboard button.rox-pin-icon {"
+		" background: transparent; border: 2px solid transparent;"
+		" box-shadow: none; padding: 0; }"
+		"#rox-pinboard button.rox-pin-icon:hover { background: transparent; }"
+		"#rox-pinboard button.rox-pin-icon.rox-wink {"
+		" border-color: @theme_selected_bg_color;"
+		" box-shadow: inset 0 0 0 1px @theme_selected_fg_color; }"
+		"#rox-pinboard label.rox-pin-label {"
+		" color: #ffffff; background: transparent;"
+		" text-shadow: -1px -1px #000000, 1px -1px #000000,"
+		" -1px 1px #000000, 1px 1px #000000,"
+		" 0 -1px #000000, 0 1px #000000,"
+		" -1px 0 #000000, 1px 0 #000000;"
+		" padding: 1px 2px; }"
+		"#rox-pinboard label.rox-pin-label.rox-selected {"
+		" color: @theme_selected_fg_color;"
+		" background-color: @theme_selected_bg_color;"
+		" text-shadow: none; border-radius: 2px; }";
 
 	g_return_if_fail(pinboard != NULL);
-
-	g_snprintf(fg, sizeof(fg), "#%02x%02x%02x",
-		(guint) CLAMP(pin_text_fg_col.red * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_fg_col.green * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_fg_col.blue * 255.0 + 0.5, 0.0, 255.0));
-	g_snprintf(bg, sizeof(bg), "#%02x%02x%02x",
-		(guint) CLAMP(pin_text_bg_col.red * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_bg_col.green * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_bg_col.blue * 255.0 + 0.5, 0.0, 255.0));
-	g_snprintf(shadow, sizeof(shadow), "#%02x%02x%02x",
-		(guint) CLAMP(pin_text_shadow_col.red * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_shadow_col.green * 255.0 + 0.5, 0.0, 255.0),
-		(guint) CLAMP(pin_text_shadow_col.blue * 255.0 + 0.5, 0.0, 255.0));
-
-	shadow_rule = o_pinboard_shadow_labels.int_value
-		? "text-shadow: 1px 1px 1px %s;" : "text-shadow: none;";
 
 	if (!pinboard->css_provider)
 	{
@@ -881,52 +876,20 @@ static void pinboard_update_css(Pinboard *pinboard)
 			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 
-	if (o_pinboard_shadow_labels.int_value)
-	{
-		css = g_strdup_printf(
-			"#rox-pinboard button.rox-pin-icon {"
-			" background: transparent; border: 2px solid transparent;"
-			" box-shadow: none; padding: 0; }"
-			"#rox-pinboard button.rox-pin-icon:hover { background: transparent; }"
-			"#rox-pinboard button.rox-pin-icon.rox-wink {"
-			" border-color: #ffffff; box-shadow: inset 0 0 0 1px #000000; }"
-			"#rox-pinboard label.rox-pin-label {"
-			" color: %s; background: transparent;"
-			" text-shadow: 1px 1px 1px %s; padding: 1px 2px; }"
-			"#rox-pinboard label.rox-pin-label.rox-selected {"
-			" color: @theme_selected_fg_color;"
-			" background-color: @theme_selected_bg_color;"
-			" text-shadow: none; border-radius: 2px; }",
-			fg, shadow);
-	}
-	else
-	{
-		css = g_strdup_printf(
-			"#rox-pinboard button.rox-pin-icon {"
-			" background: transparent; border: 2px solid transparent;"
-			" box-shadow: none; padding: 0; }"
-			"#rox-pinboard button.rox-pin-icon:hover { background: transparent; }"
-			"#rox-pinboard button.rox-pin-icon.rox-wink {"
-			" border-color: #ffffff; box-shadow: inset 0 0 0 1px #000000; }"
-			"#rox-pinboard label.rox-pin-label {"
-			" color: %s; background: transparent; text-shadow: none;"
-			" padding: 1px 2px; }"
-			"#rox-pinboard label.rox-pin-label.rox-selected {"
-			" color: @theme_selected_fg_color;"
-			" background-color: @theme_selected_bg_color;"
-			" text-shadow: none; border-radius: 2px; }",
-			fg);
-	}
-
 	gtk_css_provider_load_from_data(pinboard->css_provider, css, -1, NULL);
-	g_free(css);
 
-	/* The backdrop colour is painted by bg_draw(), not by deprecated
-	 * gtk_widget_modify_bg()/GtkStyle pixmaps. */
-	pinboard->background_rgba = pin_text_bg_col;
-	pinboard->background_rgba.alpha = 1.0;
-	(void) bg;
-	(void) shadow_rule;
+	context = gtk_widget_get_style_context(pinboard->window);
+	if (!gtk_style_context_lookup_color(context, "theme_bg_color", &theme_bg))
+		rox_style_context_get_background(context, GTK_STATE_FLAG_NORMAL,
+			&theme_bg);
+	if (theme_bg.alpha <= 0.01)
+		theme_bg = (GdkRGBA) {0.5, 0.5, 0.5, 1.0};
+	theme_bg.alpha = 1.0;
+
+	pin_text_fg_col = (GdkRGBA) {1.0, 1.0, 1.0, 1.0};
+	pin_text_shadow_col = (GdkRGBA) {0.0, 0.0, 0.0, 0.92};
+	pin_text_bg_col = theme_bg;
+	pinboard->background_rgba = theme_bg;
 }
 
 /* Set and save (path, style) as the new backdrop. */
@@ -1024,12 +987,6 @@ static gboolean recreate_pinboard(gchar *name)
 
 static void pinboard_check_options(void)
 {
-	GdkRGBA n_fg, n_bg, n_shadow;
-
-	gdk_rgba_parse(&n_fg, (const gchar *) o_pinboard_fg_colour.value);
-	gdk_rgba_parse(&n_bg, (const gchar *) o_pinboard_bg_colour.value);
-	gdk_rgba_parse(&n_shadow, (const gchar *) o_pinboard_shadow_colour.value);
-
 	if (o_override_redirect.has_changed && current_pinboard)
 	{
 		gchar *name = g_strdup((const gchar *) current_pinboard->name);
@@ -1039,22 +996,12 @@ static void pinboard_check_options(void)
 
 	tasklist_set_active(o_pinboard_tasklist.int_value && current_pinboard);
 
-	if (!gdk_rgba_equal(&n_fg, &pin_text_fg_col) ||
-		!gdk_rgba_equal(&n_bg, &pin_text_bg_col) ||
-		!gdk_rgba_equal(&n_shadow, &pin_text_shadow_col) ||
-		o_pinboard_shadow_labels.has_changed || o_label_font.has_changed)
+	if (o_label_font.has_changed)
 	{
-		pin_text_fg_col = n_fg;
-		pin_text_bg_col = n_bg;
-		pin_text_shadow_col = n_shadow;
 		update_pinboard_font();
-
 		if (current_pinboard)
 		{
 			pinboard_update_css(current_pinboard);
-			reload_backdrop(current_pinboard,
-				current_pinboard->backdrop,
-				current_pinboard->backdrop_style);
 			reshape_all();
 		}
 		tasklist_style_changed();
@@ -2480,14 +2427,7 @@ static void reload_backdrop(Pinboard *pinboard,
 	if (backdrop)
 		pinboard->backdrop_pixbuf = load_backdrop(backdrop, backdrop_style);
 
-	if (!gdk_rgba_parse(&pinboard->background_rgba,
-		(const gchar *) o_pinboard_bg_colour.value))
-	{
-		pinboard->background_rgba.red = 0.5;
-		pinboard->background_rgba.green = 0.5;
-		pinboard->background_rgba.blue = 0.5;
-		pinboard->background_rgba.alpha = 1.0;
-	}
+	pinboard_update_css(pinboard);
 
 	gtk_widget_queue_draw(pinboard->fixed);
 

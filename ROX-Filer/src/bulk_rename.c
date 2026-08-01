@@ -69,6 +69,7 @@ void bulk_rename(const char *dir, GList *items)
 	g_object_set_data_full(G_OBJECT(box), "rename_dir",
 				g_strdup(dir), g_free);
 	gtk_window_set_title(GTK_WINDOW(box), _("Bulk rename files"));
+	gtk_window_set_position(GTK_WINDOW(box), GTK_WIN_POS_CENTER);
 
 	button = button_new_mixed(ROX_ICON_REFRESH, _("Reset"));
 	gtk_widget_set_can_default(button, TRUE);

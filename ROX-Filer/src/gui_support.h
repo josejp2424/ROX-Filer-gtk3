@@ -79,6 +79,7 @@ GtkWidget *button_new_icon(const char *icon_name);
 GtkWidget *button_new_mixed(const char *icon_name, const char *message);
 GtkWidget *dialog_add_icon_button(GtkDialog *dialog, const char *icon_name,
                                   const char *label, gint response_id);
+GtkWidget *rox_menu_new(void);
 GtkWidget *menu_item_new_label(const char *label);
 GtkWidget *check_menu_item_new_label(const char *label);
 GtkWidget *menu_item_get_label_widget(GtkWidget *item);

@@ -2595,15 +2595,13 @@ static void panel_show_options(Panel *panel)
 		GtkWindow *win = GTK_WINDOW(dialog);
 
 		gtk_widget_hide(dialog);
-		/* This extra set_position() should ensure it moves to new position
-		 * under pointer */
+		/* Re-centre an options window that was already visible. */
 		gtk_window_set_position(win, GTK_WIN_POS_CENTER_ALWAYS);
-		gtk_window_set_position(win, GTK_WIN_POS_MOUSE);
 		gtk_window_present(win);
 	}
 	else
 	{
-		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 		gtk_widget_show_all(dialog);
 	}
 
@@ -2652,7 +2650,7 @@ static void panel_remove_callback(PanelSide side)
 
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Remove Panel"));
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)
 		panel_new(NULL, side);
 	gtk_widget_destroy(dialog);
@@ -2832,7 +2830,7 @@ static void panel_add_callback(PanelSide side)
 
 GtkWidget *panel_new_panel_submenu(void)
 {
-	GtkWidget *menu = gtk_menu_new();
+	GtkWidget *menu = rox_menu_new();
 	PanelSide side;
 
 	for (side = 0; side < PANEL_NUMBER_OF_SIDES; ++side)

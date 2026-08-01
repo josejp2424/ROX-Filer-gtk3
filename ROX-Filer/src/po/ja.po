@@ -7,20 +7,18 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.11\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2011-10-12 01:30+0900\n"
-"Last-Translator: team OKATANA<mkato@par.odn.ne.jp,mosaicist@par.odn.ne.jp> "
-"<>\n"
-"Language-Team: Japanese team OKATANA <mkato@par.odn.ne.jp, mosaicist@par.odn."
-"ne.jp>\n"
-"Language: \n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<dir>"
 
@@ -5516,3 +5514,549 @@ msgstr "パーティションの表示、マウント、アンマウント、オ
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "コマンドの実行に失敗しました。"
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "ROX デスクトップ"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "デスクトップ項目を開けません"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "このファイルに関連付けられたアプリケーションがありません"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "背景フォルダーへコピー..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "... を背景フォルダーへコピーしますか？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "背景フォルダーへコピーできるのは JPEG、PNG、SVG 画像だけです。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "背景フォルダー「%s」を作成できません: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "背景フォルダーには「%s」というファイルが既にあります。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "既存のファイルを置き換えますか？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "画像は既に背景フォルダーにあります。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "画像を背景フォルダーへコピーしました。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "今すぐデスクトップの壁紙として使用しますか？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_今はしない"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_壁紙として使用"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "「%s」を「%s」へコピーできません: %s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "壁紙を設定できません: %s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "ROX デスクトップエラー"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "デバイスを読み取れません"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "デスクトップの背景"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "_画像を選択..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "_適用"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "/usr/share/backgrounds から壁紙を選択してください"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "デスクトップの背景を選択"
+
+#: desktop.c
+msgid "Image files"
+msgstr "画像ファイル"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "デスクトップの背景を設定できません"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "デスクトップの背景を変更..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "デスクトップフォルダーを開く"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "デスクトップを更新"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "使用法: ROX-Filer [オプション]... [ファイル]...\n指定された各ディレクトリまたはファイルを開きます。引数がない場合は\n現在の作業ディレクトリを開きます。\n\nROX Desktop:\n      --desktop\t壁紙、デスクトップファイル、ドライブを含む ROX Desktop を開始\n\nファイルマネージャー:\n  -c, --client-id=ID\tセッション管理に使用\n  -d, --dir=DIR\t\tDIR をディレクトリとして開く\n  -D, --close=DIR\tDIR とそのサブディレクトリを閉じる\n  -h, --help\t\tこのヘルプを表示して終了\n  -m, --mime-type=FILE\tFILE の MIME タイプを表示して終了\n  -n, --new\t\t別のファイラーインスタンスを開始\n  -R, --RPC\t\t標準入力から読み取ったメソッド呼び出しを実行\n  -s, --show=FILE\tFILE を表示するディレクトリを開く\n  -u, --user\t\t各ウィンドウにユーザー名を表示\n  -U, --url=URL\t\tURI 形式でファイルまたはディレクトリを開く\n  -v, --version\t\tバージョン情報を表示して終了\n  -x, --examine=FILE\tFILE が変更されたため再確認\n\n従来の ROX デスクトップ互換:\n  -b, --border=PANEL\tPANEL を境界パネルとして開く\n  -B, --bottom=PANEL\tPANEL を下端に開く\n  -l, --left=PANEL\tPANEL を左端に開く\n  -p, --pinboard=PIN\t従来の ROX pinboard を使用\n  -r, --right=PANEL\tPANEL を右端に開く\n  -S, --rox-session\t従来のパネルと pinboard セッションを使用\n  -t, --top=PANEL\tPANEL を上端に開く\n\nバグの報告先: %s.\nプロジェクト: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "壁紙の表示方法:"
+
+#: desktop.c
+msgid "Fill"
+msgstr "塗りつぶし"
+
+#: desktop.c
+msgid "Center"
+msgstr "中央"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "デスクトップ設定を保存できません"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "ドライブアイコンを表示"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "左下"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "右下"
+
+#: desktop.c
+msgid "Top left"
+msgstr "左上"
+
+#: desktop.c
+msgid "Top right"
+msgstr "右上"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "横"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "縦"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "ドライブアイコン"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "マウント済みボリュームを開く"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "ボリュームをマウントして開く"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "デスクトップにプログラムを追加..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "デスクトップのプログラム"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "検索:"
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "アプリケーション"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "説明"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "デスクトップ上"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "デスクトップフォルダーを作成できませんでした"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "アプリケーションを追加できませんでした: %s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "デスクトップに追加しました"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "「%s」をデスクトップから削除しますか？"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "アプリケーションをデスクトップから削除できませんでした"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "デスクトップランチャーが無効です"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_追加"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_削除"
+
+#: desktop.c desktop_apps.c
+msgid "_Close"
+msgstr "_閉じる"
+
+#: desktop.c desktop_apps.c
+msgid "_Cancel"
+msgstr "_キャンセル"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "アプリケーションランチャーが見つかりません"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "デスクトップに追加するアプリケーションを選択してください"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "このアプリケーションはすでにデスクトップにあります"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "このアプリケーションはデスクトップにありません"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "デスクトップから削除しました"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "デスクトップアイコンの動作"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "アイコンサイズ:"
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "1回のクリックで開く"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "ダブルクリックで開く"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "ROX Desktop の設定"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "デスクトップアイコンのサイズ:"
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "デスクトップアイコンを開く方法:"
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "1回のクリック"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "ダブルクリック"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "デスクトップアイコンをグリッドに揃える"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "ドライブアイコンのサイズ:"
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "マウント済みドライブにクイックアンマウントボタンを表示"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "ドライブの位置:"
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "ドライブの向き:"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "デスクトップの設定..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "クイックアンマウントボタンを表示"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "アイコンサイズ"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "既定のアプリケーションを設定..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "... の既定のアプリケーションを設定しますか？"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "既定のアプリケーションを設定できるのは通常のファイルだけです"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "既定のアプリケーションを選択"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "このファイル形式の既定のアプリケーションを選択してください"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "%s の既定のアプリケーションを設定できません: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "既定のアプリケーションが設定されていません"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "既定の XDG アプリケーション"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "'%s' を既定の XDG アプリケーションで開けません: %s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "この種類のファイル (%s/%s) には既定のアプリケーションが設定されていません。ファイルメニューの「既定のアプリケーションを設定」で選択するか、ファイルをアプリケーションへドラッグしてください。%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "ドライブアイコンの配置"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "既定値"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "表示"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "内蔵ドライブ"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "リムーバブルドライブ"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "ネットワークドライブ"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "ラベルを表示"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "ラベル枠"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "逆順"
+
+#: desktop.c
+msgid "Layout"
+msgstr "配置"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "方向"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "水平位置"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "垂直位置"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "水平間隔"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "垂直間隔"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "水平オフセット"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "垂直オフセット"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "ドライブアイコンを配置..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "ドライブアイコンを再配置"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "ドライブアイコンを1ピクセルずつ左右に移動します"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "ドライブアイコンを1ピクセルずつ上下に移動します"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "元に戻す項目を1つ以上選択してください。"
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "ゴミ箱はすでに空です。"
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "ゴミ箱を空にする(_E)"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "ゴミ箱"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "ゴミ箱を開く"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "選択項目を元に戻す"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "ゴミ箱を空にする"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "項目を元に戻す..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "1個の項目を元に戻しました。"
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "%u個の項目を元に戻しました。"

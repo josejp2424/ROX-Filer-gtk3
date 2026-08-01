@@ -7,18 +7,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.8.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-13 14:12-0600\n"
-"PO-Revision-Date: 2008-12-29 16:32+0100\n"
-"Last-Translator: Babyfai Cheung<babyfai1@yahoo.com.hk>\n"
-"Language-Team: none\n"
-"Language: \n"
+"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
+"POT-Creation-Date: 2026-07-29 17:41-0300\n"
+"PO-Revision-Date: 2026-07-29 17:41-0300\n"
+"Last-Translator: josejp2424 <puppylinuxjosejp2424@gmail.com>\n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: abox.c:125
 msgid "<dir>"
 msgstr "<目录>"
 
@@ -5217,3 +5217,549 @@ msgstr "显示、挂载、卸载和打开分区"
 #. Modificado por josejp2424 (2026): errores genéricos de acciones de unidades.
 msgid "The command failed."
 msgstr "命令执行失败。"
+
+#: desktop.c
+msgid "ROX Desktop"
+msgstr "ROX 桌面"
+
+#: desktop.c
+msgid "Unable to open desktop item"
+msgstr "无法打开桌面项目"
+
+#: desktop.c
+msgid "No application is associated with this file"
+msgstr "没有与此文件关联的应用程序"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy to Backgrounds..."
+msgstr "复制到背景目录..."
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Copy ... to Backgrounds ?"
+msgstr "将 ... 复制到背景目录？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Only JPEG, PNG and SVG images can be copied to the backgrounds folder."
+msgstr "只能将 JPEG、PNG 和 SVG 图像复制到背景目录。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to create backgrounds folder '%s': %s"
+msgstr "无法创建背景目录“%s”：%s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "A file named '%s' already exists in the backgrounds folder."
+msgstr "背景目录中已存在名为“%s”的文件。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Replace the existing file?"
+msgstr "替换现有文件吗？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image is already in the backgrounds folder."
+msgstr "该图像已在背景目录中。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "The image was copied to the backgrounds folder."
+msgstr "图像已复制到背景目录。"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Would you like to use it as the desktop wallpaper now?"
+msgstr "现在将它用作桌面壁纸吗？"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Not now"
+msgstr "_暂不"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "_Use as Wallpaper"
+msgstr "_设为壁纸"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to copy '%s' to '%s': %s"
+msgstr "无法将“%s”复制到“%s”：%s"
+
+#. Agregado por josejp2424 (2026): integración nativa de fondos de escritorio.
+#: menu.c
+msgid "Unable to set wallpaper: %s"
+msgstr "无法设置壁纸：%s"
+
+#: desktop.c
+msgid "ROX Desktop error"
+msgstr "ROX 桌面错误"
+
+#: desktop.c
+msgid "Unable to read the device"
+msgstr "无法读取设备"
+
+#: desktop.c
+msgid "Desktop Background"
+msgstr "桌面背景"
+
+#: desktop.c
+msgid "Choose _Image..."
+msgstr "选择图像(_I)..."
+
+#: desktop.c
+msgid "_Apply"
+msgstr "应用(_A)"
+
+#: desktop.c
+msgid "Select a wallpaper from /usr/share/backgrounds"
+msgstr "从 /usr/share/backgrounds 选择壁纸"
+
+#: desktop.c
+msgid "Choose Desktop Background"
+msgstr "选择桌面背景"
+
+#: desktop.c
+msgid "Image files"
+msgstr "图像文件"
+
+#: desktop.c
+msgid "Unable to set the desktop background"
+msgstr "无法设置桌面背景"
+
+#: desktop.c
+msgid "Change Desktop Background..."
+msgstr "更改桌面背景..."
+
+#: desktop.c
+msgid "Open Desktop Folder"
+msgstr "打开桌面文件夹"
+
+#: desktop.c
+msgid "Refresh Desktop"
+msgstr "刷新桌面"
+
+#: main.c
+#, c-format
+msgid "Usage: ROX-Filer [OPTION]... [FILE]...\nOpen each directory or file listed, or the current working\ndirectory if no arguments are given.\n\nROX Desktop:\n      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\nFile manager:\n  -c, --client-id=ID\tused for session management\n  -d, --dir=DIR\t\topen DIR as directory (not application)\n  -D, --close=DIR\tclose DIR and its subdirectories\n  -h, --help\t\tdisplay this help and exit\n  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n  -n, --new\t\tstart a separate filer instance\n  -R, --RPC\t\tinvoke method call read from stdin\n  -s, --show=FILE\topen a directory showing FILE\n  -u, --user\t\tshow user name in each window\n  -U, --url=URL\t\topen file or directory in URI form\n  -v, --version\t\tdisplay version information and exit\n  -x, --examine=FILE\tFILE has changed - re-examine it\n\nLegacy ROX desktop compatibility:\n  -b, --border=PANEL\topen PANEL as a border panel\n  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n  -l, --left=PANEL\topen PANEL as a left-edge panel\n  -p, --pinboard=PIN\tuse the classic ROX pinboard\n  -r, --right=PANEL\topen PANEL as a right-edge panel\n  -S, --rox-session\tuse the classic panel and pinboard session\n  -t, --top=PANEL\topen PANEL as a top-edge panel\n\nReport bugs to %s.\nProject: https://github.com/josejp2424/ROX-Filer-gtk3\n"
+msgstr "用法：ROX-Filer [选项]... [文件]...\n打开列出的每个目录或文件；未给出参数时打开当前工作目录。\n\nROX Desktop：\n      --desktop\t启动带壁纸、桌面文件和驱动器的 ROX Desktop\n\n文件管理器：\n  -c, --client-id=ID\t用于会话管理\n  -d, --dir=DIR\t\t将 DIR 作为目录打开\n  -D, --close=DIR\t关闭 DIR 及其子目录\n  -h, --help\t\t显示此帮助并退出\n  -m, --mime-type=FILE\t输出 FILE 的 MIME 类型并退出\n  -n, --new\t\t启动独立的文件管理器实例\n  -R, --RPC\t\t调用从标准输入读取的方法\n  -s, --show=FILE\t打开目录并显示 FILE\n  -u, --user\t\t在每个窗口中显示用户名\n  -U, --url=URL\t\t以 URI 形式打开文件或目录\n  -v, --version\t\t显示版本信息并退出\n  -x, --examine=FILE\tFILE 已更改，重新检查\n\n传统 ROX 桌面兼容：\n  -b, --border=PANEL\t将 PANEL 作为边缘面板打开\n  -B, --bottom=PANEL\t在底部边缘打开 PANEL\n  -l, --left=PANEL\t在左侧边缘打开 PANEL\n  -p, --pinboard=PIN\t使用传统 ROX pinboard\n  -r, --right=PANEL\t在右侧边缘打开 PANEL\n  -S, --rox-session\t使用传统面板和 pinboard 会话\n  -t, --top=PANEL\t在顶部边缘打开 PANEL\n\n错误报告至 %s。\n项目：https://github.com/josejp2424/ROX-Filer-gtk3\n"
+
+#: desktop.c
+msgid "Wallpaper style:"
+msgstr "壁纸样式："
+
+#: desktop.c
+msgid "Fill"
+msgstr "填充"
+
+#: desktop.c
+msgid "Center"
+msgstr "居中"
+
+#: desktop.c
+msgid "Unable to save desktop settings"
+msgstr "无法保存桌面设置"
+
+#: desktop.c
+msgid "Show drive icons"
+msgstr "显示驱动器图标"
+
+#: desktop.c
+msgid "Bottom left"
+msgstr "左下"
+
+#: desktop.c
+msgid "Bottom right"
+msgstr "右下"
+
+#: desktop.c
+msgid "Top left"
+msgstr "左上"
+
+#: desktop.c
+msgid "Top right"
+msgstr "右上"
+
+#: desktop.c
+msgid "Horizontal"
+msgstr "水平"
+
+#: desktop.c
+msgid "Vertical"
+msgstr "垂直"
+
+#: desktop.c
+msgid "Drive Icons"
+msgstr "驱动器图标"
+
+#: desktop.c
+msgid "Open mounted volume"
+msgstr "打开已挂载卷"
+
+#: desktop.c
+msgid "Mount and open volume"
+msgstr "挂载并打开卷"
+
+#: desktop.c desktop_apps.c
+msgid "Add Programs to Desktop..."
+msgstr "将程序添加到桌面..."
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Programs"
+msgstr "桌面程序"
+
+#: desktop.c desktop_apps.c
+msgid "Search:"
+msgstr "搜索："
+
+#: desktop.c desktop_apps.c
+msgid "Application"
+msgstr "应用程序"
+
+#: desktop.c desktop_apps.c
+msgid "Description"
+msgstr "描述"
+
+#: desktop.c desktop_apps.c
+msgid "On desktop"
+msgstr "已在桌面"
+
+#: desktop.c desktop_apps.c
+msgid "Could not create the Desktop directory"
+msgstr "无法创建桌面目录"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Unable to add the application: %s"
+msgstr "无法添加应用程序：%s"
+
+#: desktop.c desktop_apps.c
+msgid "Added to the desktop"
+msgstr "已添加到桌面"
+
+#: desktop.c desktop_apps.c
+#, c-format
+msgid "Remove \"%s\" from the desktop?"
+msgstr "从桌面移除“%s”吗？"
+
+#: desktop.c desktop_apps.c
+msgid "Unable to remove the application from the desktop"
+msgstr "无法从桌面移除应用程序"
+
+#: desktop.c desktop_apps.c
+msgid "The desktop launcher is invalid"
+msgstr "桌面启动器无效"
+
+#: desktop.c desktop_apps.c
+msgid "_Add"
+msgstr "_添加"
+
+#: desktop.c desktop_apps.c
+msgid "_Remove"
+msgstr "_移除"
+
+#: desktop.c desktop_apps.c
+msgid "_Close"
+msgstr "_关闭"
+
+#: desktop.c desktop_apps.c
+msgid "_Cancel"
+msgstr "_取消"
+
+#: desktop.c desktop_apps.c
+msgid "No application launchers were found"
+msgstr "未找到应用程序启动器"
+
+#: desktop.c desktop_apps.c
+msgid "Select an application to add it to the desktop"
+msgstr "选择要添加到桌面的应用程序"
+
+#: desktop.c desktop_apps.c
+msgid "This application is already on the desktop"
+msgstr "此应用程序已在桌面上"
+
+#: desktop.c desktop_apps.c
+msgid "This application is not on the desktop"
+msgstr "此应用程序不在桌面上"
+
+#: desktop.c desktop_apps.c
+msgid "Removed from the desktop"
+msgstr "已从桌面移除"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon behavior"
+msgstr "桌面图标行为"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size:"
+msgstr "图标大小："
+
+#: desktop.c desktop_apps.c
+msgid "Open with one click"
+msgstr "单击打开"
+
+#: desktop.c desktop_apps.c
+msgid "Open with double click"
+msgstr "双击打开"
+
+#: desktop.c desktop_apps.c
+msgid "ROX Desktop Preferences"
+msgstr "ROX Desktop 首选项"
+
+#: desktop.c desktop_apps.c
+msgid "Desktop icon size:"
+msgstr "桌面图标大小："
+
+#: desktop.c desktop_apps.c
+msgid "Open desktop icons:"
+msgstr "打开桌面图标："
+
+#: desktop.c desktop_apps.c
+msgid "With one click"
+msgstr "单击"
+
+#: desktop.c desktop_apps.c
+msgid "With double click"
+msgstr "双击"
+
+#: desktop.c desktop_apps.c
+msgid "Snap desktop icons to grid"
+msgstr "将桌面图标对齐到网格"
+
+#: desktop.c desktop_apps.c
+msgid "Drive icon size:"
+msgstr "驱动器图标大小："
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button on mounted drives"
+msgstr "在已挂载驱动器上显示快速卸载按钮"
+
+#: desktop.c desktop_apps.c
+msgid "Drive position:"
+msgstr "驱动器位置："
+
+#: desktop.c desktop_apps.c
+msgid "Drive orientation:"
+msgstr "驱动器排列方向："
+
+#: desktop.c desktop_apps.c
+msgid "Desktop Preferences..."
+msgstr "桌面首选项..."
+
+#: desktop.c desktop_apps.c
+msgid "Show quick unmount button"
+msgstr "显示快速卸载按钮"
+
+#: desktop.c desktop_apps.c
+msgid "Icon size"
+msgstr "图标大小"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set Default Application..."
+msgstr "设置默认应用程序..."
+
+# ROX Desktop r39 - XDG default applications
+msgid "Set default application for ... ?"
+msgstr "为 ... 设置默认应用程序？"
+
+# ROX Desktop r39 - XDG default applications
+msgid "You can only set the default application for a regular file"
+msgstr "只能为普通文件设置默认应用程序"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Choose Default Application"
+msgstr "选择默认应用程序"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Select the default application for this file type"
+msgstr "选择此文件类型的默认应用程序"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to set the default application for %s: %s"
+msgstr "无法为 %s 设置默认应用程序：%s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application defined"
+msgstr "未定义默认应用程序"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Default XDG application"
+msgstr "默认 XDG 应用程序"
+
+# ROX Desktop r39 - XDG default applications
+msgid "Unable to open '%s' with the default XDG application: %s"
+msgstr "无法使用默认 XDG 应用程序打开“%s”：%s"
+
+# ROX Desktop r39 - XDG default applications
+msgid "No default application is configured for files of this type (%s/%s) - you can choose one with `Set Default Application' from the File menu, or you can just drag the file to an application.%s"
+msgstr "没有为此类型的文件（%s/%s）配置默认应用程序。您可以在“文件”菜单中选择“设置默认应用程序”，或将文件拖到应用程序上。%s"
+
+#: desktop.c
+msgid "Drive Icon Layout"
+msgstr "驱动器图标布局"
+
+#: desktop.c
+msgid "Defaults"
+msgstr "默认值"
+
+#: desktop.c
+msgid "Visibility"
+msgstr "可见性"
+
+#: desktop.c
+msgid "Internal drives"
+msgstr "内部驱动器"
+
+#: desktop.c
+msgid "Removable drives"
+msgstr "可移动驱动器"
+
+#: desktop.c
+msgid "Network drives"
+msgstr "网络驱动器"
+
+#: desktop.c
+msgid "Show labels"
+msgstr "显示标签"
+
+#: desktop.c
+msgid "Label frame"
+msgstr "标签边框"
+
+#: desktop.c
+msgid "Reverse order"
+msgstr "反向排列"
+
+#: desktop.c
+msgid "Layout"
+msgstr "布局"
+
+#: desktop.c
+msgid "Orientation"
+msgstr "方向"
+
+#: desktop.c
+msgid "Horizontal position"
+msgstr "水平位置"
+
+#: desktop.c
+msgid "Vertical position"
+msgstr "垂直位置"
+
+#: desktop.c
+msgid "Horizontal spacing"
+msgstr "水平间距"
+
+#: desktop.c
+msgid "Vertical spacing"
+msgstr "垂直间距"
+
+#: desktop.c
+msgid "Horizontal offset"
+msgstr "水平偏移"
+
+#: desktop.c
+msgid "Vertical offset"
+msgstr "垂直偏移"
+
+#: desktop.c
+msgid "Arrange Drive Icons..."
+msgstr "排列驱动器图标..."
+
+#: desktop.c
+msgid "Realign Drive Icons"
+msgstr "重新对齐驱动器图标"
+
+
+#: desktop.c
+msgid "Move the drive icons left or right one pixel at a time"
+msgstr "每次将驱动器图标向左或向右移动一个像素"
+
+#: desktop.c
+msgid "Move the drive icons up or down one pixel at a time"
+msgstr "每次将驱动器图标向上或向下移动一个像素"
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to create the Trash information directory '%s': %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Only local files can be moved to this Trash."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash and select the items you want to restore."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Select one or more items to restore."
+msgstr "请选择一个或多个要还原的项目。"
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash information for '%s' has no valid original path."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because '%s' already exists."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Cannot restore '%s' because its original folder no longer exists: %s"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "The Trash is already empty."
+msgstr "回收站已经为空。"
+
+#: trash.c desktop.c toolbar.c
+msgid "Permanently delete every item in the Trash?\n\nThis action cannot be undone."
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "_Empty Trash"
+msgstr "清空回收站(_E)"
+
+#: trash.c desktop.c toolbar.c
+msgid "Trash"
+msgstr "回收站"
+
+#: trash.c desktop.c toolbar.c
+msgid "Open the Trash; use the arrow to restore selected items or empty it"
+msgstr ""
+
+#: trash.c desktop.c toolbar.c
+msgid "Open Trash"
+msgstr "打开回收站"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Selected"
+msgstr "还原所选项目"
+
+#: trash.c desktop.c toolbar.c
+msgid "Empty Trash"
+msgstr "清空回收站"
+
+#: trash.c desktop.c toolbar.c
+msgid "Restore Items..."
+msgstr "还原项目..."
+
+#: trash.c desktop.c toolbar.c
+msgid "Unable to move one or more desktop items to the Trash"
+msgstr ""
+
+#: trash.c
+msgid "One item was restored."
+msgid_plural "%u items were restored."
+msgstr[0] "已还原一个项目。"
+
+#: trash.c
+msgid "%u items were restored."
+msgstr "已还原 %u 个项目。"

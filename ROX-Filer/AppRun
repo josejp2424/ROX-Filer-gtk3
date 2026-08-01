@@ -26,7 +26,8 @@ case $1 in
 	--massif) shift ; DEBUGGER="valgrind --tool=massif --alloc-fn=g_malloc --alloc-fn=g_realloc --alloc-fn=g_malloc0 --alloc-fn=g_try_malloc --alloc-fn=g_mem_chunk_alloc";;
 	--calltree) shift ; DEBUGGER="calltree";;
 	--leaks) shift ; DEBUGGER="valgrind --num-callers=8 --leak-check=yes";;
-	--compile)
+	--compile|--compile-only)
+		COMPILE_MODE=$1
 		shift
 		if [ ! -d "$APP_DIR/src" ] ; then
 			echo "ERROR from $0:" >&2
@@ -43,7 +44,10 @@ case $1 in
 		rm -f "$BUILDDIR/config.cache"
 		rm -f "$APP_DIR/ROX-Filer" "$APP_DIR/ROX-Filer.dbg"
 		rm -f "$APP_DIR/src/config.h"	# (for upgrading)
-		if cd "$BUILDDIR" && "$APP_DIR/src/configure" "$@" \
+		# Run configure through a relative path from build/.  This keeps
+		# srcdir as ../src even when the extracted package is inside a
+		# directory whose name contains spaces (common under /initrd).
+		if cd "$BUILDDIR" && ../src/configure "$@" \
 			&& $MAKE clean && $MAKE; then
 			if command -v msgfmt >/dev/null 2>&1 && command -v iconv >/dev/null 2>&1; then
 				(
@@ -61,6 +65,12 @@ case $1 in
 				echo "gettext tools not found; using bundled translations." >&2
 			fi
 			echo Done >&2
+			if [ "$COMPILE_MODE" = "--compile" ]; then
+				PROJECT_ROOT=`dirname "$APP_DIR"`
+				if [ -x "$PROJECT_ROOT/build-package.sh" ]; then
+					"$PROJECT_ROOT/build-package.sh" --skip-compile || exit $?
+				fi
+			fi
 			exit 0
 		fi
 		echo Compile failed >&2

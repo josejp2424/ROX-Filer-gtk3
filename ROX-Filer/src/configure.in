@@ -96,6 +96,7 @@ fi
 
 ROX_REQUIRE(sm, 1)
 ROX_REQUIRE(gtk+-3.0, 3.22.0)
+ROX_REQUIRE(gio-unix-2.0, 2.50.0)
 AC_DEFINE(ROX_USING_GTK3, 1, [Build against GTK3])
 ROX_REQUIRE(libxml-2.0, 2.0.0)
 ROX_REQUIRE(shared-mime-info, 0.14)

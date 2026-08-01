@@ -193,6 +193,7 @@ enum
 #define ROX_ICON_CANCEL           "process-stop"
 #define ROX_ICON_DELETE           "edit-delete"
 #define ROX_ICON_TRASH            "user-trash"
+#define ROX_ICON_TRASH_FULL       "user-trash-full"
 #define ROX_ICON_PREFERENCES      "preferences-system"
 #define ROX_ICON_REFRESH          "view-refresh"
 #define ROX_ICON_COPY             "edit-copy"

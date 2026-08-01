@@ -5,602 +5,1072 @@
 <h1 align="center">ROX-Filer 2.12 GTK3</h1>
 
 <p align="center">
-  A modern GTK3 port of the classic, fast and lightweight ROX-Filer file manager.
+  A fast and lightweight GTK3 file manager and desktop for Puppy Linux,
+  Essora and other lightweight X11/XLibre environments.
 </p>
 
+<p align="center">
+  Classic ROX-Filer simplicity, modern GTK3 integration and an optional desktop mode.
+</p>
 
----
+<p align="center">
+  <img src="screenshot/rox-desktop-demo-slow.gif"
+       alt="ROX-Filer GTK3 desktop demonstration">
+</p>
 
-## Overview
+Overview
 
-ROX-Filer is a fast and lightweight graphical file manager originally created
-by **Thomas Leonard** for the ROX Desktop.
+ROX-Filer is a fast and lightweight graphical file manager originally createdby Thomas Leonard for the ROX Desktop.
 
-This repository contains an ongoing GTK3 development line based on the
-**ROX-Filer 2.11 source currently used by Puppy Linux Woof-CE**.
-The **2.12 GTK3** version identifies this updated fork and does
-not refer to a separate upstream ROX-Filer 2.12 source release.
+This repository contains an ongoing GTK3 development line based on theROX-Filer 2.11 source used by Puppy Linux Woof-CE.
 
-The goal of this project is to preserve the speed, simplicity, flexibility and
-traditional behaviour of the original ROX-Filer while replacing its GTK2-era
-implementation with a modern GTK3 code base.
+The 2.12 GTK3 name identifies this maintained fork. It does not refer to aseparate upstream ROX-Filer 2.12 release.
 
-The main filer interface, file views, menus, preferences, file operations,
-input handling, GTK theme integration, icon-theme support and dialogs have
-already been adapted to GTK3. Development may continue with additional testing,
-cleanup, translation work and compatibility improvements.
+The project preserves the traditional ROX-Filer workflow while modernising theGTK2-era implementation and adding practical desktop features for current PuppyLinux, EssoraPup and Essora systems.
 
-This version is intended primarily for lightweight X11 and XLibre desktops,
-including:
+The primary targets are:
 
-- Puppy Linux
-- EssoraPup
-- Essora
-- JWM
-- EssoraWM
-- Other lightweight X11/XLibre environments
+Puppy Linux
 
-> ROX-Filer GTK3 currently targets X11/XLibre. It is not a native Wayland port.
+EssoraPup
 
-## Project goals
+Essora
 
-- Preserve the classic ROX-Filer workflow.
-- Maintain fast startup and low resource usage.
-- Remove the dependency on GTK2.
-- Integrate correctly with GTK3 themes and icon themes.
-- Improve behaviour on modern Puppy Linux and Essora systems.
-- Keep the source understandable and maintainable.
-- Preserve all original copyright and contributor notices.
-- Add practical desktop features without making the filer unnecessarily heavy.
+JWM
 
-## Current GTK3 status
+EssoraWM
+
+Other lightweight X11 and XLibre environments
+
+ROX-Filer GTK3 currently targets X11/XLibre. It is not yet a native Waylanddesktop or file manager.
+
+Project goals
+
+Preserve the classic ROX-Filer workflow.
+
+Keep startup fast and resource use low.
+
+Remove the normal runtime dependency on GTK2.
+
+Integrate correctly with GTK3 widget and icon themes.
+
+Use XDG and Freedesktop standards where practical.
+
+Improve behaviour on Puppy Linux, EssoraPup and Essora.
+
+Keep the source understandable and maintainable.
+
+Preserve original copyright and contributor notices.
+
+Add useful desktop features without turning ROX-Filer into a heavy desktopenvironment.
+
+Main capabilities
+
+GTK3 file-manager interface.
+
+Classic ROX-Filer icon and detailed list views.
+
+Optional ROX Desktop mode.
+
+Files and launchers from ~/Desktop.
+
+Wallpaper and desktop-application managers.
+
+Correct device icons for internal, removable, optical and flash storage.
+
+Configurable desktop drive layout.
+
+Standard Freedesktop Trash.
+
+XDG application associations.
+
+Standard GTK icon-theme integration.
+
+Faster rsync-assisted copy and move operations.
+
+Improved copy, move and permanent-delete progress dialogs.
+
+Multiple desktop-item selection and movement.
+
+Built-in file templates.
+
+Centred normal windows and dialogs.
+
+Classic ROX pinboard and panel compatibility.
+
+Debian and portable package generation.
+
+Standard /usr/bin/ROX-Filer launcher.
+
+Quick start
+
+Build ROX-Filer:
+
+cd ROX-Filer
+./AppRun --compile
+
+Run a separate file-manager instance:
+
+./AppRun -n
+
+Start ROX Desktop:
+
+ROX-Filer --desktop
+
+Open the wallpaper manager:
+
+ROX-Filer --desktop-wallpaper
+
+Open the desktop application manager:
+
+ROX-Filer --desktop-apps
+
+Current GTK3 status
 
 The project builds against:
 
-```text
 GTK+ 3.22 or newer
-```
 
-The source uses GTK3 for the main interface and no longer requires GTK2 for the
-normal build.
+The normal build uses GTK3 and no longer requires GTK2.
 
-Major GTK3 porting work includes:
+The GTK3 port includes:
 
-- GTK3 widgets and containers.
-- GTK3 event handling.
-- Cairo-based custom drawing.
-- `GtkStyleContext` theme integration.
-- GTK3-compatible menus.
-- GTK3-compatible scroll adjustments and file views.
-- GTK3-compatible drag-and-drop handling.
-- GTK3 preferences and dialogs.
-- GTK3 icon-theme loading.
-- Native GTK3 About dialog.
-- Replacement of removed GTK2 menu infrastructure.
-- Compatibility with X11/XLibre through GDK X11 and Xlib.
+GTK3 widgets and containers.
 
-Some historical compatibility code and deprecated-but-still-supported GTK3 APIs
-may remain and can be cleaned up gradually without preventing the application
-from being a GTK3 program.
+GTK3 event handling.
 
-## Main features
+Cairo-based custom drawing where still required.
 
-- Fast and lightweight graphical file manager.
-- Classic ROX-Filer icon and list views.
-- Desktop pinboard support.
-- Panel support.
-- Drag and drop.
-- Fast rsync-assisted copy and move operations.
-- Standard Freedesktop Trash integration through GIO.
-- Separate permanent deletion with Shift+Delete.
-- File type handling and application associations.
-- AppDir support.
-- Mount and unmount integration.
-- Symbolic-link handling.
-- Extended-attribute support.
-- Per-directory display settings.
-- Configurable toolbar.
-- Per-window Back and Forward path navigation.
-- GTK3 theme and icon-theme integration.
-- Multilingual interface.
-- Integrated terminal actions.
-- Permanent partition browser in the main toolbar.
-- Mount, unmount, eject and open support for internal and removable partitions.
-- Directories-first ordering without hiding normal file types.
-- Native GTK3 About dialog.
+GtkStyleContext integration.
 
-## Window defaults
+GTK3-compatible menus and toolbars.
 
-New filer windows use a real initial size of:
+GTK3-compatible scrolling and file views.
 
-```text
+GTK3-compatible drag and drop.
+
+GTK3 preferences and dialogs.
+
+GTK3 icon-theme loading.
+
+Native GTK3 About dialog.
+
+Replacement of removed GTK2 menu infrastructure.
+
+X11/XLibre integration through GDK X11 and Xlib.
+
+Some historical compatibility code and deprecated-but-still-supported GTK3 APIsmay remain. They can be cleaned up gradually without introducing a GTK2dependency.
+
+File manager
+
+Main file-manager features
+
+Fast and lightweight graphical file manager.
+
+Classic ROX-Filer icon and detailed list views.
+
+Folders-first ordering.
+
+Complete non-hidden directory contents.
+
+Drag and drop.
+
+AppDir support.
+
+Symbolic-link handling.
+
+Extended-attribute support.
+
+Per-directory display settings.
+
+Configurable toolbar.
+
+Per-window Back and Forward history.
+
+Permanent Partitions button.
+
+Mount, unmount, eject and open support.
+
+Fast rsync-assisted copy and move operations.
+
+Standard Freedesktop Trash through GIO.
+
+Separate permanent deletion.
+
+XDG default-application handling.
+
+Standard GTK3 widget and icon themes.
+
+Multilingual interface.
+
+Integrated terminal actions.
+
+Built-in file templates.
+
+Native GTK3 About dialog.
+
+Window defaults
+
+New filer windows use an initial size of:
+
 640 × 400 pixels
-```
 
-This size is applied after the initial GTK3 window mapping so that the content
-layout cannot stretch a new window into a single wide row.
+The size is applied after the initial GTK mapping so the content layout cannotstretch a new window into a single wide row.
 
-A saved per-directory geometry continues to take priority when one exists, but
-older saved sizes are clamped so no normal filer instance can open below
-640 × 400 pixels. The window remains fully resizable above that minimum.
+A saved per-directory geometry still takes priority. Older saved sizes areclamped so a normal filer window cannot open below 640 × 400 pixels.
 
-## Preferences window
+The window remains fully resizable.
+
+Centred and square dialogs
+
+Normal ROX-Filer dialogs are centred using the usable monitor area rather thanthe complete screen rectangle.
+
+This includes:
+
+Rename
+
+Delete
+
+Permanent delete
+
+Properties
+
+Create directory
+
+Create symbolic link
+
+Preferences
+
+Bulk rename
+
+Icon editing
+
+Confirmation dialogs
+
+Wallpaper and desktop-management windows
+
+The usable-area calculation takes the desktop panel into account so dialogbuttons are not hidden behind it.
+
+Menus and normal dialogs use square corners. This avoids black corner artefactsthat may appear with rounded popup windows on XLibre, systems without acompositor or themes that use transparent rounded surfaces.
+
+GTK3 still controls colours, text, selection, spacing, typography and icons.
+
+Preferences window
 
 The Preferences window uses a default size of:
 
-```text
 640 × 400 pixels
-```
 
-Large settings pages are placed inside scrollable GTK3 containers. This prevents
-their natural size from expanding the dialog beyond the available screen area.
+Large pages are placed inside scrollable GTK3 containers. The category listalso uses its own compact scrollable panel.
 
-The category list also has its own compact scrollable panel.
+Old ROX-specific colour controls were removed. File-view colours come from theactive GTK3 theme.
 
-## Permanent partition button
+Back and Forward navigation
 
-The main filer toolbar includes a permanent **Partitions** button. It is added
-outside the configurable toolbar-item list, so it cannot be removed or disabled
-from the toolbar preferences.
+Each filer window keeps its own lightweight directory history.
 
-The button uses the active icon theme's standard:
-
-```text
-drive-harddisk
-```
-
-icon and refreshes the partition list each time it is opened. It remains the
-first permanent toolbar item, followed by the compact **Back**, **Forward** and
-**Up** navigation buttons.
-
-The partition detection is based on the drive-handling approach used by
-EssoraWM. It reads `lsblk` data and filters technical devices that should not be
-presented as normal user volumes, including:
-
-- Loop devices
-- ZRAM and RAM devices
-- Device-mapper helper devices
-- Puppy Linux runtime layers
-- SquashFS, overlay and AUFS layers
-- Swap volumes
-- EFI system partitions
-
-For compatibility with older Puppy Linux versions, ROX-Filer first requests the
-complete modern `lsblk` column set and automatically retries with a smaller
-compatible set when some columns are unavailable.
-
-A left click keeps the original direct workflow: mounted partitions open in the
-current filer window and unmounted partitions are mounted before opening.
-When a partition is not mounted:
-
-- Puppy Linux and other root sessions mount it under `/mnt/<device>` using
-  `/bin/mount`.
-- Regular-user sessions can use `udisksctl mount -b` when it is available.
-- After a successful mount, ROX-Filer opens the resulting mount point.
-
-The partition selector is a GTK3 popover arranged as a four-column grid. The
-first four units appear on the first row, the next four on the second row, and
-so on. Each unit shows its volume label, device name, size and mounted state.
-
-A right click on a partition opens a compact traditional ROX menu containing:
-
-- Open
-- Mount
-- Unmount
-- Eject
-
-Puppy/root sessions use `umount` directly. Regular users can use
-`udisksctl unmount -b`. Removable media is unmounted first and then safely
-powered off with `udisksctl power-off`, with `eject` as a fallback.
-
-<p align="center">
-  <img src="screenshot/rox-particiones.png" alt="partition">
-</p>
-
-## Back and Forward navigation
-
-Every filer window keeps its own lightweight directory history. The toolbar
-uses small traditional buttons with the active icon theme's `go-previous` and
-`go-next` icons.
-
-```text
 Alt+Left   Back
 Alt+Right  Forward
-```
 
-Opening a new directory after navigating backwards clears the Forward branch,
-matching the behaviour expected from other file managers. History is limited
-to 100 paths per window.
+Opening a new directory after navigating backwards clears the Forward branch.History is limited to 100 paths per window.
 
-## File visibility and ordering
+Complete directory contents
 
-The historical toolbar control that switched between **directories only** and
-**files only** was removed. It could be activated accidentally and make normal
-files appear to be missing, including archives such as `.tar.gz`, AppImages,
-shell scripts, Python files and other regular file types.
+The normal filer view displays every non-hidden item in the current directory.
 
-ROX-Filer now keeps every normally visible directory and file in the view.
-Inherited filters, saved per-directory filters and glob filters are ignored in
-the normal filer view so archives, AppImages, scripts and other files cannot
-disappear. The standard Hidden button remains the only visibility control for
-dotfiles and other hidden entries.
+Folders are placed first. Other files follow in stable name order.
 
-Normal directories are always placed first. Every remaining visible file is
-shown after the directory group. This rule applies to:
+Historical type filters, saved glob filters and directories-only/files-onlystates are not applied to the normal view. This prevents archives, AppImages,scripts and other regular files from appearing to be missing.
 
-- Icon view
-- Detailed list view
-- Stable ascending name ordering with folders first
+At the end of a scan, ROX-Filer compares the visible collection with thedirectory's internal item table. If an item is missing, duplicated or stale, theview is rebuilt and the GTK3 layout is recalculated.
 
-AppDirs continue to behave as applications rather than ordinary directories.
+Hidden files remain controlled by the Hidden toolbar action.
 
-## Fast rsync copy and move engine
+Permanent Partitions button
 
-ROX-Filer GTK3 includes a hybrid file-operation engine designed to improve the
-speed of large local copies.
+The main toolbar includes a permanent Partitions button.
 
-The historical engine starts an external `cp` process for each regular file.
-That behaviour is reliable but becomes slow when a directory contains hundreds
-or thousands of small files.
+It is outside the configurable toolbar-item list and cannot be removed from thetoolbar preferences.
 
-When `rsync` is available, this version uses:
+The partition view combines information from:
 
-- One rsync process for a complete directory tree.
-- One rsync batch for multiple selected items when their destination types are
-  compatible.
-- `rename()`/`mv` for moves inside the same filesystem.
-- `rsync --remove-source-files` for moves across filesystems and directory
-  merges.
-- `--partial` to preserve partial transfer data after an interrupted copy.
+lsblk
 
-ROX-Filer never adds `--delete` to normal copy or move operations, so unrelated
-files already present in the destination are not removed.
+Puppy runtime entries under /tmp/pup_event_frontend/drive_*
 
-If `rsync` is not installed, ROX-Filer automatically uses its classic copy and
-move engine.
+Real partitions under /sys/class/block/*/partition
 
-### Conflict policy
+Technical devices are filtered, including:
 
-When destination items already exist, ROX-Filer displays one conflict-policy
-dialog. The choices are presented as four large ROX-style buttons instead of a
-drop-down menu:
+Loop devices
 
-- Ask for each conflict.
-- Replace existing files.
-- Skip existing files.
-- Replace only if the source is newer.
+ZRAM and RAM devices
 
-The buttons are arranged in a compact two-by-two grid and use standard icons
-from the active GTK3 icon theme. **Ask for each conflict** is the safe default
-and can be activated with Enter.
+Device-mapper helper devices
 
-When **Ask for each conflict** is selected, the traditional comparison dialog
-also provides **Apply this decision to all remaining conflicts**. This allows a
-single Replace or Skip decision to be reused for the rest of the operation.
+Puppy runtime layers
 
-The selected policy applies only to the current copy or move and is reset before
-the next operation.
+SquashFS, overlay and AUFS layers
 
-## Terminal integration
+Swap volumes
 
-ROX-Filer GTK3 adds two practical file-context-menu actions.
+EFI system partitions
 
-### Open Terminal Here
+ROX-Filer first requests the complete modern lsblk column set and retries witha smaller compatible set when older Puppy Linux versions do not provide everycolumn.
 
-When a directory is selected, the contextual menu provides:
+Mounted devices open directly.
 
-```text
-Open Terminal Here
-```
+Unmounted devices are mounted before opening:
 
-The configured terminal emulator opens with the selected directory as its
-working directory.
+Puppy/root sessions use /bin/mount under /mnt/<device>.
 
-### Run in Terminal
+Normal-user sessions may use udisksctl mount -b.
 
-The contextual menu provides:
+Right-clicking a partition provides:
 
-```text
-Run in Terminal
-```
+Open
 
-for supported files, including:
+Mount
 
-- Executable native binaries
-- Executable shell scripts
-- Files ending in `.sh`
-- Python scripts ending in `.py`
-- Python GUI scripts ending in `.pyw`
-- Executable AppImage files
-- Other executable files with a valid interpreter line
+Unmount
 
-The command is launched with safely separated arguments, supports paths
-containing spaces and keeps the terminal open until the user presses Enter.
+Eject
 
-The terminal command remains controlled by ROX-Filer's existing:
+Removable media can be unmounted and safely powered off with udisksctl, witheject as a fallback.
 
-```text
-menu_xterm
-```
+<p align="center">
+  <img src="screenshot/rox-particiones.png" alt="ROX-Filer partition browser">
+</p>
 
-option.
+Correct device icons
 
-The terminal menu entries use the standard icon-theme name:
+ROX-Filer identifies the real device type before requesting an icon from theactive icon theme.
 
-```text
-utilities-terminal
-```
+Examples include:
 
-### Optional runtime tools
+drive-harddisk
+drive-harddisk-solidstate
+drive-removable-media
+media-flash
+media-cdrw
+drive-network
+media-floppy
 
-Depending on the selected file, the terminal integration may use:
+Recognised devices include:
 
-- A configured terminal emulator, such as `xterm`
-- `/bin/sh`
-- `python3`
+Internal hard drives
 
-AppImage files must have executable permission before they can be launched.
+SSD and NVMe drives
 
-## Standard Trash and permanent deletion
+USB flash drives
 
-The normal **Delete** key now moves the selected items to the standard
-Freedesktop Trash used by PCManFM, EssoraFM and other compatible file managers.
+SD and MMC cards
 
-The implementation uses GIO, so each filesystem can use its correct local Trash
-location and write the standard metadata required for restoring files.
+Optical devices such as sr0
 
-The interface preserves the traditional compact ROX style:
+Floppy devices
 
-- One small confirmation dialog for the whole selection.
-- **Delete** moves the selection to Trash.
-- **Shift+Delete** opens a separate permanent-delete confirmation.
-- Permanent deletion asks only once for the complete selection.
-- Small confirmation buttons are used instead of large modern panels.
-- Filesystems without Trash support show an error and are never silently
-  converted to permanent deletion.
+Network drives
 
-Moving a directory to Trash does not recursively process every file inside it.
-The complete top-level directory is moved by the GIO backend, which makes the
-operation much faster for directories containing many files.
+ROX-Filer does not scan unrelated installed icon themes and does not forceGNOME icon files. GTK3 resolves the semantic icon name through the active icontheme configured by the user.
 
-Permanent deletion continues to use the native ROX deletion engine, but in
-batch mode it avoids per-file questions and refreshes only the selected
-top-level paths when the operation finishes.
+Fast rsync copy and move engine
 
-## File-operation dialog fixes
+ROX-Filer GTK3 includes a hybrid file-operation engine for faster local copies.
 
-The GTK3 port includes corrections for file-operation dialogs that previously
-remained visible after an operation had already completed.
+The historical engine started an external cp process for each regular file.That is reliable but slow for directories containing hundreds or thousands ofsmall files.
 
-The child-process communication now handles pending input correctly when GLib
-reports input and pipe closure at the same time.
+When rsync is available, the project can use:
 
-This applies to operations such as:
+One rsync process for a complete directory tree.
 
-- Copying files
-- Replacing existing files
-- Moving files
-- Deleting files
-- Deleting directories recursively
+One rsync batch for compatible multiple selections.
 
-The progress dialog closes after a successful operation and remains open only
-when an actual error must be shown to the user.
+rename() or mv for moves on the same filesystem.
 
-## GTK3 theme integration
+rsync --remove-source-files for cross-filesystem moves and directory merges.
 
-ROX-Filer uses the active GTK3 settings, widget theme and icon theme.
+--partial to preserve incomplete transfer data after interruption.
 
-GTK3 normally reads the user's configuration from:
+ROX-Filer never adds --delete to normal copy or move operations, so unrelateddestination files are not removed.
 
-```text
+When rsync is unavailable, ROX-Filer falls back to the classic copy and moveengine.
+
+Conflict policy
+
+When destination items already exist, one conflict-policy dialog is shown.
+
+Available choices:
+
+Ask for each conflict.
+
+Replace existing files.
+
+Skip existing files.
+
+Replace only when the source is newer.
+
+Ask for each conflict is the safe default.
+
+The comparison dialog can apply one Replace or Skip choice to all remainingconflicts in the current operation.
+
+The selected policy is reset before the next copy or move.
+
+Improved operation dialogs
+
+Copy, move and permanent-delete operations use clearer GTK3 progress windows.
+
+The interface can show:
+
+The current operation.
+
+Source and destination information.
+
+Visual progress.
+
+Error details when needed.
+
+Cancel and decision controls.
+
+The dialogs keep a compact ROX-style workflow while presenting progress in aform familiar to users of current graphical file managers.
+
+The child-process communication handles pending input correctly when GLibreports data and pipe closure at the same time. Successful operations closetheir progress window automatically.
+
+Standard Trash
+
+The normal Delete key moves selected items to the standard FreedesktopTrash.
+
+ROX-Filer uses GIO so each filesystem can select the correct Trash location andwrite the metadata required for restoring files.
+
+The standard user Trash is normally:
+
+~/.local/share/Trash/files
+~/.local/share/Trash/info
+
+Available actions include:
+
+Open Trash
+
+Move selected items to Trash
+
+Restore selected items
+
+Empty Trash
+
+Permanently delete with Shift+Delete
+
+The Trash is available:
+
+In the filer toolbar.
+
+In contextual menus.
+
+As an optional desktop icon.
+
+Filesystems without Trash support show an error. ROX-Filer does not silentlyconvert a failed Trash operation into permanent deletion.
+
+Permanent deletion remains a separate operation and asks once for the completeselection.
+
+XDG file associations
+
+ROX-Filer uses the standard XDG/GIO application-association system.
+
+The primary user configuration is:
+
+~/.config/mimeapps.list
+
+Applications selected as default in another XDG-compatible file manager, suchas Thunar or PCManFM, can therefore also be recognised by ROX-Filer.
+
+The old ROX-specific association directories are no longer used to decide thedefault application:
+
+~/Choices/MIME-types
+~/.config/rox.sourceforge.net/MIME-types
+
+The Set Default Application action uses GIO to store the standard defaultapplication for the selected MIME type.
+
+Standard MIME icons
+
+ROX-Filer requests standard MIME icon names from the active icon theme.
+
+Puppy-specific MIME icons can be installed into the standard hicolor theme:
+
+application-pet
+application-x-sfs
+application-x-squashfs-image
+
+The Debian package can install them under:
+
+/usr/share/icons/hicolor/16x16/mimetypes
+/usr/share/icons/hicolor/24x24/mimetypes
+/usr/share/icons/hicolor/48x48/mimetypes
+/usr/share/icons/hicolor/scalable/mimetypes
+
+The post-installation script creates missing mimetypes directories andrefreshes the icon cache when gtk-update-icon-cache is available.
+
+This makes the icons available to ROX-Filer and other applications that followthe Freedesktop icon-theme standard.
+
+GTK3 theme integration
+
+GTK3 reads the user's theme configuration from:
+
 ~/.config/gtk-3.0/settings.ini
-```
 
 For example:
 
-```ini
 [Settings]
 gtk-theme-name=YourGtkTheme
 gtk-icon-theme-name=YourIconTheme
 gtk-font-name=Sans 10
-```
 
-This port does not force a fixed filer background or text colour. File views use
-standard GTK3 styling so that the selected system theme controls their
-appearance.
+ROX-Filer does not force fixed file-view background or text colours.
 
-## System icon theme
+The active GTK3 theme controls:
 
-ROX-Filer GTK3 uses the active system icon theme for interface graphics such as:
+File-view background
 
-- Toolbar actions
-- Folders
-- Applications and AppDirs
-- List view
-- Selection actions
-- Mounted devices
-- Unmount and eject actions
-- Symbolic links
-- Extended attributes
-- Iconified windows
-- Terminal actions
+Normal text
 
-Examples of standard icon names used by the application include:
+Selected text
 
-```text
+Selection background
+
+Disabled controls
+
+Menus
+
+Dialogs
+
+Toolbar buttons
+
+Fonts and spacing
+
+System icon theme
+
+ROX-Filer uses standard semantic icon names for:
+
+Toolbar actions
+
+Folders
+
+Applications
+
+AppDirs
+
+List view
+
+Selection actions
+
+Devices
+
+Unmount and eject actions
+
+Symbolic links
+
+Extended attributes
+
+Terminal actions
+
+Wallpaper management
+
+Desktop application management
+
+Trash
+
+Examples include:
+
 folder
 application-x-executable
 view-list
 edit-select-all
 drive-harddisk
+drive-removable-media
 media-eject
 document-properties
 emblem-symbolic-link
 utilities-terminal
-```
+preferences-desktop-wallpaper
+applications-other
+user-trash
+user-trash-full
 
-ROX-Filer also checks for symbolic variants when appropriate.
+The bundled ROX-Filer/images/rox-show-hidden.png image is used only when theactive theme does not provide a supported Hidden-action icon.
 
-The only bundled interface fallback image is:
+Terminal integration
 
-```text
-ROX-Filer/images/rox-show-hidden.png
-```
+When a directory is selected, the contextual menu provides:
 
-For the **Hidden** toolbar action, ROX-Filer searches the active icon theme in
-this order:
+Open Terminal Here
 
-```text
-cab_view
-view-hidden-files
-view-hidden-files-symbolic
-view-reveal
-view-reveal-symbolic
-```
+For supported executable files, it provides:
 
-`cab_view` is preferred because it is widely included by Puppy Linux icon
-themes and normally displays an eye. The bundled `rox-show-hidden.png` image is
-used only when the active theme provides none of these icon names.
+Run in Terminal
 
-## Menu cleanup
+Supported files include:
 
-Obsolete Help entries have been removed from the active interface, including:
+Native executable binaries
 
-- Help
-- Show Help Files
-- Manual
+Executable shell scripts
 
-They were removed from the main contextual menus, AppDir menus, desktop and
-panel menus, and the main toolbar.
+.sh files
 
-The native GTK3 **About ROX-Filer** dialog remains directly available.
+.py files
 
-Historical documentation may remain in the source tree because it contains
-important project history and original licensing information.
+.pyw files
 
-## About dialog
+Executable AppImages
 
-The About dialog is integrated directly into the GTK3 source.
+Files with a valid interpreter line
 
-It identifies the project as:
+Arguments are safely separated and paths containing spaces are supported.
 
-```text
-ROX-Filer 2.12 GTK3
-```
+The configured terminal is controlled by ROX-Filer's existing:
 
-Credits are preserved as follows:
+menu_xterm
 
-- Original author: Thomas Leonard
-- Original contributors: ROX Desktop contributors
-- GTK3 port and new features: josejp2424
-- Maintainer of this GTK3 version: josejp2424
+option.
 
-All original copyright and attribution notices remain in the source files.
+The standard icon is:
 
-## Interface languages
+utilities-terminal
 
-Included interface languages:
+New menu and built-in templates
 
-- English
-- Arabic
-- Catalan
-- German
-- Spanish
-- French
-- Italian
-- Portuguese
-- Japanese
-- Hungarian
-- Russian
-- Chinese, simplified
-- Chinese, traditional
+The toolbar and context menu include a New submenu.
 
-The original upstream translation catalogues are preserved.
+It can create:
 
-Arabic and Catalan currently cover the principal interface, menus, terminal
-integration and file-operation dialogs. Their translation coverage may continue
-to expand as development progresses.
+A directory
 
-Precompiled `.mo` files are included so the available translations can work on
-systems where `msgfmt` is not installed.
+A blank file
 
-ROX-Filer binds its translation domain directly to the AppDir path:
+A shell script
 
-```text
-ROX-Filer/Messages/<locale>/LC_MESSAGES/ROX-Filer.mo
-```
+A text file
 
-When the AppDir is installed as `/usr/local/apps/ROX-Filer`, the catalogues
-therefore remain under:
+A web page
 
-```text
-/usr/local/apps/ROX-Filer/Messages
-```
+A Python file
 
-They do not need to be duplicated under `/usr/share/locale` unless the source is
-changed to use a system-wide locale directory instead of the ROX AppDir.
+User-defined templates
 
-## Build requirements
+Bundled templates are stored in:
 
-The build requires a C development environment and the development files for:
+ROX-Filer/Templates/
 
-- GTK+ 3.22 or newer
-- GLib and GObject
-- GDK-Pixbuf
-- Cairo
-- libxml2
-- X11
-- X Session Management library (`sm`)
-- Inter-Client Exchange library (`ice`)
-- `pkg-config`
-- GNU Autoconf tools when regenerating `configure`
+User templates can be stored in:
+
+~/.config/rox.sourceforge.net/Templates/
+
+When a user template and a bundled template have the same name, the usertemplate takes priority.
+
+ROX Desktop
+
+Starting the desktop
+
+Start ROX Desktop with:
+
+ROX-Filer --desktop
+
+This mode manages:
+
+Wallpaper
+
+Files and launchers from ~/Desktop
+
+Drive and partition icons
+
+Desktop icon positions
+
+Standard Trash
+
+Desktop contextual menus
+
+Desktop refresh operations
+
+The /usr/bin/ROX-Filer launcher provides a standard executable path for thismode and for the normal filer.
+
+Desktop files and applications
+
+The new desktop always uses:
+
+~/Desktop
+
+It does not create or switch to translated directory names such as~/Escritorio.
+
+Files, folders and .desktop launchers placed in ~/Desktop appear on thedesktop.
+
+Supported interactions include:
+
+Double-click to launch or open.
+
+Drag to move an icon.
+
+Persistent manual positions.
+
+Multiple selection with Ctrl, Shift or Ctrl+Alt.
+
+Group movement of selected icons.
+
+Delete to move selected items to Trash.
+
+Enter to open selected items.
+
+Contextual actions for one or multiple items.
+
+Positions are stored in:
+
+~/.config/rox.sourceforge.net/ROX-Filer/desktop-positions.conf
+
+Desktop preferences are stored in:
+
+~/.config/rox.sourceforge.net/ROX-Filer/desktop.conf
+
+Desktop application manager
+
+Open the application manager with:
+
+ROX-Filer --desktop-apps
+
+The manager allows applications to be added to or removed from ~/Desktop.
+
+A menu entry can use:
+
+Exec=ROX-Filer --desktop-apps
+Icon=applications-other
+
+Wallpaper manager
+
+Open the wallpaper manager with:
+
+ROX-Filer --desktop-wallpaper
+
+The manager supports:
+
+Browsing /usr/share/backgrounds.
+
+Choosing another image.
+
+Wallpaper fill styles.
+
+Applying several wallpapers without closing the selector.
+
+Refreshing the desktop after the wallpaper changes.
+
+Restart-aware refresh for wbar and desktop work-area changes.
+
+A menu entry can use:
+
+Exec=ROX-Filer --desktop-wallpaper
+Icon=preferences-desktop-wallpaper
+
+The selector remains open after Apply, allowing the user to continue testingdifferent wallpapers.
+
+Desktop drive icons
+
+Drive icons are displayed independently from the classic PuppyPin.
+
+The desktop can show or hide:
+
+Internal drives
+
+Removable drives
+
+Network drives
+
+Labels
+
+Label frames
+
+Quick unmount buttons
+
+Layout controls include:
+
+Horizontal or vertical orientation
+
+Left, centre or right position
+
+Top, centre or bottom position
+
+Icon size
+
+Horizontal spacing
+
+Vertical spacing
+
+Horizontal offset
+
+Vertical offset
+
+Reverse order
+
+A typical EssoraWM-compatible layout is:
+
+[Main]
+desktop_drive_icons=true
+desktop_drive_show_internal=true
+desktop_drive_show_removable=true
+desktop_drive_show_network=false
+desktop_drive_icon_size=32
+ShowLabels=true
+ShowFrame=false
+Vertical=false
+ReversePack=true
+SpacingX=87
+SpacingY=87
+XOffset=20
+YOffset=-40
+XPos=0.0
+YPos=1.0
+
+XOffset and YOffset move the complete drive group by small increments.
+
+The Realign Drive Icons action reapplies the configured layout and reserveddesktop area.
+
+ROX-Filer refreshes drive placement:
+
+During desktop startup.
+
+After wallpaper changes.
+
+After wbar restarts.
+
+When the usable monitor work area changes.
+
+When devices are added or removed.
+
+Desktop application icons and drive icons use collision-aware placement so theydo not overlap.
+
+Desktop Trash
+
+ROX Desktop can display a standard Trash icon.
+
+The contextual menu provides:
+
+Open Trash
+
+Restore Items
+
+Empty Trash
+
+The icon changes between the active theme's empty and full Trash states whensupported:
+
+user-trash
+user-trash-full
+
+Desktop text
+
+Desktop labels use transparent backgrounds.
+
+Normal labels use high-contrast text and a subtle shadow so they remain readableon light and dark wallpapers without drawing a solid rectangle behind everyname.
+
+Selected desktop items use the active GTK3 selection colours.
+
+Classic PuppyPin compatibility
+
+ROX Desktop does not use:
+
+/root/Choices/ROX-Filer/PuppyPin
+
+The old pinboard remains available through the classic ROX command-line options,including:
+
+ROX-Filer -p PINBOARD
+
+Classic panel support also remains available.
+
+Users who run only:
+
+ROX-Filer --desktop
+
+do not need to modify PuppyPin.
+
+Testing ROX Desktop in Puppy Linux
+
+Back up the Puppy session file:
+
+cp -a /root/.xinitrc /root/.xinitrc.backup
+
+Disable the old PuppyPin relocation line:
+
+#/usr/sbin/fixPuppyPin /root/Choices/ROX-Filer/PuppyPin
+
+Comment out the old ROX pinboard startup block:
+
+#case $desktop in
+# pcmanfm) pcmanfm --desktop & ;;
+# rox)
+#     if [ -f /root/Choices/ROX-Filer/PuppyPan1 ]; then
+#         roxfiler -p /root/Choices/ROX-Filer/PuppyPin \
+#             -r /root/Choices/ROX-Filer/PuppyPan1
+#     else
+#         roxfiler -p /root/Choices/ROX-Filer/PuppyPin
+#     fi
+#     ;;
+#esac
+
+Before the window manager is executed, add:
+
+# Start ROX Desktop
+sleep 1
+ROX-Filer --desktop &
+
+For example:
+
+# Start ROX Desktop
+sleep 1
+ROX-Filer --desktop &
+
+which "$CURRENTWM" && exec "$CURRENTWM"
+[ -x "$CURRENTWM" ] && exec "$CURRENTWM"
+[ "$desktop" = "rox" ] && exec jwm
+
+Restart X or start a new graphical session.
+
+To restore the classic Puppy desktop, comment out:
+
+ROX-Filer --desktop &
+
+and restore the old fixPuppyPin and pinboard startup lines.
+
+Command-line interface
+
+Important desktop commands:
+
+ROX-Filer --desktop
+ROX-Filer --desktop-wallpaper
+ROX-Filer --desktop-apps
+
+Important file-manager options:
+
+-c, --client-id=ID
+-d, --dir=DIR
+-D, --close=DIR
+-h, --help
+-m, --mime-type=FILE
+-n, --new
+-R, --RPC
+-s, --show=FILE
+-u, --user
+-U, --url=URL
+-v, --version
+-x, --examine=FILE
+
+Classic compatibility options:
+
+-b, --border=PANEL
+-B, --bottom=PANEL
+-l, --left=PANEL
+-p, --pinboard=PIN
+-r, --right=PANEL
+-S, --rox-session
+-t, --top=PANEL
+
+Build and packaging
+
+Build requirements
+
+A C development environment and development files are required for:
+
+GTK+ 3.22 or newer
+
+GLib and GObject
+
+GDK-Pixbuf
+
+Cairo
+
+libxml2
+
+X11
+
+X Session Management (sm)
+
+Inter-Client Exchange (ice)
+
+pkg-config
+
+GNU Autoconf tools when regenerating configure
 
 The exact package names depend on the distribution.
 
-### Optional runtime tools
+The main dependency check is equivalent to:
 
-- `rsync` enables the fast directory and batch-copy engine and cross-filesystem moves.
-- A configured terminal emulator is used by the terminal integration.
-- `python3` is used when running Python scripts in a terminal.
-- `udisksctl` can be used for partition mounting in normal-user sessions.
-
-The build system checks the main dependencies through `pkg-config`, including:
-
-```sh
 pkg-config --cflags --libs gtk+-3.0 libxml-2.0 sm ice
-```
 
-## Build and run
+Optional runtime tools
+
+rsync enables fast directory and batch-copy operations.
+
+A configured terminal emulator is used by terminal actions.
+
+python3 is used for Python terminal actions and the bundled Python template.
+
+udisksctl can mount, unmount and power off devices in normal-user sessions.
+
+gtk-update-icon-cache refreshes the hicolor cache after packageinstallation.
+
+Build and create packages
 
 From the repository root:
 
-```sh
 cd ROX-Filer
 ./AppRun --compile
-```
 
-Run a new ROX-Filer instance with:
+The build process can:
 
-```sh
-./AppRun -n
-```
+Compile ROX-Filer.
 
-The complete sequence is:
+Update translations.
 
-```sh
-cd ROX-Filer
-./AppRun --compile
-./AppRun -n
-```
+Create the complete package tree.
 
-`AppRun --compile` removes the previous generated binary before rebuilding, which
-helps prevent stale object files or an older binary from being reused.
+Remove build and src from the final runtime package.
 
-## Clean rebuild
+Create a Debian package.
 
-For a completely clean rebuild:
+Preserve a complete Debian package directory.
 
-```sh
+Create a portable usr/ tree.
+
+Create a portable tar.gz archive.
+
+Remove the temporary build directory.
+
+Generated names use the current project version and architecture. A typicaloutput layout is:
+
+output/
+├── rox-filer_<version>_<architecture>.deb
+├── rox-filer_<version>_<architecture>/
+├── rox-filer-<version>-portable-<architecture>/
+└── rox-filer-<version>-portable-<architecture>.tar.gz
+
+The Debian package directory contains the complete package control and runtimetree.
+
+The portable directory contains the runtime usr/ tree and can be used as abase for:
+
+PET
+
+TXZ
+
+Slackware packages
+
+Arch-style packages
+
+Other distribution-specific formats
+
+Build without packaging
+
+./ROX-Filer/AppRun --compile-only
+
+Package an existing binary
+
+./build-package.sh --skip-compile
+
+Clean generated files
+
+./build-package.sh --clean
+
+Clean rebuild
+
 cd ROX-Filer
 
 rm -rf build
@@ -608,208 +1078,272 @@ rm -f ROX-Filer ROX-Filer.dbg
 
 ./AppRun --compile
 ./AppRun -n
-```
 
-Close an older running instance before testing a newly compiled version:
+Close an older process before testing a new binary:
 
-```sh
 killall ROX-Filer 2>/dev/null
 ./AppRun -n
-```
 
-## Repository layout
+Debian maintenance scripts
+
+The source includes Debian maintenance scripts for installing and removing thePuppy MIME icons.
+
+The post-installation script:
+
+Creates missing hicolor/*/mimetypes directories.
+
+Installs PET, SFS and SquashFS MIME icons.
+
+Applies mode 0644.
+
+Refreshes the icon cache when possible.
+
+The post-removal script removes the installed package-owned MIME icons andrefreshes the cache.
+
+Repository layout
 
 Important files and directories include:
 
-```text
 .
 ├── README.md
 ├── CHANGELOG
 ├── LICENSE
 ├── ROX-Filer.svg
+├── build-package.sh
+├── DEBIAN/
+│   ├── postinst
+│   └── postrm
+├── package-base/
+├── screenshot/
+│   ├── rox-desktop-demo-slow.gif
+│   └── rox-particiones.png
 ├── ROX-Filer/
 │   ├── AppRun
 │   ├── AppInfo.xml
 │   ├── Options.xml
 │   ├── Templates.ui
+│   ├── Templates/
+│   │   ├── Script
+│   │   ├── Text.txt
+│   │   ├── WebPage.html
+│   │   └── python3.py
+│   ├── ROX/
+│   │   └── MIME/
+│   │       ├── application-pet.svg
+│   │       ├── application-x-sfs.svg
+│   │       └── application-x-squashfs-image.svg
 │   ├── images/
-│   │   └── rox-show-hidden.png
 │   ├── Messages/
 │   ├── Help/
 │   └── src/
 └── .gitignore
-```
 
-The exact contents may evolve as the GTK3 port continues.
+The exact layout may evolve as development continues.
 
-## Configuration
+Configuration
 
-ROX-Filer stores user configuration under:
+ROX-Filer configuration is stored under:
 
-```text
 ~/.config/rox.sourceforge.net/ROX-Filer/
-```
 
-Common configuration files may include:
+Important files include:
 
-```text
 Options
 Settings.xml
-```
+desktop.conf
+desktop-positions.conf
 
-The GTK3 widget and icon themes are controlled separately through the user's
-GTK3 configuration.
+Other relevant standards-based locations include:
 
-## Compatibility
+~/.config/mimeapps.list
+~/.config/gtk-3.0/settings.ini
+~/.local/share/Trash/
+~/Desktop
+
+Interface languages
+
+Included interface languages include:
+
+English
+
+Arabic
+
+Catalan
+
+German
+
+Spanish
+
+French
+
+Italian
+
+Portuguese
+
+Japanese
+
+Hungarian
+
+Russian
+
+Simplified Chinese
+
+Traditional Chinese
+
+The original upstream catalogues are preserved and updated catalogues areincluded for the GTK3 additions.
+
+Precompiled .mo files are included so translations can work on systems wheremsgfmt is unavailable.
+
+ROX-Filer binds the translation domain to:
+
+ROX-Filer/Messages/<locale>/LC_MESSAGES/ROX-Filer.mo
+
+When installed under /usr/local/apps/ROX-Filer, the catalogues remain under:
+
+/usr/local/apps/ROX-Filer/Messages
+
+Compatibility and future backends
 
 The primary target is GTK3 on X11/XLibre.
 
-The source contains X11-specific integration using components such as:
+The source uses:
 
-- GDK X11
-- GTK X11 embedding support
-- Xlib
-- X Session Management
-- ICE
+GDK X11
 
-This is appropriate for Puppy Linux, Essora, JWM, EssoraWM and similar
-lightweight X11/XLibre environments.
+GTK X11 embedding support
 
-Native Wayland support is not currently a project goal.
+Xlib
 
+X Session Management
 
-## Complete directory contents
+ICE
 
-The normal filer view always displays every non-hidden item present in the
-current directory. Folders are placed first and all other files follow in name
-order. Historical type and glob filters are not applied to the normal view.
+The --desktop command is a stable desktop entry point.
 
-At the end of each directory scan, ROX-Filer compares the visible collection
-against the directory's complete internal item table. If an item is missing,
-duplicated or stale, the view is rebuilt from the authoritative directory
-contents and its GTK3 layout is recalculated. This also ensures the vertical
-scrollbar reaches the final row.
+At present it launches the X11/XLibre desktop implementation. In the future,the same command may be able to select additional desktop backends withoutchanging how users start ROX Desktop.
 
-Hidden files remain controlled by the existing **Hidden** toolbar action.
+Native Wayland support is not currently implemented.
 
-## Partition detection
+A complete Wayland backend would require replacements for:
 
-The permanent **Partitions** button uses the standard `drive-harddisk` icon and
-combines three local sources:
+The bottom desktop window layer
 
-- `lsblk` output
-- Puppy runtime entries under `/tmp/pup_event_frontend/drive_*`
-- Real partitions exposed by `/sys/class/block/*/partition`
+Work-area detection
 
-This allows the button to list the same drives visible on a Puppy desktop even
-when an older `lsblk` build omits newer columns. Duplicate devices and technical
-loop, RAM, Puppy layer and swap devices are filtered.
+Desktop icon positioning
 
-## Known limitations
+X11 window-property handling
 
-- Additional testing is still useful across different GTK3 themes and icon
-  themes.
-- Arabic and Catalan translation coverage is not yet as extensive as every
-  historical upstream catalogue.
-- Some deprecated GTK3 APIs may remain, although they are still available in
-  GTK3 and do not introduce a GTK2 dependency.
-- Behaviour can vary depending on the external terminal emulator and desktop
-  environment.
-- X11/XLibre-specific desktop and panel functionality is not expected to work
-  natively on Wayland.
+Panel and compositor integration
 
-## Reporting issues
+Other X11-specific functions
 
-When reporting a problem, include:
+Known limitations
 
-- Distribution and version
-- Desktop or window manager
-- X11 or XLibre version
-- GTK3 version
-- Steps needed to reproduce the problem
-- Console output
-- Relevant log files
-- A screenshot when the issue is visual
+More testing is useful across different GTK3 themes and icon themes.
 
-For input or event problems, running ROX-Filer from a terminal can provide useful
-diagnostics:
+Behaviour can vary between Puppy Linux variants and window managers.
 
-```sh
+Some deprecated-but-supported GTK3 APIs remain.
+
+Some historical classic pinboard and panel code remains for compatibility.
+
+X11/XLibre desktop and panel functionality does not work natively on Wayland.
+
+Optional features depend on external tools such as rsync, udisksctl and aterminal emulator.
+
+Translation coverage can vary between languages.
+
+Reporting issues
+
+Please include:
+
+Distribution and version
+
+Desktop or window manager
+
+X11 or XLibre version
+
+GTK3 version
+
+ROX-Filer revision
+
+Steps to reproduce
+
+Console output
+
+Relevant log files
+
+A screenshot for visual problems
+
+For input or event problems:
+
 ROX_TRACE_INPUT=1 GDK_SYNCHRONIZE=1 ./AppRun -n
-```
 
-## Contributing
+Report issues to:
 
-Contributions, testing reports and translations are welcome.
+puppylinuxjosejp2424@gmail.com
+
+Project repository:
+
+https://github.com/josejp2424/ROX-Filer-gtk3
+
+Contributing
+
+Contributions, tests and translations are welcome.
 
 Changes should:
 
-- Preserve the lightweight character of ROX-Filer.
-- Remain compatible with GTK3.
-- Avoid adding unnecessary dependencies.
-- Preserve original copyright notices.
-- Follow the existing source style where practical.
-- Be tested on X11 or XLibre.
-- Include translation updates for newly added interface strings when possible.
+Preserve the lightweight character of ROX-Filer.
 
-## Changelog
+Remain compatible with GTK3.
 
-See the consolidated file:
+Avoid unnecessary dependencies.
 
-```text
+Preserve original copyright notices.
+
+Follow the existing source style where practical.
+
+Be tested on X11 or XLibre.
+
+Include translation updates for new interface strings when possible.
+
+Changelog and releases
+
+Development changes are recorded in:
+
 CHANGELOG
-```
 
-It contains the development history of the GTK3 port and the fixes introduced
-during the conversion.
+Release-specific announcements, screenshots and package names should be kept inGitHub Releases, forum posts or changelog entries rather than permanentlydescribing one revision in this README.
 
-## Credits
+When a new revision is published, normally only these items need review:
 
-### Original project
+The visible version in AppInfo.xml and the About dialog.
 
-ROX-Filer was originally created by **Thomas Leonard** for the ROX Desktop.
+Package metadata.
 
-The project also includes work from the original ROX Desktop contributors.
-Their copyright and attribution notices remain preserved throughout the source.
+CHANGELOG.
 
-### GTK3 version
+Build output naming.
 
-- GTK3 port: **josejp2424**
-- New GTK3 integration and features: **josejp2424**
-- Maintainer of this version: **josejp2424**
+Features that were added, removed or changed.
 
-## License
+Known limitations.
 
-This modified GTK3 version of ROX-Filer is distributed under the:
+Credits
 
-```text
-GNU General Public License, version 3 or, at your option, any later version
-```
+Original project
 
-SPDX license identifier:
+ROX-Filer was originally created by Thomas Leonard for the ROX Desktop.
 
-```text
-GPL-3.0-or-later
-```
+The project includes work from the original ROX Desktop contributors. Originalcopyright and attribution notices remain preserved in the source.
 
-See the root license file:
+GTK3 version
 
-```text
-LICENSE
-```
+GTK3 port: josejp2424
 
-The original ROX-Filer source was distributed under GPL-2.0-or-later. That
-licensing permits this modified version to be distributed under
-GPL-3.0-or-later.
+New GTK3 integration and features: josejp2424
 
-All original copyright, authorship and licensing notices are retained.
+ROX Desktop implementation: josejp2424
 
-Files containing third-party code may retain their own compatible copyright and
-license notices. Those file-specific notices remain applicable to those files.
-
----
-
-<p align="center">
-  <strong>ROX-Filer 2.12 GTK3</strong><br>
-  Classic ROX-Filer simplicity, adapted for modern GTK3 desktops.
-</p>
+Maintainer 

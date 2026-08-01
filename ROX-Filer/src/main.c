@@ -80,6 +80,8 @@
 #include "xtypes.h"
 #include "bulk_rename.h"
 #include "gtksavebox.h"
+#include "desktop.h"
+#include "rox_config.h"
 
 extern gboolean session_auto_respawn;
 
@@ -109,41 +111,18 @@ const char *home_dir, *app_dir;
 		"see the file named COPYING.\n")
 
 #ifdef HAVE_GETOPT_LONG
-#  define USAGE   N_("Try `ROX-Filer/AppRun --help' for more information.\n")
+#  define USAGE   N_("Try `ROX-Filer --help' for more information.\n")
 #  define SHORT_ONLY_WARNING ""
 #else
-#  define USAGE   N_("Try `ROX-Filer/AppRun -h' for more information.\n")
+#  define USAGE   N_("Try `ROX-Filer -h' for more information.\n")
 #  define SHORT_ONLY_WARNING	\
 		_("NOTE: Your system does not support long options - \n" \
 		"you must use the short versions instead.\n\n")
 #endif
 
-#define BUGS_TO "<rox-devel@lists.sourceforge.net>"
+#define BUGS_TO "<puppylinuxjosejp2424@gmail.com>"
 
-#define HELP N_("Usage: ROX-Filer/AppRun [OPTION]... [FILE]...\n"	\
-       "Open each directory or file listed, or the current working\n"	\
-       "directory if no arguments are given.\n\n"			\
-       "  -b, --border=PANEL	open PANEL as a border panel\n"	\
-       "  -B, --bottom=PANEL	open PAN as a bottom-edge panel\n"	\
-       "  -c, --client-id=ID	used for session management\n"		\
-       "  -d, --dir=DIR		open DIR as directory (not application)\n"  \
-       "  -D, --close=DIR	close DIR and its subdirectories\n"     \
-       "  -h, --help		display this help and exit\n"		\
-       "  -l, --left=PANEL	open PAN as a left-edge panel\n"	\
-       "  -m, --mime-type=FILE	print MIME type of FILE and exit\n" \
-       "  -n, --new		start new copy; for debugging the filer\n"  \
-       "  -p, --pinboard=PIN	use pinboard PIN as the pinboard\n"	\
-       "  -r, --right=PANEL	open PAN as a right-edge panel\n"	\
-       "  -R, --RPC		invoke method call read from stdin\n"	\
-       "  -s, --show=FILE	open a directory showing FILE\n"	\
-       "  -S, --rox-session	use default panel and pinboard options, and -n\n"\
-       "  -t, --top=PANEL	open PANEL as a top-edge panel\n"	\
-       "  -u, --user		show user name in each window \n"	\
-       "  -U, --url=URL		open file or directory in URI form\n"   \
-       "  -v, --version		display the version information and exit\n"   \
-       "  -x, --examine=FILE	FILE has changed - re-examine it\n"	\
-       "\nReport bugs to %s.\n"		\
-       "Home page (including updated versions): http://rox.sourceforge.net/\n")
+#define HELP N_("Usage: ROX-Filer [OPTION]... [FILE]...\n"       "Open each directory or file listed, or the current working\n"       "directory if no arguments are given.\n\n"       "ROX Desktop:\n"       "      --desktop\tstart ROX Desktop with wallpaper, Desktop files and drives\n\n"       "File manager:\n"       "  -c, --client-id=ID\tused for session management\n"       "  -d, --dir=DIR\t\topen DIR as directory (not application)\n"       "  -D, --close=DIR\tclose DIR and its subdirectories\n"       "  -h, --help\t\tdisplay this help and exit\n"       "  -m, --mime-type=FILE\tprint MIME type of FILE and exit\n"       "  -n, --new\t\tstart a separate filer instance\n"       "  -R, --RPC\t\tinvoke method call read from stdin\n"       "  -s, --show=FILE\topen a directory showing FILE\n"       "  -u, --user\t\tshow user name in each window\n"       "  -U, --url=URL\t\topen file or directory in URI form\n"       "  -v, --version\t\tdisplay version information and exit\n"       "  -x, --examine=FILE\tFILE has changed - re-examine it\n\n"       "Legacy ROX desktop compatibility:\n"       "  -b, --border=PANEL\topen PANEL as a border panel\n"       "  -B, --bottom=PANEL\topen PANEL as a bottom-edge panel\n"       "  -l, --left=PANEL\topen PANEL as a left-edge panel\n"       "  -p, --pinboard=PIN\tuse the classic ROX pinboard\n"       "  -r, --right=PANEL\topen PANEL as a right-edge panel\n"       "  -S, --rox-session\tuse the classic panel and pinboard session\n"       "  -t, --top=PANEL\topen PANEL as a top-edge panel\n"       "\nReport bugs to %s.\n"       "Project: https://github.com/josejp2424/ROX-Filer-gtk3\n")
 
 #define SHORT_OPS "c:d:t:b:l:r:B:op:s:hvnux:m:D:RSU:"
 
@@ -169,7 +148,10 @@ static struct option long_opts[] =
 	{"close", 1, NULL, 'D'},
 	{"mime-type", 1, NULL, 'm'},
 	{"client-id", 1, NULL, 'c'},
-	{"url", 1, NULL, 'u'},
+	{"url", 1, NULL, 'U'},
+	{"desktop", 0, NULL, 1000},
+	{"desktop-wallpaper", 0, NULL, 1001},
+	{"desktop-apps", 0, NULL, 1002},
 	{NULL, 0, NULL, 0},
 };
 #endif
@@ -188,6 +170,15 @@ Option o_session_pinboard_name;
 
 /* Always start a new filer, even if one seems to be already running */
 gboolean new_copy = FALSE;
+static gboolean desktop_mode = FALSE;
+
+typedef enum {
+	DESKTOP_TOOL_NONE = 0,
+	DESKTOP_TOOL_WALLPAPER,
+	DESKTOP_TOOL_APPS
+} DesktopTool;
+
+static DesktopTool desktop_tool = DESKTOP_TOOL_NONE;
 
 /* Maps child PIDs to Callback pointers */
 static GHashTable *death_callbacks = NULL;
@@ -197,6 +188,7 @@ Option o_dnd_no_hostnames;
 
 /* Static prototypes */
 static void show_features(void);
+static void print_help_text(void);
 static void soap_add(xmlNodePtr body,
 			   xmlChar *function,
 			   const xmlChar *arg1_name, const xmlChar *arg1_value,
@@ -252,6 +244,44 @@ static int rox_x_error(Display *display, XErrorEvent *error)
 	abort();
 }
 
+/* Modificado por josejp2424 (2026): permitir ejecutar el binario
+ * directamente, sin depender de que AppRun defina APP_DIR. */
+static gchar *find_application_directory(const gchar *argv0)
+{
+	const gchar *configured = g_getenv("APP_DIR");
+	gchar *executable = NULL;
+	gchar *directory;
+
+	if (configured && *configured)
+		return g_strdup(configured);
+
+#ifdef __linux__
+	/* /proc/self/exe resuelve también lanzadores y enlaces simbólicos. */
+	executable = g_file_read_link("/proc/self/exe", NULL);
+#endif
+
+	if (!executable && argv0 && *argv0)
+	{
+		if (g_path_is_absolute(argv0))
+			executable = g_strdup(argv0);
+		else if (strchr(argv0, G_DIR_SEPARATOR))
+		{
+			gchar *current = g_get_current_dir();
+			executable = g_build_filename(current, argv0, NULL);
+			g_free(current);
+		}
+		else
+			executable = g_find_program_in_path(argv0);
+	}
+
+	if (!executable)
+		return g_get_current_dir();
+
+	directory = g_path_get_dirname(executable);
+	g_free(executable);
+	return directory;
+}
+
 /* Parses the command-line to work out what the user wants to do.
  * Tries to send the request to an already-running copy of the filer.
  * If that fails, it initialises all the other modules and executes the
@@ -286,7 +316,7 @@ int main(int argc, char **argv)
 
 	home_dir = g_get_home_dir();
 	home_dir_len = strlen(home_dir);
-	app_dir = g_strdup(getenv("APP_DIR"));
+	app_dir = find_application_directory(argv[0]);
 
 	/* Get internationalisation up and running. This requires the
 	 * choices system, to discover the user's preferred language.
@@ -296,18 +326,9 @@ int main(int argc, char **argv)
 	i18n_init();
 	xattr_init();
 
-	if (!app_dir)
-	{
-		g_warning("APP_DIR environment variable was unset!\n"
-			"Use the AppRun script to invoke ROX-Filer...\n");
-		app_dir = g_get_current_dir();
-	}
 #ifdef HAVE_UNSETENV
-	else
-	{
-		/* Don't pass it on to our child processes... */
-		unsetenv("APP_DIR");
-	}
+	/* No pasar APP_DIR a los procesos hijos. El binario ya conoce su ruta. */
+	unsetenv("APP_DIR");
 #endif
 
 	/* Sometimes we want to take special action when a child
@@ -391,6 +412,18 @@ int main(int argc, char **argv)
 			case 'n':
 				new_copy = TRUE;
 				break;
+			case 1000:
+				desktop_mode = TRUE;
+				new_copy = TRUE;
+				break;
+			case 1001:
+				desktop_tool = DESKTOP_TOOL_WALLPAPER;
+				new_copy = TRUE;
+				break;
+			case 1002:
+				desktop_tool = DESKTOP_TOOL_APPS;
+				new_copy = TRUE;
+				break;
 			case 'o':
 				info_message(_("The -o argument is no longer "
 					"used. You can turn on override "
@@ -403,8 +436,10 @@ int main(int argc, char **argv)
 				show_features();
 				return EXIT_SUCCESS;
 			case 'h':
-			        g_print(_(HELP), BUGS_TO);
+				print_help_text();
+#ifndef HAVE_GETOPT_LONG
 				g_print("%s", _(SHORT_ONLY_WARNING));
+#endif
 				return EXIT_SUCCESS;
 			case 'D':
 			case 'd':
@@ -546,7 +581,8 @@ int main(int argc, char **argv)
 		body = NULL;
 		rpc = soap_rpc;
 	}
-	else if (!body->xmlChildrenNode)
+	else if (!body->xmlChildrenNode && !desktop_mode &&
+	         desktop_tool == DESKTOP_TOOL_NONE)
 	{
 		/* The user didn't request any action. Open the current
 		 * directory.
@@ -562,7 +598,8 @@ int main(int argc, char **argv)
 
 	/* Try to send the request to an already-running copy of the filer */
 	gui_support_init();
-	if (remote_init(rpc, new_copy)) {
+	if (!desktop_mode && desktop_tool == DESKTOP_TOOL_NONE &&
+	    remote_init(rpc, new_copy)) {
 		xmlFreeDoc(rpc);	/* avoid memleak */
 		return EXIT_SUCCESS;	/* It worked - exit */
 	}
@@ -641,6 +678,21 @@ int main(int argc, char **argv)
 	/* See if we need to migrate the Choices directories*/
 	choices_migrate();
 
+	/* Agregado por josejp2424 (2026): iniciar el escritorio nativo. */
+	rox_config_init();
+	desktop_init();
+	if (desktop_mode)
+		desktop_start();
+	else if (desktop_tool != DESKTOP_TOOL_NONE)
+	{
+		if (desktop_tool == DESKTOP_TOOL_WALLPAPER)
+			desktop_open_wallpaper_manager();
+		else if (desktop_tool == DESKTOP_TOOL_APPS)
+			desktop_open_apps_manager();
+		xmlFreeDoc(rpc);
+		return EXIT_SUCCESS;
+	}
+
 	/* Finally, execute the request */
 	reply = run_soap(rpc);
 	xmlFreeDoc(rpc);
@@ -682,6 +734,36 @@ void one_less_window(void)
 /****************************************************************
  *			INTERNAL FUNCTIONS			*
  ****************************************************************/
+
+static void print_help_text(void)
+{
+	gchar *formatted;
+	gchar *desktop_option;
+	gchar *line_end;
+	gchar *prefix;
+
+	formatted = g_strdup_printf(_(HELP), BUGS_TO);
+	desktop_option = strstr(formatted, "--desktop");
+	line_end = desktop_option ? strchr(desktop_option, '\n') : NULL;
+
+	if (!line_end)
+	{
+		g_print("%s", formatted);
+		g_free(formatted);
+		return;
+	}
+
+	prefix = g_strndup(formatted, (line_end + 1) - formatted);
+	g_print("%s", prefix);
+	g_print("      --desktop-wallpaper\t%s\n",
+		_("open the desktop wallpaper manager"));
+	g_print("      --desktop-apps\t%s\n",
+		_("open the desktop application manager"));
+	g_print("%s", line_end + 1);
+
+	g_free(prefix);
+	g_free(formatted);
+}
 
 static void show_features(void)
 {

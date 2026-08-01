@@ -46,7 +46,6 @@ static struct migration {
 	{"ROX-Filer", SITE, TRUE},
 	{"SendTo", SITE, TRUE},
 	{"Templates", SITE, TRUE},
-	{"MIME-types", SITE, TRUE},
 	{"MIME-icons", SITE, TRUE},
 	{"MIME-thumb", SITE, TRUE},
 
