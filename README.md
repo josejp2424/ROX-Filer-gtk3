@@ -883,54 +883,6 @@ ROX-Filer --desktop
 
 do not need to modify PuppyPin.
 
-Testing ROX Desktop in Puppy Linux
-
-Back up the Puppy session file:
-
-cp -a /root/.xinitrc /root/.xinitrc.backup
-
-Disable the old PuppyPin relocation line:
-
-#/usr/sbin/fixPuppyPin /root/Choices/ROX-Filer/PuppyPin
-
-Comment out the old ROX pinboard startup block:
-
-#case $desktop in
-# pcmanfm) pcmanfm --desktop & ;;
-# rox)
-#     if [ -f /root/Choices/ROX-Filer/PuppyPan1 ]; then
-#         roxfiler -p /root/Choices/ROX-Filer/PuppyPin \
-#             -r /root/Choices/ROX-Filer/PuppyPan1
-#     else
-#         roxfiler -p /root/Choices/ROX-Filer/PuppyPin
-#     fi
-#     ;;
-#esac
-
-Before the window manager is executed, add:
-
-# Start ROX Desktop
-sleep 1
-ROX-Filer --desktop &
-
-For example:
-
-# Start ROX Desktop
-sleep 1
-ROX-Filer --desktop &
-
-which "$CURRENTWM" && exec "$CURRENTWM"
-[ -x "$CURRENTWM" ] && exec "$CURRENTWM"
-[ "$desktop" = "rox" ] && exec jwm
-
-Restart X or start a new graphical session.
-
-To restore the classic Puppy desktop, comment out:
-
-ROX-Filer --desktop &
-
-and restore the old fixPuppyPin and pinboard startup lines.
-
 Command-line interface
 
 Important desktop commands:
@@ -1330,20 +1282,3 @@ Features that were added, removed or changed.
 
 Known limitations.
 
-Credits
-
-Original project
-
-ROX-Filer was originally created by Thomas Leonard for the ROX Desktop.
-
-The project includes work from the original ROX Desktop contributors. Originalcopyright and attribution notices remain preserved in the source.
-
-GTK3 version
-
-GTK3 port: josejp2424
-
-New GTK3 integration and features: josejp2424
-
-ROX Desktop implementation: josejp2424
-
-Maintainer 
