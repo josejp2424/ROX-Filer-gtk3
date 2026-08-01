@@ -159,7 +159,7 @@ Replacement of removed GTK2 menu infrastructure.
 
 X11/XLibre integration through GDK X11 and Xlib.
 
-Some historical compatibility code and deprecated-but-still-supported GTK3 APIsmay remain. They can be cleaned up gradually without introducing a GTK2dependency.
+Some historical compatibility code and deprecated-but-still-supported GTK2 APIsmay remain. They can be cleaned up gradually without introducing a GTK2dependency.
 
 File manager
 
