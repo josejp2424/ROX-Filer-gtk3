@@ -1,4 +1,5 @@
 #!/bin/sh
+# autor josejp2424
 set -eu
 
 PROJECT_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -6,8 +7,8 @@ APP_DIR="$PROJECT_ROOT/ROX-Filer"
 PACKAGE_BASE="$PROJECT_ROOT/package-base"
 OUTPUT_DIR="$PROJECT_ROOT/output"
 PACKAGE_NAME="rox-filer"
-DEB_VERSION="2.12+gtk3.v-56"
-DISPLAY_VERSION="2.12-r56"
+DEB_VERSION="2.12+gtk3.v-57"
+DISPLAY_VERSION="2.12-r57"
 SKIP_COMPILE=0
 
 usage() {
@@ -28,6 +29,7 @@ case "${1:-}" in
     --skip-compile) SKIP_COMPILE=1 ;;
     --clean)
         rm -rf "$OUTPUT_DIR" "$APP_DIR/build"
+        rm -f "$PROJECT_ROOT/rox-find/rox-find"
         echo "Cleaned generated output."
         exit 0
         ;;
@@ -42,6 +44,11 @@ fi
 
 if [ ! -x "$APP_DIR/ROX-Filer" ]; then
     echo "ERROR: compiled binary not found: $APP_DIR/ROX-Filer" >&2
+    exit 1
+fi
+
+if [ ! -x "$PROJECT_ROOT/rox-find/rox-find" ]; then
+    echo "ERROR: ROX File Search binary not found: $PROJECT_ROOT/rox-find/rox-find" >&2
     exit 1
 fi
 
@@ -92,6 +99,23 @@ rm -rf "$SUPPLIED_ROX_TMP"
 rm -rf \
     "$PACKAGE_DIR/usr/local/apps/ROX-Filer/build" \
     "$PACKAGE_DIR/usr/local/apps/ROX-Filer/src"
+
+# Install the native ROX File Search companion application.
+install -Dm0755 "$PROJECT_ROOT/rox-find/rox-find" \
+    "$PACKAGE_DIR/usr/bin/rox-find"
+install -Dm0644 "$PROJECT_ROOT/rox-find/data/rox-find.desktop" \
+    "$PACKAGE_DIR/usr/share/applications/rox-find.desktop"
+install -Dm0644 "$PROJECT_ROOT/rox-find/data/rox-find.png" \
+    "$PACKAGE_DIR/usr/share/pixmaps/rox-find.png"
+for size in 48 64 128; do
+    install -Dm0644 \
+        "$PROJECT_ROOT/rox-find/data/icons/${size}x${size}/apps/rox-find.png" \
+        "$PACKAGE_DIR/usr/share/icons/hicolor/${size}x${size}/apps/rox-find.png"
+done
+if [ -d "$PROJECT_ROOT/rox-find/locale" ]; then
+    mkdir -p "$PACKAGE_DIR/usr/share/locale"
+    cp -a "$PROJECT_ROOT/rox-find/locale/." "$PACKAGE_DIR/usr/share/locale/"
+fi
 
 # Restore package-base integration files and normalize permissions.
 mkdir -p "$PACKAGE_DIR/DEBIAN"

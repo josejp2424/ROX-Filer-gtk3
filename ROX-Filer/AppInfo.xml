@@ -28,7 +28,7 @@
   </About>
   <About xml:lang="en">
     <Purpose>File manager</Purpose>
-    <Version>2.12-r56</Version>
+    <Version>2.12-r57</Version>
     <Authors>Thomas Leonard and contributors; GTK3 port and new features by josejp2424; GTK3 version maintained by josejp2424</Authors>
     <License>GNU General Public License, version 3 or later</License>
     <Homepage>http://rox.sourceforge.net</Homepage>

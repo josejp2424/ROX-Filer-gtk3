@@ -9,6 +9,9 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <stdlib.h>
@@ -24,6 +27,7 @@
 #include "filer.h"
 #include "i18n.h"
 #include "gui_support.h"
+#include "options.h"
 
 #define DESKTOP_CONFIG "desktop.conf"
 #define DESKTOP_POSITIONS_CONFIG "desktop-positions.conf"
@@ -36,6 +40,8 @@
 #define DESKTOP_ICON_MARGIN 12
 #define DESKTOP_ICON_LABEL_WIDTH 18
 #define DESKTOP_DRAG_THRESHOLD 5
+#define ROX_DESKTOP_WINDOW_ATOM "_ROX_DESKTOP_WINDOW"
+#define ROX_DESKTOP_REFRESH_ATOM "_ROX_DESKTOP_REFRESH"
 
 /* Modificado por josejp2424 (2026): los archivos reales de
  * XDG_DESKTOP_DIR se representan ahora con widgets libres dentro de GtkFixed.
@@ -135,6 +141,9 @@ static gdouble drive_y_pos = 1.0;
 static GdkRectangle desktop_geometry = {0, 0, 1, 1};
 static GdkRectangle desktop_workarea = {0, 0, 1, 1};
 static GdkRectangle desktop_drive_reserved = {0, 0, 0, 0};
+static Atom desktop_window_atom;
+static Atom desktop_refresh_atom;
+static gboolean desktop_x11_filter_installed;
 
 static void desktop_reload(void);
 static gboolean desktop_reload_idle(gpointer data);
@@ -155,11 +164,96 @@ static void desktop_show_preferences_dialog(GtkWindow *parent);
 static void desktop_show_drive_layout_dialog(GtkWindow *parent);
 static void desktop_realign_drive_icons(void);
 static void desktop_rebuild_icon_layer(void);
+static GList *build_desktop_tools(Option *option, xmlNode *node, guchar *label);
 static void desktop_item_activate(DesktopItem *item);
 static void show_desktop_item_menu(DesktopItem *item, GdkEventButton *event);
 static void show_desktop_menu(GdkEventButton *event);
 
 extern int number_of_windows;
+
+static GdkFilterReturn desktop_x11_filter(GdkXEvent *xevent, GdkEvent *event, gpointer data)
+{
+    XEvent *xe = (XEvent *)xevent;
+    (void)event; (void)data;
+
+    if (!xe || xe->type != ClientMessage)
+        return GDK_FILTER_CONTINUE;
+    if (desktop_refresh_atom != None &&
+        xe->xclient.message_type == desktop_refresh_atom) {
+        desktop_refresh_now();
+        return GDK_FILTER_REMOVE;
+    }
+    return GDK_FILTER_CONTINUE;
+}
+
+static void desktop_register_x11_control(void)
+{
+    GdkDisplay *gdisplay;
+    Display *display;
+    GdkWindow *gwindow;
+    Window xid;
+
+    if (!desktop_window || !gtk_widget_get_realized(desktop_window))
+        return;
+    gdisplay = gtk_widget_get_display(desktop_window);
+    if (!GDK_IS_X11_DISPLAY(gdisplay))
+        return;
+    display = gdk_x11_display_get_xdisplay(gdisplay);
+    gwindow = gtk_widget_get_window(desktop_window);
+    xid = gdk_x11_window_get_xid(gwindow);
+    desktop_window_atom = XInternAtom(display, ROX_DESKTOP_WINDOW_ATOM, False);
+    desktop_refresh_atom = XInternAtom(display, ROX_DESKTOP_REFRESH_ATOM, False);
+    XChangeProperty(display, DefaultRootWindow(display), desktop_window_atom,
+                    XA_WINDOW, 32, PropModeReplace,
+                    (const unsigned char *)&xid, 1);
+    if (!desktop_x11_filter_installed) {
+        gdk_window_add_filter(gwindow, desktop_x11_filter, NULL);
+        desktop_x11_filter_installed = TRUE;
+    }
+    XFlush(display);
+}
+
+static void desktop_unregister_x11_control(void)
+{
+    GdkDisplay *gdisplay;
+    Display *display;
+    GdkWindow *gwindow;
+
+    if (!desktop_window || !gtk_widget_get_realized(desktop_window))
+        return;
+    gdisplay = gtk_widget_get_display(desktop_window);
+    if (!GDK_IS_X11_DISPLAY(gdisplay))
+        return;
+    display = gdk_x11_display_get_xdisplay(gdisplay);
+    gwindow = gtk_widget_get_window(desktop_window);
+    if (desktop_x11_filter_installed) {
+        gdk_window_remove_filter(gwindow, desktop_x11_filter, NULL);
+        desktop_x11_filter_installed = FALSE;
+    }
+    if (desktop_window_atom != None) {
+        Atom actual_type;
+        gint actual_format;
+        gulong nitems, bytes_after;
+        unsigned char *property = NULL;
+        Window registered = None;
+        Window own_xid = gdk_x11_window_get_xid(gwindow);
+
+        if (XGetWindowProperty(display, DefaultRootWindow(display),
+                desktop_window_atom, 0, 1, False, XA_WINDOW,
+                &actual_type, &actual_format, &nitems, &bytes_after,
+                &property) == Success && property &&
+            actual_type == XA_WINDOW && actual_format == 32 && nitems >= 1)
+            registered = *(Window *)property;
+        if (property)
+            XFree(property);
+        /* Do not remove a property already replaced by a newer desktop
+         * instance after this one was started. */
+        if (registered == own_xid)
+            XDeleteProperty(display, DefaultRootWindow(display),
+                            desktop_window_atom);
+    }
+    XFlush(display);
+}
 
 static void show_desktop_error(const gchar *primary, const gchar *secondary)
 {
@@ -3319,6 +3413,7 @@ static void desktop_destroyed(GtkWidget *widget, gpointer data)
 {
     (void)widget; (void)data;
 
+    desktop_unregister_x11_control();
     if (drive_poll_source) {
         g_source_remove(drive_poll_source);
         drive_poll_source = 0;
@@ -3372,6 +3467,7 @@ static void desktop_destroyed(GtkWidget *widget, gpointer data)
 void desktop_init(void)
 {
     rox_config_init();
+    option_register_widget("desktop-tools", build_desktop_tools);
 }
 
 void desktop_start(void)
@@ -3506,6 +3602,7 @@ void desktop_start(void)
     desktop_reload();
     number_of_windows++;
     gtk_widget_show_all(desktop_window);
+    desktop_register_x11_control();
     desktop_schedule_geometry_update();
     desktop_refresh_after_environment_change();
 }
@@ -3514,6 +3611,49 @@ static void desktop_prepare_standalone_tool(void)
 {
     if (!desktop_dir)
         load_settings();
+}
+
+static void desktop_wallpaper_button(GtkButton *button, gpointer data)
+{
+    (void)button; (void)data;
+    desktop_open_wallpaper_manager();
+}
+
+static void desktop_apps_button(GtkButton *button, gpointer data)
+{
+    (void)button; (void)data;
+    desktop_open_apps_manager();
+}
+
+static void desktop_drives_button(GtkButton *button, gpointer data)
+{
+    (void)button; (void)data;
+    desktop_prepare_standalone_tool();
+    desktop_show_drive_layout_dialog(desktop_window ? GTK_WINDOW(desktop_window) : NULL);
+}
+
+static GList *build_desktop_tools(Option *option, xmlNode *node, guchar *label)
+{
+    GtkWidget *box, *wallpaper, *apps, *drives;
+    (void)node; (void)label;
+    g_return_val_if_fail(option == NULL, NULL);
+    box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+    wallpaper = gtk_button_new_with_label(_("Wallpaper"));
+    gtk_button_set_image(GTK_BUTTON(wallpaper),
+        gtk_image_new_from_icon_name("preferences-desktop-wallpaper", GTK_ICON_SIZE_BUTTON));
+    apps = gtk_button_new_with_label(_("Desktop Applications"));
+    gtk_button_set_image(GTK_BUTTON(apps),
+        gtk_image_new_from_icon_name("applications-other", GTK_ICON_SIZE_BUTTON));
+    drives = gtk_button_new_with_label(_("Drive Icon Layout"));
+    gtk_button_set_image(GTK_BUTTON(drives),
+        gtk_image_new_from_icon_name("drive-harddisk", GTK_ICON_SIZE_BUTTON));
+    g_signal_connect(wallpaper, "clicked", G_CALLBACK(desktop_wallpaper_button), NULL);
+    g_signal_connect(apps, "clicked", G_CALLBACK(desktop_apps_button), NULL);
+    g_signal_connect(drives, "clicked", G_CALLBACK(desktop_drives_button), NULL);
+    gtk_box_pack_start(GTK_BOX(box), wallpaper, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), apps, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), drives, FALSE, FALSE, 0);
+    return g_list_append(NULL, box);
 }
 
 void desktop_open_wallpaper_manager(void)
@@ -3539,6 +3679,58 @@ void desktop_open_apps_manager(void)
     }
     if (desktop_window)
         desktop_reload();
+}
+
+void desktop_refresh_now(void)
+{
+    if (!desktop_window)
+        return;
+    desktop_reload();
+    desktop_schedule_geometry_update();
+    desktop_refresh_after_environment_change();
+}
+
+gboolean desktop_send_refresh_request(void)
+{
+    GdkDisplay *gdisplay = gdk_display_get_default();
+    Display *display;
+    Atom window_atom, refresh_atom, actual_type;
+    gint actual_format;
+    gulong nitems, bytes_after;
+    unsigned char *data = NULL;
+    Window destination = None;
+    XEvent event;
+    gint status;
+
+    if (!gdisplay || !GDK_IS_X11_DISPLAY(gdisplay))
+        return FALSE;
+    display = gdk_x11_display_get_xdisplay(gdisplay);
+    window_atom = XInternAtom(display, ROX_DESKTOP_WINDOW_ATOM, False);
+    refresh_atom = XInternAtom(display, ROX_DESKTOP_REFRESH_ATOM, False);
+    status = XGetWindowProperty(display, DefaultRootWindow(display),
+        window_atom, 0, 1, False, XA_WINDOW, &actual_type, &actual_format,
+        &nitems, &bytes_after, &data);
+    if (status != Success || !data || actual_type != XA_WINDOW || nitems < 1) {
+        if (data) XFree(data);
+        return FALSE;
+    }
+    destination = *(Window *)data;
+    XFree(data);
+    memset(&event, 0, sizeof(event));
+    event.xclient.type = ClientMessage;
+    event.xclient.display = display;
+    event.xclient.window = destination;
+    event.xclient.message_type = refresh_atom;
+    event.xclient.format = 32;
+    event.xclient.data.l[0] = CurrentTime;
+    /* The root property may outlive a crashed desktop process. Trap X11
+     * errors so a stale window ID cannot terminate the refresh client. */
+    rox_x11_error_trap_push();
+    status = XSendEvent(display, destination, False, NoEventMask, &event);
+    XSync(display, False);
+    if (rox_x11_error_trap_pop() != 0)
+        status = 0;
+    return status != 0;
 }
 
 gboolean desktop_is_running(void)

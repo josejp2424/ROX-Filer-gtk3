@@ -1,0 +1,173 @@
+# ca translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: ca\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>Cerca fitxers i carpetes</b>"
+
+msgid "About ROX File Search"
+msgstr "Quant a Cerca de fitxers ROX"
+
+msgid "Advanced options"
+msgstr "Opcions avançades"
+
+msgid "All items"
+msgstr "Tots els elements"
+
+msgid "Cancel"
+msgstr "Cancel·la"
+
+msgid "Case sensitive"
+msgstr "Distingeix majúscules i minúscules"
+
+msgid "Choose"
+msgstr "Tria"
+
+msgid "Choose Search Folder"
+msgstr "Tria la carpeta de cerca"
+
+msgid "Choose…"
+msgstr "Tria…"
+
+msgid "Close"
+msgstr "Tanca"
+
+msgid "Content:"
+msgstr "Contingut:"
+
+msgid "Copy Path"
+msgstr "Copia el camí"
+
+msgid "Directories only"
+msgstr "Només carpetes"
+
+msgid "Files only"
+msgstr "Només fitxers"
+
+msgid "Follow symbolic links"
+msgstr "Segueix els enllaços simbòlics"
+
+msgid "Include hidden items"
+msgstr "Inclou els elements ocults"
+
+msgid "Include subdirectories"
+msgstr "Inclou les subcarpetes"
+
+msgid "Location"
+msgstr "Ubicació"
+
+msgid "Location:"
+msgstr "Ubicació:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "KB màxims (0 = sense límit):"
+
+msgid "Minimum KB:"
+msgstr "KB mínims:"
+
+msgid "Modified"
+msgstr "Modificat"
+
+msgid "Move the selected item to Trash?"
+msgstr "Voleu moure l’element seleccionat a la paperera?"
+
+msgid "Move to Trash"
+msgstr "Mou a la paperera"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "Nom o patró, per exemple *.svg"
+
+msgid "Name:"
+msgstr "Nom:"
+
+msgid "Open"
+msgstr "Obre"
+
+msgid "Open Parent Folder"
+msgstr "Obre la carpeta superior"
+
+msgid "ROX File Search"
+msgstr "Cerca de fitxers ROX"
+
+msgid "Ready"
+msgstr "A punt"
+
+msgid "Search"
+msgstr "Cerca"
+
+msgid "Search file contents"
+msgstr "Cerca dins dels fitxers"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "Cerca fitxers i carpetes amb integració amb ROX-Filer."
+
+msgid "Search stopped — %u results"
+msgstr "Cerca aturada — %u resultats"
+
+msgid "Searching…"
+msgstr "Cercant…"
+
+msgid "Show in ROX-Filer"
+msgstr "Mostra a ROX-Filer"
+
+msgid "Size"
+msgstr "Mida"
+
+msgid "Stay on the selected filesystem"
+msgstr "Mantén-te al sistema de fitxers seleccionat"
+
+msgid "Stop"
+msgstr "Atura"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "Aturant la cerca… torneu a tancar quan acabi."
+
+msgid "Symbolic links only"
+msgstr "Només enllaços simbòlics"
+
+msgid "Text contained in files"
+msgstr "Text contingut als fitxers"
+
+msgid "Type"
+msgstr "Tipus"
+
+msgid "Type:"
+msgstr "Tipus:"
+
+msgid "Unable to move the item to Trash"
+msgstr "No s’ha pogut moure l’element a la paperera"
+
+msgid "Unable to open the selected item"
+msgstr "No s’ha pogut obrir l’element seleccionat"
+
+msgid "Unknown error"
+msgstr "Error desconegut"
+
+msgid "[FOLDER…]"
+msgstr "[CARPETA…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u resultat"
+msgstr[1] "%u resultats"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "Cerca completada — %u resultat"
+msgstr[1] "Cerca completada — %u resultats"
+
+msgid "Maximum file size for content search:"
+msgstr "Mida màxima del fitxer per a la cerca de contingut:"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Stopping search…"
+msgstr "S'està aturant la cerca…"

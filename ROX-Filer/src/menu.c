@@ -72,6 +72,8 @@
 #include "log.h"
 #include "dnd.h"
 #include "desktop.h"
+#include "filer_pair.h"
+#include "search_integration.h"
 
 static gboolean input_trace_enabled(void)
 {
@@ -135,6 +137,7 @@ static gint updating_menu = 0;		/* Non-zero => ignore activations */
 static GList *send_to_paths = NULL;
 
 static Option o_menu_iconsize, o_menu_xterm, o_menu_xterm_grave, o_menu_quick, o_menu_xdg_apps;
+static Option o_menu_legacy_sendto, o_menu_hide_unavailable;
 
 /* clipboard targets */
 static const GtkTargetEntry clipboard_targets[] = {
@@ -207,6 +210,9 @@ static gboolean spawn_terminal_runner(const gchar *working_dir,
 					  const gchar *path,
 					  TerminalRunMode mode);
 static void menu_options_changed(void);
+static void search_current_folders(gpointer data, guint action, GtkWidget *widget);
+static void open_paired_windows(gpointer data, guint action, GtkWidget *widget);
+static void realign_paired_windows(gpointer data, guint action, GtkWidget *widget);
 
 static void open_parent_same(gpointer data, guint action, GtkWidget *widget);
 static void open_parent(gpointer data, guint action, GtkWidget *widget);
@@ -250,6 +256,9 @@ static GtkWidget    *filer_set_type;        /* Set type item */
 static GtkWidget    *filer_open_terminal_here; /* Open terminal in selected folder */
 static GtkWidget    *filer_run_in_terminal;    /* Run selected executable/script */
 static GtkWidget    *filer_copy_to_backgrounds; /* Copiar imagen y aplicar wallpaper */
+static GtkWidget    *filer_search_item;
+static GtkWidget    *filer_pair_open_item;
+static GtkWidget    *filer_pair_realign_item;
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 static GtkWidget	*filer_xattrs;	/* Extended attributes item */
 #endif
@@ -318,7 +327,7 @@ static RoxItemFactoryEntry filer_menu_def[] = {
 {">" N_("Set Type..."),		NULL, file_op, FILE_SET_TYPE, "<IconItem>", "text-x-generic"},
 {">" N_("Permissions"),		NULL, file_op, FILE_CHMOD_ITEMS, "<IconItem>", "dialog-password"},
 {">",				NULL, NULL, 0, "<Separator>"},
-{">" N_("Find"),		"<Ctrl>F", file_op, FILE_FIND, "<IconItem>", ROX_ICON_FIND},
+{">" N_("Search in This Folder..."), "<Ctrl>F", search_current_folders, 0, "<IconItem>", "rox-find"},
 {N_("Select"),	    		NULL, NULL, 0, "<Branch>", ROX_ICON_SELECT},
 {">" N_("Select All"),	    	"<Ctrl>A", select_all, 0, "<IconItem>", ROX_ICON_SELECT},
 {">" N_("Clear Selection"),	NULL, clear_selection, 0, "<IconItem>", ROX_ICON_CLEAR},
@@ -342,6 +351,9 @@ static RoxItemFactoryEntry filer_menu_def[] = {
 {">" N_("Show Log"),		NULL, show_log, 0, "<IconItem>", ROX_ICON_INFO},
 {">" N_("Follow Symbolic Links"),	NULL, follow_symlinks, 0, "<IconItem>", ROX_ICON_SYMLINK},
 {">" N_("Resize Window"),	"<Ctrl>E", resize, 0, "<IconItem>", "view-fullscreen"},
+{">",				NULL, NULL, 0, "<Separator>"},
+{">" N_("Open Paired Windows"), NULL, open_paired_windows, 0, "<IconItem>", "window-new"},
+{">" N_("Realign Paired Windows"), NULL, realign_paired_windows, 0, "<IconItem>", "view-restore"},
 /* {">" N_("New, As User..."),	NULL, new_user, 0, NULL}, */
 
 {">" N_("Close Window"),	"<Ctrl>Q", close_window, 0, "<IconItem>", ROX_ICON_CLOSE},
@@ -408,10 +420,21 @@ gboolean ensure_filer_menu(void)
 	filer_run_in_terminal = item;
 	GET_SSMENU_ITEM(item, "filer", "File", "Copy to Backgrounds...");
 	filer_copy_to_backgrounds = item;
+	GET_SSMENU_ITEM(item, "filer", "File", "Search in This Folder...");
+	filer_search_item = item;
+	GET_SSMENU_ITEM(item, "filer", "Window", "Open Paired Windows");
+	filer_pair_open_item = item;
+	GET_SSMENU_ITEM(item, "filer", "Window", "Realign Paired Windows");
+	filer_pair_realign_item = item;
 	/* Modificado por josejp2424 (2026): show_popup_menu() usa show_all();
 	 * no-show-all permite ocultar esta acción para archivos no compatibles. */
 	gtk_widget_set_no_show_all(filer_copy_to_backgrounds, TRUE);
 	gtk_widget_hide(filer_copy_to_backgrounds);
+	gtk_widget_set_no_show_all(filer_open_terminal_here, TRUE);
+	gtk_widget_set_no_show_all(filer_run_in_terminal, TRUE);
+	gtk_widget_set_no_show_all(filer_search_item, TRUE);
+	gtk_widget_set_no_show_all(filer_pair_open_item, TRUE);
+	gtk_widget_set_no_show_all(filer_pair_realign_item, TRUE);
 
 #if defined(HAVE_GETXATTR) || defined(HAVE_ATTROPEN)
 	GET_SSMENU_ITEM(item, "filer", "File", "Extended attributes...");
@@ -468,6 +491,8 @@ void menu_init(void)
 	option_add_int(&o_menu_iconsize, "menu_iconsize", MIS_SMALL);
 	option_add_int(&o_menu_quick, "menu_quick", FALSE);
 	option_add_int(&o_menu_xdg_apps, "menu_xdg_apps", TRUE);
+	option_add_int(&o_menu_legacy_sendto, "menu_legacy_sendto", FALSE);
+	option_add_int(&o_menu_hide_unavailable, "menu_hide_unavailable", TRUE);
 	option_add_saver(save_menus);
 
 	option_register_widget("menu-set-keys", set_keys_button);
@@ -878,7 +903,7 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 			clipboard, gnome_copied_files, clipboardcb, GUINT_TO_POINTER(1));
 
 	/* Short-cut to the Send To menu */
-	if (state & GDK_SHIFT_MASK)
+	if ((state & GDK_SHIFT_MASK) && o_menu_legacy_sendto.int_value)
 	{
 		GList *paths;
 
@@ -922,9 +947,33 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 			filer_window->display_style_wanted == AUTO_SIZE_ICONS);
 		buffer = g_string_new(NULL);
 
-		gtk_widget_set_sensitive(filer_open_terminal_here, FALSE);
-		gtk_widget_set_sensitive(filer_run_in_terminal, FALSE);
+		if (o_menu_hide_unavailable.int_value)
+		{
+			gtk_widget_hide(filer_open_terminal_here);
+			gtk_widget_hide(filer_run_in_terminal);
+		}
+		else
+		{
+			gtk_widget_show(filer_open_terminal_here);
+			gtk_widget_show(filer_run_in_terminal);
+			gtk_widget_set_sensitive(filer_open_terminal_here, FALSE);
+			gtk_widget_set_sensitive(filer_run_in_terminal, FALSE);
+		}
 		gtk_widget_hide(filer_copy_to_backgrounds);
+		gtk_widget_hide(filer_search_item);
+		gtk_widget_hide(filer_pair_open_item);
+		gtk_widget_hide(filer_pair_realign_item);
+		if (filer_pair_is_enabled()) {
+			gtk_widget_show(filer_pair_open_item);
+			gtk_widget_show(filer_pair_realign_item);
+		}
+		if (search_integration_available(filer_window))
+		{
+			gtk_menu_item_set_label(GTK_MENU_ITEM(filer_search_item),
+				n_selected > 1 ? _("Search in Selected Folders...") :
+				_("Search in This Folder..."));
+			gtk_widget_show(filer_search_item);
+		}
 
 		switch (n_selected)
 		{
@@ -946,10 +995,15 @@ void show_filer_menu(FilerWindow *filer_window, GdkEvent *event, ViewIter *iter)
 						filer_window->sym_path, file_item->leafname);
 					if (file_item->base_type == TYPE_DIRECTORY ||
 					    g_file_test(terminal_path, G_FILE_TEST_IS_DIR))
+					{
+						gtk_widget_show(filer_open_terminal_here);
 						gtk_widget_set_sensitive(filer_open_terminal_here, TRUE);
-					else
-						gtk_widget_set_sensitive(filer_run_in_terminal,
-							terminal_run_mode_for_item(terminal_path, file_item) != TERMINAL_RUN_NONE);
+					}
+					else if (terminal_run_mode_for_item(terminal_path, file_item) != TERMINAL_RUN_NONE)
+					{
+						gtk_widget_show(filer_run_in_terminal);
+						gtk_widget_set_sensitive(filer_run_in_terminal, TRUE);
+					}
 				}
 				g_string_printf(buffer, _("%s '%s'"),
 					basetype_name(file_item),
@@ -1884,7 +1938,8 @@ static void add_sendto(GtkWidget *menu, const gchar *type, const gchar *subtype)
 
 		menu_entries = g_hash_table_new(g_str_hash, g_str_equal);
 
-		widgets = add_sendto_shared(menu, menu_entries, type, subtype, (CallbackFn) do_send_to);
+		if (o_menu_legacy_sendto.int_value)
+			widgets = add_sendto_shared(menu, menu_entries, type, subtype, (CallbackFn) do_send_to);
         widgets = g_list_concat(widgets,
             add_sendto_desktop_items(menu, menu_entries, type, subtype, (CallbackFn) do_send_to));
 		if (widgets)
@@ -2231,10 +2286,12 @@ static void show_send_to_menu(GList *paths, GdkEvent *event)
 
 	add_sendto(menu, NULL, NULL);
 
-	item = gtk_menu_item_new_with_label(_("Customise"));
-	g_signal_connect_swapped(item, "activate",
+	if (o_menu_legacy_sendto.int_value) {
+		item = gtk_menu_item_new_with_label(_("Customise Legacy SendTo"));
+		g_signal_connect_swapped(item, "activate",
 				G_CALLBACK(customise_send_to), NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	}
 
 	if (send_to_paths)
 		destroy_glist(&send_to_paths);
@@ -2260,6 +2317,25 @@ static void send_to(FilerWindow *filer_window)
 
 	if (event)
 		gdk_event_free(event);
+}
+
+static void search_current_folders(gpointer data, guint action, GtkWidget *widget)
+{
+	(void)data; (void)action; (void)widget;
+	if (window_with_focus)
+		search_integration_launch(window_with_focus);
+}
+
+static void open_paired_windows(gpointer data, guint action, GtkWidget *widget)
+{
+	(void)data; (void)action; (void)widget;
+	filer_pair_open(window_with_focus, NULL, NULL);
+}
+
+static void realign_paired_windows(gpointer data, guint action, GtkWidget *widget)
+{
+	(void)data; (void)action; (void)widget;
+	filer_pair_realign();
 }
 
 static void menu_options_changed(void)

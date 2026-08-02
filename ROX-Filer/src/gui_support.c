@@ -99,6 +99,8 @@ static gboolean rox_window_is_position_exempt(GtkWindow *window)
 
 	if (!window || gtk_window_get_window_type(window) != GTK_WINDOW_TOPLEVEL)
 		return TRUE;
+	if (g_object_get_data(G_OBJECT(window), "rox-paired-window"))
+		return TRUE;
 
 	type_hint = gtk_window_get_type_hint(window);
 	return type_hint == GDK_WINDOW_TYPE_HINT_DESKTOP ||
@@ -1149,6 +1151,8 @@ const char *rox_icon_fallback_name(const char *icon_name)
 	if (g_str_equal(icon_name, ROX_ICON_SHOW_HIDDEN) ||
 	    g_str_equal(icon_name, "rox-show-hidden"))
 		return "rox-show-hidden";
+	if (g_str_equal(icon_name, "rox-find"))
+		return "rox-find";
 	return NULL;
 }
 

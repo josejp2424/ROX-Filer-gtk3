@@ -304,6 +304,11 @@ void filer_window_set_size(FilerWindow *filer_window, int w, int h)
 		h += alloc.height;
 	}
 
+	/* A paired window is controlled by the paired-layout engine. Automatic
+	 * content resizing would break the left/right or top/bottom arrangement. */
+	if (g_object_get_data(G_OBJECT(window), "rox-paired-window"))
+		return;
+
 	/* Modificado por josejp2424 (2026): ninguna instancia normal del
 	 * filer puede quedar por debajo de 640x400, incluso cuando el modo de
 	 * autoajuste calcula una sola fila de iconos. */
@@ -407,6 +412,13 @@ static gboolean apply_standard_initial_geometry(gpointer data)
 
 	if (!filer_exists(filer_window))
 		return G_SOURCE_REMOVE;
+
+	/* Paired windows have their own work-area layout and a smaller minimum. */
+	if (g_object_get_data(G_OBJECT(filer_window->window), "rox-paired-window"))
+	{
+		filer_window->initial_geometry_pending = FALSE;
+		return G_SOURCE_REMOVE;
+	}
 
 	if (GTK_IS_WINDOW(filer_window->window))
 	{
@@ -2384,6 +2396,7 @@ gboolean filer_close_recursive(char *path)
 				gtk_widget_destroy(filer_window->window);
 		}
 	}
+	g_free(real);
 	return FALSE;
 }
 
@@ -2885,6 +2898,10 @@ void filer_perform_action(FilerWindow *filer_window, GdkEventButton *event)
 	gboolean	press = event->type == GDK_BUTTON_PRESS;
 	ViewIter	iter;
 	OpenFlags	flags = 0;
+	/* Directory-only mode takes priority over the historical global
+	 * single-click setting, so files and AppDirs still require a double click. */
+	gboolean single_click_item = o_single_click_dirs.int_value
+		? FALSE : o_single_click.int_value;
 
 	if (event->button > 3)
 		return;
@@ -2918,7 +2935,17 @@ void filer_perform_action(FilerWindow *filer_window, GdkEventButton *event)
 		return;
 	}
 
-	if (!o_single_click.int_value)
+	if (item && o_single_click_dirs.int_value &&
+	    !(item->flags & ITEM_FLAG_APPDIR))
+	{
+		const gchar *item_path = (const gchar *) make_path(
+			filer_window->sym_path, item->leafname);
+		if (item->base_type == TYPE_DIRECTORY ||
+		    g_file_test(item_path, G_FILE_TEST_IS_DIR))
+			single_click_item = TRUE;
+	}
+
+	if (!single_click_item)
 	{
 		/* Make sure both parts of a double-click fall on
 		 * the same file.
@@ -2948,9 +2975,9 @@ void filer_perform_action(FilerWindow *filer_window, GdkEventButton *event)
 		}
 	}
 
-	action = bind_lookup_bev(
+	action = bind_lookup_bev_full(
 			item ? BIND_DIRECTORY_ICON : BIND_DIRECTORY,
-			event);
+			event, single_click_item);
 
 	INPUT_TRACE("event type=%d button=%u state=0x%x x=%.1f y=%.1f item=%s selected=%d action=%d",
 		event->type, event->button, (guint) event->state, event->x, event->y,

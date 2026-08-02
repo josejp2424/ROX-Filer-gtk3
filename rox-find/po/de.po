@@ -1,0 +1,173 @@
+# de translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: de\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>Dateien und Ordner suchen</b>"
+
+msgid "About ROX File Search"
+msgstr "Über ROX-Dateisuche"
+
+msgid "Advanced options"
+msgstr "Erweiterte Optionen"
+
+msgid "All items"
+msgstr "Alle Elemente"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Case sensitive"
+msgstr "Groß-/Kleinschreibung beachten"
+
+msgid "Choose"
+msgstr "Auswählen"
+
+msgid "Choose Search Folder"
+msgstr "Suchordner auswählen"
+
+msgid "Choose…"
+msgstr "Auswählen…"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Content:"
+msgstr "Inhalt:"
+
+msgid "Copy Path"
+msgstr "Pfad kopieren"
+
+msgid "Directories only"
+msgstr "Nur Ordner"
+
+msgid "Files only"
+msgstr "Nur Dateien"
+
+msgid "Follow symbolic links"
+msgstr "Symbolischen Links folgen"
+
+msgid "Include hidden items"
+msgstr "Versteckte Elemente einbeziehen"
+
+msgid "Include subdirectories"
+msgstr "Unterordner einbeziehen"
+
+msgid "Location"
+msgstr "Ort"
+
+msgid "Location:"
+msgstr "Ort:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "Maximale KB (0 = unbegrenzt):"
+
+msgid "Minimum KB:"
+msgstr "Minimale KB:"
+
+msgid "Modified"
+msgstr "Geändert"
+
+msgid "Move the selected item to Trash?"
+msgstr "Ausgewähltes Element in den Papierkorb verschieben?"
+
+msgid "Move to Trash"
+msgstr "In den Papierkorb verschieben"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "Name oder Muster, zum Beispiel *.svg"
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Open Parent Folder"
+msgstr "Übergeordneten Ordner öffnen"
+
+msgid "ROX File Search"
+msgstr "ROX-Dateisuche"
+
+msgid "Ready"
+msgstr "Bereit"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Search file contents"
+msgstr "Dateiinhalte durchsuchen"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "Dateien und Ordner mit ROX-Filer-Integration suchen."
+
+msgid "Search stopped — %u results"
+msgstr "Suche angehalten — %u Ergebnisse"
+
+msgid "Searching…"
+msgstr "Suche läuft…"
+
+msgid "Show in ROX-Filer"
+msgstr "In ROX-Filer anzeigen"
+
+msgid "Size"
+msgstr "Größe"
+
+msgid "Stay on the selected filesystem"
+msgstr "Im ausgewählten Dateisystem bleiben"
+
+msgid "Stop"
+msgstr "Stopp"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "Suche wird beendet… schließen Sie erneut, wenn sie fertig ist."
+
+msgid "Symbolic links only"
+msgstr "Nur symbolische Links"
+
+msgid "Text contained in files"
+msgstr "In Dateien enthaltener Text"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Type:"
+msgstr "Typ:"
+
+msgid "Unable to move the item to Trash"
+msgstr "Element konnte nicht in den Papierkorb verschoben werden"
+
+msgid "Unable to open the selected item"
+msgstr "Ausgewähltes Element konnte nicht geöffnet werden"
+
+msgid "Unknown error"
+msgstr "Unbekannter Fehler"
+
+msgid "[FOLDER…]"
+msgstr "[ORDNER…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u Ergebnis"
+msgstr[1] "%u Ergebnisse"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "Suche abgeschlossen — %u Ergebnis"
+msgstr[1] "Suche abgeschlossen — %u Ergebnisse"
+
+msgid "Maximum file size for content search:"
+msgstr "Maximale Dateigröße für die Inhaltssuche:"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Stopping search…"
+msgstr "Suche wird beendet…"

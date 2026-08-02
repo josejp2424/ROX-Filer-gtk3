@@ -8,7 +8,7 @@
 
 #include <gtk/gtk.h>
 
-extern Option o_new_button_1, o_single_click;
+extern Option o_new_button_1, o_single_click, o_single_click_dirs;
 
 typedef enum {
 	BIND_DIRECTORY,
@@ -38,5 +38,7 @@ typedef enum {
 
 void bind_init(void);
 BindAction bind_lookup_bev(BindContext context, GdkEventButton *event);
+BindAction bind_lookup_bev_full(BindContext context, GdkEventButton *event,
+                                gboolean single_click_item);
 
 #endif /* _BIND_H */

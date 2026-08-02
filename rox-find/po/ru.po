@@ -1,0 +1,173 @@
+# ru translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: ru\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>Поиск файлов и папок</b>"
+
+msgid "About ROX File Search"
+msgstr "О программе «Поиск файлов ROX»"
+
+msgid "Advanced options"
+msgstr "Дополнительные параметры"
+
+msgid "All items"
+msgstr "Все объекты"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Case sensitive"
+msgstr "Учитывать регистр"
+
+msgid "Choose"
+msgstr "Выбрать"
+
+msgid "Choose Search Folder"
+msgstr "Выбрать папку поиска"
+
+msgid "Choose…"
+msgstr "Выбрать…"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Content:"
+msgstr "Содержимое:"
+
+msgid "Copy Path"
+msgstr "Копировать путь"
+
+msgid "Directories only"
+msgstr "Только папки"
+
+msgid "Files only"
+msgstr "Только файлы"
+
+msgid "Follow symbolic links"
+msgstr "Переходить по символическим ссылкам"
+
+msgid "Include hidden items"
+msgstr "Включать скрытые объекты"
+
+msgid "Include subdirectories"
+msgstr "Включать подпапки"
+
+msgid "Location"
+msgstr "Расположение"
+
+msgid "Location:"
+msgstr "Расположение:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "Максимум КБ (0 = без ограничения):"
+
+msgid "Minimum KB:"
+msgstr "Минимум КБ:"
+
+msgid "Modified"
+msgstr "Изменён"
+
+msgid "Move the selected item to Trash?"
+msgstr "Переместить выбранный объект в корзину?"
+
+msgid "Move to Trash"
+msgstr "Переместить в корзину"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "Имя или шаблон, например *.svg"
+
+msgid "Name:"
+msgstr "Имя:"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Open Parent Folder"
+msgstr "Открыть родительскую папку"
+
+msgid "ROX File Search"
+msgstr "Поиск файлов ROX"
+
+msgid "Ready"
+msgstr "Готово"
+
+msgid "Search"
+msgstr "Искать"
+
+msgid "Search file contents"
+msgstr "Искать в содержимом файлов"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "Поиск файлов и папок с интеграцией ROX-Filer."
+
+msgid "Search stopped — %u results"
+msgstr "Поиск остановлен — %u результатов"
+
+msgid "Searching…"
+msgstr "Поиск…"
+
+msgid "Show in ROX-Filer"
+msgstr "Показать в ROX-Filer"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Stay on the selected filesystem"
+msgstr "Оставаться в выбранной файловой системе"
+
+msgid "Stop"
+msgstr "Остановить"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "Остановка поиска… закройте снова после завершения."
+
+msgid "Symbolic links only"
+msgstr "Только символические ссылки"
+
+msgid "Text contained in files"
+msgstr "Текст в файлах"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Type:"
+msgstr "Тип:"
+
+msgid "Unable to move the item to Trash"
+msgstr "Не удалось переместить объект в корзину"
+
+msgid "Unable to open the selected item"
+msgstr "Не удалось открыть выбранный объект"
+
+msgid "Unknown error"
+msgstr "Неизвестная ошибка"
+
+msgid "[FOLDER…]"
+msgstr "[ПАПКА…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u результат"
+msgstr[1] "%u результатов"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "Поиск завершён — %u результат"
+msgstr[1] "Поиск завершён — %u результатов"
+
+msgid "Maximum file size for content search:"
+msgstr "Максимальный размер файла для поиска по содержимому:"
+
+msgid "MB"
+msgstr "МБ"
+
+msgid "Stopping search…"
+msgstr "Остановка поиска…"

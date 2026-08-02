@@ -112,6 +112,7 @@ static void thumbnail_child_done(ChildThumbnail *info);
 static void child_create_thumbnail(const gchar *path, MIME_type *type);
 static GList *thumbs_purge_cache(Option *option, xmlNode *node, guchar *label);
 static gchar *thumbnail_path(const gchar *path);
+static gchar *thumbnail_cache_dir(void);
 static gchar *thumbnail_program(MIME_type *type);
 static GdkPixbuf *extract_tiff_thumbnail(const gchar *path);
 
@@ -439,8 +440,8 @@ MaskedPixmap *pixmap_try_thumb(const gchar *path, gboolean can_load)
 
 		dir = g_path_get_dirname(path);
 
-		/* If the image itself is in ~/.thumbnails, load it now
-		 * (ie, don't create thumbnails for thumbnails!).
+		/* If the image itself is in the standard thumbnail cache, load
+		 * it now (do not create thumbnails for thumbnails).
 		 */
 		if (mc_stat(dir, &info1) != 0)
 		{
@@ -449,17 +450,21 @@ MaskedPixmap *pixmap_try_thumb(const gchar *path, gboolean can_load)
 		}
 		g_free(dir);
 
-		if (mc_stat(make_path(home_dir, ".thumbnails/normal"),
-			    &info2) == 0 &&
-			    info1.st_dev == info2.st_dev &&
-			    info1.st_ino == info2.st_ino)
 		{
+			gchar *cache_dir = thumbnail_cache_dir();
+			gboolean in_cache = mc_stat(cache_dir, &info2) == 0 &&
+				info1.st_dev == info2.st_dev &&
+				info1.st_ino == info2.st_ino;
+			g_free(cache_dir);
+			if (in_cache)
+			{
 			pixbuf = rox_pixbuf_new_from_file_at_scale(path,
 					PIXMAP_THUMB_SIZE, PIXMAP_THUMB_SIZE,
 								   TRUE, NULL);
-			if (!pixbuf)
-			{
-				return NULL;
+				if (!pixbuf)
+				{
+					return NULL;
+				}
 			}
 		}
 	}
@@ -481,6 +486,15 @@ MaskedPixmap *pixmap_try_thumb(const gchar *path, gboolean can_load)
  *			INTERNAL FUNCTIONS			*
  ****************************************************************/
 
+/* Return the standard Freedesktop thumbnail cache directory. */
+static gchar *thumbnail_cache_dir(void)
+{
+	gchar *path = g_build_filename(g_get_user_cache_dir(),
+				       "thumbnails", "normal", NULL);
+	g_mkdir_with_parents(path, 0700);
+	return path;
+}
+
 /* Create a thumbnail file for this image */
 static void save_thumbnail(const char *pathname, GdkPixbuf *full)
 {
@@ -488,6 +502,7 @@ static void save_thumbnail(const char *pathname, GdkPixbuf *full)
 	gchar *path;
 	int original_width, original_height;
 	GString *to;
+	gchar *cache_dir;
 	char *md5, *swidth, *sheight, *ssize, *smtime, *uri;
 	mode_t old_mask;
 	int name_len;
@@ -513,12 +528,11 @@ static void save_thumbnail(const char *pathname, GdkPixbuf *full)
 	md5 = md5_hash(uri);
 	g_free(path);
 
-	to = g_string_new(home_dir);
-	g_string_append(to, "/.thumbnails");
-	mkdir(to->str, 0700);
-	g_string_append(to, "/normal/");
-	mkdir(to->str, 0700);
+	cache_dir = thumbnail_cache_dir();
+	to = g_string_new(cache_dir);
+	g_string_append_c(to, G_DIR_SEPARATOR);
 	g_string_append(to, md5);
+	g_free(cache_dir);
 	name_len = to->len + 4; /* Truncate to this length when renaming */
 	g_string_append_printf(to, ".png.ROX-Filer-%ld", (long) getpid());
 
@@ -562,18 +576,18 @@ static gchar *thumbnail_path(const char *path)
 	gchar *uri, *md5;
 	GString *to;
 	gchar *ans;
+	gchar *cache_dir;
 
 	uri = g_filename_to_uri(path, NULL, NULL);
 	if(!uri)
 	       uri = g_strconcat("file://", path, NULL);
 	md5 = md5_hash(uri);
 
-	to = g_string_new(home_dir);
-	g_string_append(to, "/.thumbnails");
-	mkdir(to->str, 0700);
-	g_string_append(to, "/normal/");
-	mkdir(to->str, 0700);
+	cache_dir = thumbnail_cache_dir();
+	to = g_string_new(cache_dir);
+	g_string_append_c(to, G_DIR_SEPARATOR);
 	g_string_append(to, md5);
+	g_free(cache_dir);
 	g_string_append(to, ".png");
 
 	g_free(md5);
@@ -676,8 +690,12 @@ static GdkPixbuf *get_thumbnail_for(const char *pathname)
 	md5 = md5_hash(uri);
 	g_free(uri);
 
-	thumb_path = g_strdup_printf("%s/.thumbnails/normal/%s.png",
-					home_dir, md5);
+	{
+		gchar *cache_dir = thumbnail_cache_dir();
+		thumb_path = g_strdup_printf("%s%c%s.png", cache_dir,
+					      G_DIR_SEPARATOR, md5);
+		g_free(cache_dir);
+	}
 	g_free(md5);
 
 	thumb = gdk_pixbuf_new_from_file(thumb_path, NULL);
@@ -1033,7 +1051,7 @@ static void purge_disk_cache(GtkWidget *button, gpointer data)
 
 	g_fscache_purge(pixmap_cache, 0);
 
-	path = g_strconcat(home_dir, "/.thumbnails/normal/", NULL);
+	path = thumbnail_cache_dir();
 
 	dir = opendir(path);
 	if (!dir)
@@ -1048,7 +1066,7 @@ static void purge_disk_cache(GtkWidget *button, gpointer data)
 		if (ent->d_name[0] == '.')
 			continue;
 		list = g_list_prepend(list,
-				      g_strconcat(path, ent->d_name, NULL));
+				      g_build_filename(path, ent->d_name, NULL));
 	}
 
 	closedir(dir);

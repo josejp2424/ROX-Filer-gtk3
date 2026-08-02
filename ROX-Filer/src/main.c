@@ -74,6 +74,7 @@
 #include "run.h"
 #include "toolbar.h"
 #include "bind.h"
+#include "bookmarks.h"
 #include "panel.h"
 #include "session.h"
 #include "minibuffer.h"
@@ -82,6 +83,8 @@
 #include "gtksavebox.h"
 #include "desktop.h"
 #include "rox_config.h"
+#include "filer_pair.h"
+#include "search_integration.h"
 
 extern gboolean session_auto_respawn;
 
@@ -152,6 +155,9 @@ static struct option long_opts[] =
 	{"desktop", 0, NULL, 1000},
 	{"desktop-wallpaper", 0, NULL, 1001},
 	{"desktop-apps", 0, NULL, 1002},
+	{"desktop-refresh", 0, NULL, 1003},
+	{"pair", 0, NULL, 1004},
+	{"pair-realign", 0, NULL, 1005},
 	{NULL, 0, NULL, 0},
 };
 #endif
@@ -175,10 +181,15 @@ static gboolean desktop_mode = FALSE;
 typedef enum {
 	DESKTOP_TOOL_NONE = 0,
 	DESKTOP_TOOL_WALLPAPER,
-	DESKTOP_TOOL_APPS
+	DESKTOP_TOOL_APPS,
+	DESKTOP_TOOL_REFRESH
 } DesktopTool;
 
 static DesktopTool desktop_tool = DESKTOP_TOOL_NONE;
+static gboolean pair_mode = FALSE;
+static gboolean pair_realign_mode = FALSE;
+static gchar *pair_left_arg = NULL;
+static gchar *pair_right_arg = NULL;
 
 /* Maps child PIDs to Callback pointers */
 static GHashTable *death_callbacks = NULL;
@@ -424,6 +435,16 @@ int main(int argc, char **argv)
 				desktop_tool = DESKTOP_TOOL_APPS;
 				new_copy = TRUE;
 				break;
+			case 1003:
+				desktop_tool = DESKTOP_TOOL_REFRESH;
+				new_copy = TRUE;
+				break;
+			case 1004:
+				pair_mode = TRUE;
+				break;
+			case 1005:
+				pair_realign_mode = TRUE;
+				break;
 			case 'o':
 				info_message(_("The -o argument is no longer "
 					"used. You can turn on override "
@@ -567,11 +588,29 @@ int main(int argc, char **argv)
 	while (i < argc)
 	{
 		tmp = pathdup(argv[i++]);
-
-		soap_add(body, "Run", "Filename", tmp, NULL, NULL);
-
+		if (pair_mode)
+		{
+			if (!pair_left_arg)
+				pair_left_arg = g_strdup(tmp);
+			else if (!pair_right_arg)
+				pair_right_arg = g_strdup(tmp);
+			else
+			{
+				g_printerr("%s\n", _("--pair accepts at most two folders."));
+				g_free(tmp);
+				return EXIT_FAILURE;
+			}
+		}
+		else
+			soap_add(body, "Run", "Filename", tmp, NULL, NULL);
 		g_free(tmp);
 	}
+
+	if (pair_mode)
+		soap_add(body, "PairWindows",
+			"Left", pair_left_arg, "Right", pair_right_arg);
+	if (pair_realign_mode)
+		soap_add(body, "PairRealign", NULL, NULL, NULL, NULL);
 
 	if (soap_rpc)
 	{
@@ -627,11 +666,14 @@ int main(int argc, char **argv)
 	log_init();
 	dnd_init();
 	bind_init();
+	bookmarks_init();
 	dir_init();
 	diritem_init();
 	menu_init();
 	minibuffer_init();
 	filer_init();
+	filer_pair_init();
+	search_integration_init();
 	toolbar_init();
 	display_init();
 	mount_init();
@@ -689,14 +731,27 @@ int main(int argc, char **argv)
 			desktop_open_wallpaper_manager();
 		else if (desktop_tool == DESKTOP_TOOL_APPS)
 			desktop_open_apps_manager();
+		else if (desktop_tool == DESKTOP_TOOL_REFRESH)
+		{
+			if (!desktop_send_refresh_request())
+			{
+				g_printerr("%s\n", _("No running ROX Desktop instance was found."));
+				xmlFreeDoc(rpc);
+				return EXIT_FAILURE;
+			}
+		}
 		xmlFreeDoc(rpc);
 		return EXIT_SUCCESS;
 	}
 
 	/* Finally, execute the request */
 	reply = run_soap(rpc);
+	if (!pair_mode && !pair_realign_mode)
+		filer_pair_startup_if_enabled();
 	xmlFreeDoc(rpc);
 	soap_reply(reply, rpc_mode);
+	g_clear_pointer(&pair_left_arg, g_free);
+	g_clear_pointer(&pair_right_arg, g_free);
 
 	/* Convert X11 protocol failures into ROX diagnostics instead of aborting. */
 	XSetErrorHandler(rox_x_error);
@@ -759,6 +814,12 @@ static void print_help_text(void)
 		_("open the desktop wallpaper manager"));
 	g_print("      --desktop-apps\t%s\n",
 		_("open the desktop application manager"));
+	g_print("      --desktop-refresh\t%s\n",
+		_("refresh the running ROX Desktop"));
+	g_print("      --pair [LEFT RIGHT]\t%s\n",
+		_("open two ROX-Filer windows side by side"));
+	g_print("      --pair-realign\t%s\n",
+		_("realign the current paired windows"));
 	g_print("%s", line_end + 1);
 
 	g_free(prefix);

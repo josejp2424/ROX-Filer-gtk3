@@ -42,7 +42,8 @@
 static GList *history = NULL;		/* Most recent first */
 static GList *history_tail = NULL;	/* Oldest item */
 static GHashTable *history_hash = NULL;	/* Path -> GList link */
-static gint history_free = 30;		/* Space left in history */
+static Option o_history_ignore_missing;
+static Option o_history_limit;
 
 static XMLwrapper *bookmarks = NULL;
 static GtkWidget *bookmarks_window = NULL;
@@ -69,6 +70,13 @@ static gboolean dir_dropped(GtkWidget *window, GdkDragContext *context,
 			    guint time, GtkTreeView *view);
 static void bookmarks_add_dir(const guchar *dir);
 static void commit_edits(GtkTreeModel *model);
+
+void bookmarks_init(void)
+{
+	option_add_int(&o_history_ignore_missing,
+			"history_ignore_missing", TRUE);
+	option_add_int(&o_history_limit, "history_limit", 100);
+}
 
 
 /****************************************************************
@@ -243,7 +251,6 @@ static void history_remove(const char *path)
 		g_free(old->data);
 		history = g_list_delete_link(history, old);
 
-		history_free++;
 	}
 }
 
@@ -275,8 +282,8 @@ void bookmarks_add_history(const gchar *path)
 		history_tail = history;
 	g_hash_table_insert(history_hash, new, history);
 
-	history_free--;
-	if (history_free == -1)
+	while (g_list_length(history) >
+	       (guint) CLAMP(o_history_limit.int_value, 1, 200))
 	{
 		g_return_if_fail(history_tail != NULL);
 		history_remove((char *) history_tail->data);
@@ -718,7 +725,13 @@ static GtkWidget *build_history_menu(FilerWindow *filer_window)
 	items = g_ptr_array_new();
 
 	for (next = history; next; next = next->next)
+	{
+		const gchar *path = next->data;
+		if (o_history_ignore_missing.int_value &&
+		    !g_file_test(path, G_FILE_TEST_EXISTS))
+			continue;
 		g_ptr_array_add(items, next->data);
+	}
 
 	/*g_ptr_array_sort(items, cmp_dirname);*/
 

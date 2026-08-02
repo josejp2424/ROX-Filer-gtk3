@@ -48,6 +48,8 @@
 #include "bookmarks.h"
 #include "gui_support.h"
 #include "trash.h"
+#include "filer_pair.h"
+#include "search_integration.h"
 
 typedef struct _Tool Tool;
 
@@ -95,6 +97,8 @@ static void toolbar_select_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
 static void toolbar_new_clicked(GtkWidget *widget,
 				   FilerWindow *filer_window);
+static void toolbar_search_clicked(GtkWidget *widget, FilerWindow *filer_window);
+static void toolbar_pair_clicked(GtkWidget *widget, FilerWindow *filer_window);
 static void toolbar_new_show_menu(GtkMenuToolButton *button,
                                    FilerWindow *filer_window);
 static GtkWidget *add_button(GtkWidget *bar, Tool *tool,
@@ -178,6 +182,14 @@ static Tool all_tools[] = {
 								  "Center: New Blank file\n"
 								  "Right: Menu"),
 	 toolbar_new_clicked, DROP_NONE, FALSE,
+	 FALSE},
+
+	{N_("Search"), "rox-find", N_("Search in the current folder"),
+	 toolbar_search_clicked, DROP_NONE, FALSE,
+	 FALSE},
+
+	{N_("Paired Windows"), "window-new", N_("Open two ROX-Filer windows side by side"),
+	 toolbar_pair_clicked, DROP_NONE, FALSE,
 	 FALSE},
 };
 
@@ -580,6 +592,18 @@ static void toolbar_new_show_menu(GtkMenuToolButton *button,
 	gtk_menu_tool_button_set_menu(button, menu);
 }
 
+static void toolbar_search_clicked(GtkWidget *widget, FilerWindow *filer_window)
+{
+	(void)widget;
+	search_integration_launch(filer_window);
+}
+
+static void toolbar_pair_clicked(GtkWidget *widget, FilerWindow *filer_window)
+{
+	(void)widget;
+	filer_pair_open(filer_window, NULL, NULL);
+}
+
 /* If filer_window is NULL, the toolbar is for the options window */
 static GtkWidget *create_toolbar(FilerWindow *filer_window)
 {
@@ -630,6 +654,12 @@ static GtkWidget *create_toolbar(FilerWindow *filer_window)
 		GtkRequisition req;
 
 		if (filer_window && !tool->enabled)
+			continue;
+		if (filer_window && tool->clicked == toolbar_search_clicked &&
+		    !search_integration_toolbar_enabled())
+			continue;
+		if (filer_window && tool->clicked == toolbar_pair_clicked &&
+		    !filer_pair_is_enabled())
 			continue;
 
 		b = add_button(bar, tool, filer_window);

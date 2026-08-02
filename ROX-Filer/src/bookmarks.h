@@ -6,6 +6,8 @@
 #ifndef _BOOKMARKS_H
 #define _BOOKMARKS_H
 
+void bookmarks_init(void);
+
 void bookmarks_show_menu(FilerWindow *filer_window);
 void bookmarks_edit(void);
 void bookmarks_add_history(const gchar *path);

@@ -1,0 +1,173 @@
+# ar translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: ar\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>البحث عن الملفات والمجلدات</b>"
+
+msgid "About ROX File Search"
+msgstr "حول بحث ملفات ROX"
+
+msgid "Advanced options"
+msgstr "خيارات متقدمة"
+
+msgid "All items"
+msgstr "كل العناصر"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Case sensitive"
+msgstr "مطابقة حالة الأحرف"
+
+msgid "Choose"
+msgstr "اختيار"
+
+msgid "Choose Search Folder"
+msgstr "اختيار مجلد البحث"
+
+msgid "Choose…"
+msgstr "اختيار…"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Content:"
+msgstr "المحتوى:"
+
+msgid "Copy Path"
+msgstr "نسخ المسار"
+
+msgid "Directories only"
+msgstr "المجلدات فقط"
+
+msgid "Files only"
+msgstr "الملفات فقط"
+
+msgid "Follow symbolic links"
+msgstr "اتباع الروابط الرمزية"
+
+msgid "Include hidden items"
+msgstr "تضمين العناصر المخفية"
+
+msgid "Include subdirectories"
+msgstr "تضمين المجلدات الفرعية"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Location:"
+msgstr "الموقع:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "الحد الأقصى بالكيلوبايت (0 = بلا حد):"
+
+msgid "Minimum KB:"
+msgstr "الحد الأدنى بالكيلوبايت:"
+
+msgid "Modified"
+msgstr "تاريخ التعديل"
+
+msgid "Move the selected item to Trash?"
+msgstr "هل تريد نقل العنصر المحدد إلى المهملات؟"
+
+msgid "Move to Trash"
+msgstr "نقل إلى المهملات"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "الاسم أو النمط، مثل *.svg"
+
+msgid "Name:"
+msgstr "الاسم:"
+
+msgid "Open"
+msgstr "فتح"
+
+msgid "Open Parent Folder"
+msgstr "فتح المجلد الأب"
+
+msgid "ROX File Search"
+msgstr "بحث ملفات ROX"
+
+msgid "Ready"
+msgstr "جاهز"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search file contents"
+msgstr "البحث داخل محتوى الملفات"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "البحث عن الملفات والمجلدات مع تكامل ROX-Filer."
+
+msgid "Search stopped — %u results"
+msgstr "توقف البحث — %u نتائج"
+
+msgid "Searching…"
+msgstr "جارٍ البحث…"
+
+msgid "Show in ROX-Filer"
+msgstr "إظهار في ROX-Filer"
+
+msgid "Size"
+msgstr "الحجم"
+
+msgid "Stay on the selected filesystem"
+msgstr "البقاء ضمن نظام الملفات المحدد"
+
+msgid "Stop"
+msgstr "إيقاف"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "جارٍ إيقاف البحث… أغلق مرة أخرى عند انتهائه."
+
+msgid "Symbolic links only"
+msgstr "الروابط الرمزية فقط"
+
+msgid "Text contained in files"
+msgstr "النص الموجود داخل الملفات"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "Type:"
+msgstr "النوع:"
+
+msgid "Unable to move the item to Trash"
+msgstr "تعذر نقل العنصر إلى المهملات"
+
+msgid "Unable to open the selected item"
+msgstr "تعذر فتح العنصر المحدد"
+
+msgid "Unknown error"
+msgstr "خطأ غير معروف"
+
+msgid "[FOLDER…]"
+msgstr "[مجلد…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u نتيجة"
+msgstr[1] "%u نتائج"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "اكتمل البحث — %u نتيجة"
+msgstr[1] "اكتمل البحث — %u نتائج"
+
+msgid "Maximum file size for content search:"
+msgstr "الحد الأقصى لحجم الملف للبحث في المحتوى:"
+
+msgid "MB"
+msgstr "ميغابايت"
+
+msgid "Stopping search…"
+msgstr "جارٍ إيقاف البحث…"

@@ -1,0 +1,169 @@
+# Translation template for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr ""
+
+msgid "About ROX File Search"
+msgstr ""
+
+msgid "Advanced options"
+msgstr ""
+
+msgid "All items"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Case sensitive"
+msgstr ""
+
+msgid "Choose"
+msgstr ""
+
+msgid "Choose Search Folder"
+msgstr ""
+
+msgid "Choose…"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Content:"
+msgstr ""
+
+msgid "Copy Path"
+msgstr ""
+
+msgid "Directories only"
+msgstr ""
+
+msgid "Files only"
+msgstr ""
+
+msgid "Follow symbolic links"
+msgstr ""
+
+msgid "Include hidden items"
+msgstr ""
+
+msgid "Include subdirectories"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Location:"
+msgstr ""
+
+msgid "MB"
+msgstr ""
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr ""
+
+msgid "Maximum file size for content search:"
+msgstr ""
+
+msgid "Minimum KB:"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Move the selected item to Trash?"
+msgstr ""
+
+msgid "Move to Trash"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Name or pattern, for example *.svg"
+msgstr ""
+
+msgid "Name:"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Open Parent Folder"
+msgstr ""
+
+msgid "ROX File Search"
+msgstr ""
+
+msgid "Ready"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search file contents"
+msgstr ""
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr ""
+
+msgid "Search stopped — %u results"
+msgstr ""
+
+msgid "Searching…"
+msgstr ""
+
+msgid "Show in ROX-Filer"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Stay on the selected filesystem"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stopping search…"
+msgstr ""
+
+msgid "Symbolic links only"
+msgstr ""
+
+msgid "Text contained in files"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Type:"
+msgstr ""
+
+msgid "Unable to move the item to Trash"
+msgstr ""
+
+msgid "Unable to open the selected item"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "[FOLDER…]"
+msgstr ""
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] ""
+msgstr[1] ""

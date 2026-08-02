@@ -340,7 +340,7 @@ GAppInfo *type_get_default_application(MIME_type *type)
 		if (app)
 			break;
 	}
-	g_strfreev(parents);
+	free(parents);
 	return app;
 }
 

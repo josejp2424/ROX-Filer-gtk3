@@ -56,6 +56,7 @@
 #include "diritem.h"
 #include "usericons.h"
 #include "options.h"
+#include "filer_pair.h"
 
 static GdkAtom filer_atom;	/* _ROX_FILER_EUID_VERSION_HOST */
 static GdkAtom filer_atom_any;	/* _ROX_FILER_EUID_HOST */
@@ -102,6 +103,8 @@ static xmlNodePtr rpc_Link(GList *args);
 static xmlNodePtr rpc_FileType(GList *args);
 static xmlNodePtr rpc_Mount(GList *args);
 static xmlNodePtr rpc_Unmount(GList *args);
+static xmlNodePtr rpc_PairWindows(GList *args);
+static xmlNodePtr rpc_PairRealign(GList *args);
 
 static xmlNodePtr rpc_PanelAdd(GList *args);
 static xmlNodePtr rpc_PanelRemove(GList *args);
@@ -145,6 +148,8 @@ gboolean remote_init(xmlDocPtr rpc, gboolean new_copy)
 	soap_register("Examine", rpc_Examine, "Filename", NULL);
 	soap_register("Show", rpc_Show, "Directory,Leafname", NULL);
 	soap_register("RunURI", rpc_RunURI, "URI", NULL);
+	soap_register("PairWindows", rpc_PairWindows, NULL, "Left,Right");
+	soap_register("PairRealign", rpc_PairRealign, NULL, NULL);
 
 	soap_register("Pinboard", rpc_Pinboard, NULL, "Name");
 	soap_register("Panel", rpc_Panel, NULL, "Side,Name");
@@ -893,6 +898,27 @@ static xmlNodePtr rpc_RunURI(GList *args)
 	}
 
 	return reply;
+}
+
+static xmlNodePtr rpc_PairWindows(GList *args)
+{
+	char *left = string_value(ARG(0));
+	char *right = string_value(ARG(1));
+	FilerWindow *source = window_with_focus;
+
+	if (!source && all_filer_windows)
+		source = all_filer_windows->data;
+	filer_pair_open(source, left, right);
+	g_free(left);
+	g_free(right);
+	return NULL;
+}
+
+static xmlNodePtr rpc_PairRealign(GList *args)
+{
+	(void)args;
+	filer_pair_realign();
+	return NULL;
 }
 
 static xmlNodePtr rpc_CloseDir(GList *args)

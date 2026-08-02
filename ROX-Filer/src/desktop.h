@@ -9,6 +9,8 @@
 void desktop_init(void);
 void desktop_start(void);
 gboolean desktop_is_running(void);
+void desktop_refresh_now(void);
+gboolean desktop_send_refresh_request(void);
 
 /* Herramientas independientes que pueden abrirse desde la línea de comandos. */
 void desktop_open_wallpaper_manager(void);

@@ -1,7 +1,7 @@
 # Modificado por josejp2424: catálogo revisado para la interfaz GTK3 y las funciones nuevas.
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Project-Id-Version: ROX-Filer 2.12-r57\n"
 "Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
 "POT-Creation-Date: 2026-07-29 17:41-0300\n"
 "PO-Revision-Date: 2026-07-29 17:41-0300\n"
@@ -6061,3 +6061,717 @@ msgstr "abre el gestor de fondos del escritorio"
 #: main.c
 msgid "open the desktop application manager"
 msgstr "abre el gestor de aplicaciones del escritorio"
+
+#: GTK3 modern options and integrations
+msgid "--pair accepts at most two folders."
+msgstr "--pair acepta como máximo dos carpetas."
+
+#: GTK3 modern options and integrations
+msgid "Allow ROX-Filer to resize after directory and view changes."
+msgstr "Permitir que ROX-Filer redimensione la ventana después de cambios de directorio o vista."
+
+#: GTK3 modern options and integrations
+msgid "Allow dropping onto directory and application icons"
+msgstr "Permitir soltar sobre iconos de directorios y aplicaciones"
+
+#: GTK3 modern options and integrations
+msgid "Allow the Search toolbar button"
+msgstr "Permitir el botón Buscar en la barra"
+
+#: GTK3 modern options and integrations
+msgid "Apply operations recursively"
+msgstr "Aplicar las operaciones recursivamente"
+
+#: GTK3 modern options and integrations
+msgid "Arrange large icons vertically"
+msgstr "Organizar verticalmente los iconos grandes"
+
+#: GTK3 modern options and integrations
+msgid "Arrange small icons vertically"
+msgstr "Organizar verticalmente los iconos pequeños"
+
+#: GTK3 modern options and integrations
+msgid "Arrangement:"
+msgstr "Organización:"
+
+#: GTK3 modern options and integrations
+msgid "Automatic window size"
+msgstr "Tamaño automático de ventana"
+
+#: GTK3 modern options and integrations
+msgid "Beep when Tab completion fails"
+msgstr "Emitir un sonido cuando falle el completado con Tab"
+
+#: GTK3 modern options and integrations
+msgid "Beep when Tab completion has several matches"
+msgstr "Emitir un sonido cuando el completado con Tab tenga varias coincidencias"
+
+#: GTK3 modern options and integrations
+msgid "Buttons"
+msgstr "Botones"
+
+#: GTK3 modern options and integrations
+msgid "Classic Compatibility"
+msgstr "Compatibilidad clásica"
+
+#: GTK3 modern options and integrations
+msgid "Classic pinboard and panels"
+msgstr "Pinboard y paneles clásicos"
+
+#: GTK3 modern options and integrations
+msgid "Close a filer window when its directory is deleted or an opened device is unmounted."
+msgstr "Cerrar una ventana cuando se elimine su directorio o se desmonte un dispositivo abierto."
+
+#: GTK3 modern options and integrations
+msgid "Close windows when their directory disappears"
+msgstr "Cerrar las ventanas cuando desaparezca su directorio"
+
+#: GTK3 modern options and integrations
+msgid "Command-line compatibility"
+msgstr "Compatibilidad con la línea de comandos"
+
+#: GTK3 modern options and integrations
+msgid "Copy, move and delete"
+msgstr "Copiar, mover y eliminar"
+
+#: GTK3 modern options and integrations
+msgid "Create a rox command script"
+msgstr "Crear un script de comando rox"
+
+#: GTK3 modern options and integrations
+msgid "Custom directory"
+msgstr "Directorio personalizado"
+
+#: GTK3 modern options and integrations
+msgid "Custom directory:"
+msgstr "Directorio personalizado:"
+
+#: GTK3 modern options and integrations
+msgid "Customise Legacy SendTo"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "Default action-window settings"
+msgstr "Configuración predeterminada de las ventanas de operación"
+
+#: GTK3 modern options and integrations
+msgid "Defaults for new windows"
+msgstr "Valores predeterminados para ventanas nuevas"
+
+#: GTK3 modern options and integrations
+msgid "Desktop Applications"
+msgstr "Aplicaciones del escritorio"
+
+#: GTK3 modern options and integrations
+msgid "Detailed list"
+msgstr "Lista detallada"
+
+#: GTK3 modern options and integrations
+msgid "Do not ask again for non-writable items"
+msgstr "No volver a preguntar por elementos sin permiso de escritura"
+
+#: GTK3 modern options and integrations
+msgid "Do not offer deleted directories or mount points that are no longer available."
+msgstr "No mostrar directorios eliminados ni puntos de montaje que ya no estén disponibles."
+
+#: GTK3 modern options and integrations
+msgid "Double-clicking the background resizes the window"
+msgstr "Un doble clic en el fondo redimensiona la ventana"
+
+#: GTK3 modern options and integrations
+msgid "Eject command:"
+msgstr "Comando de expulsión:"
+
+#: GTK3 modern options and integrations
+msgid "Enable paired-window features"
+msgstr "Activar las funciones de ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "Enable the Window menu actions, toolbar action and --pair command."
+msgstr "Activar las acciones del menú Ventana, el botón de la barra y el comando --pair."
+
+#: GTK3 modern options and integrations
+msgid "Enable the legacy SendTo directory menu"
+msgstr "Activar el menú de directorios SendTo heredado"
+
+#: GTK3 modern options and integrations
+msgid "File Operations"
+msgstr "Operaciones de archivos"
+
+#: GTK3 modern options and integrations
+msgid "First-window share"
+msgstr "Proporción de la primera ventana"
+
+#: GTK3 modern options and integrations
+msgid "Follow symbolic links by default"
+msgstr "Seguir enlaces simbólicos de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "For example, hide Run in Terminal for a normal directory instead of showing it disabled."
+msgstr "Por ejemplo, ocultar Ejecutar en terminal para un directorio normal en lugar de mostrarlo desactivado."
+
+#: GTK3 modern options and integrations
+msgid "Forward classic backdrop clicks to the window manager"
+msgstr "Enviar los clics del fondo clásico al gestor de ventanas"
+
+#: GTK3 modern options and integrations
+msgid "Gap between windows:"
+msgstr "Separación entre ventanas:"
+
+#: GTK3 modern options and integrations
+msgid "General"
+msgstr "General"
+
+#: GTK3 modern options and integrations
+msgid "Hide native menu actions that do not apply"
+msgstr "Ocultar las acciones nativas que no correspondan"
+
+#: GTK3 modern options and integrations
+msgid "Home directory"
+msgstr "Directorio personal"
+
+#: GTK3 modern options and integrations
+msgid "Hover delay:"
+msgstr "Demora de apertura:"
+
+#: GTK3 modern options and integrations
+msgid "Huge"
+msgstr "Enormes"
+
+#: GTK3 modern options and integrations
+msgid "Icon details:"
+msgstr "Detalles de los iconos:"
+
+#: GTK3 modern options and integrations
+msgid "Icon view"
+msgstr "Vista de iconos"
+
+#: GTK3 modern options and integrations
+msgid "Icons"
+msgstr "Iconos"
+
+#: GTK3 modern options and integrations
+msgid "Ignore missing directories in Recently Visited"
+msgstr "Ignorar directorios inexistentes en Visitados recientemente"
+
+#: GTK3 modern options and integrations
+msgid "Ignore older source files"
+msgstr "Ignorar archivos de origen más antiguos"
+
+#: GTK3 modern options and integrations
+msgid "Image previews"
+msgstr "Vistas previas de imágenes"
+
+#: GTK3 modern options and integrations
+msgid "Include hidden items by default"
+msgstr "Incluir elementos ocultos de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Include subdirectories by default"
+msgstr "Incluir subdirectorios de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Individual filer windows can still enable or disable thumbnails from the Display menu or toolbar."
+msgstr "Cada ventana puede seguir activando o desactivando las miniaturas desde el menú Mostrar o la barra de herramientas."
+
+#: GTK3 modern options and integrations
+msgid "Inherit display settings from the source window"
+msgstr "Heredar la configuración de vista de la ventana de origen"
+
+#: GTK3 modern options and integrations
+msgid "Initial directory:"
+msgstr "Directorio inicial:"
+
+#: GTK3 modern options and integrations
+msgid "Keep both windows on the same monitor"
+msgstr "Mantener ambas ventanas en el mismo monitor"
+
+#: GTK3 modern options and integrations
+msgid "Keep classic panels above other windows"
+msgstr "Mantener los paneles clásicos sobre otras ventanas"
+
+#: GTK3 modern options and integrations
+msgid "Keep classic panels inside the work area"
+msgstr "Mantener los paneles clásicos dentro del área de trabajo"
+
+#: GTK3 modern options and integrations
+msgid "Large"
+msgstr "Grandes"
+
+#: GTK3 modern options and integrations
+msgid "Large icons"
+msgstr "Iconos grandes"
+
+#: GTK3 modern options and integrations
+msgid "Largest automatic window size as a percentage of the usable monitor area."
+msgstr "Tamaño automático máximo de la ventana como porcentaje del área útil del monitor."
+
+#: GTK3 modern options and integrations
+msgid "Last accessed"
+msgstr "Último acceso"
+
+#: GTK3 modern options and integrations
+msgid "Last modified"
+msgstr "Última modificación"
+
+#: GTK3 modern options and integrations
+msgid "Last used directory"
+msgstr "Último directorio utilizado"
+
+#: GTK3 modern options and integrations
+msgid "Left and right"
+msgstr "Izquierda y derecha"
+
+#: GTK3 modern options and integrations
+msgid "Limit for the Recently Visited menu. Back and Forward history remains independent for each filer window."
+msgstr "Límite del menú Visitados recientemente. El historial Atrás y Adelante sigue siendo independiente en cada ventana."
+
+#: GTK3 modern options and integrations
+msgid "Maximum automatic size:"
+msgstr "Tamaño automático máximo:"
+
+#: GTK3 modern options and integrations
+msgid "Maximum large-icon label width:"
+msgstr "Ancho máximo de etiqueta para iconos grandes:"
+
+#: GTK3 modern options and integrations
+msgid "Maximum remembered locations:"
+msgstr "Máximo de ubicaciones recordadas:"
+
+#: GTK3 modern options and integrations
+msgid "Maximum small-icon label width:"
+msgstr "Ancho máximo de etiqueta para iconos pequeños:"
+
+#: GTK3 modern options and integrations
+msgid "Menu icon size:"
+msgstr "Tamaño de iconos del menú:"
+
+#: GTK3 modern options and integrations
+msgid "Merge directories by default"
+msgstr "Combinar directorios de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Middle-button drag moves immediately"
+msgstr "Arrastrar con el botón central mueve inmediatamente"
+
+#: GTK3 modern options and integrations
+msgid "Middle-button drag shows an action menu"
+msgstr "Arrastrar con el botón central muestra un menú de acciones"
+
+#: GTK3 modern options and integrations
+msgid "Mount command:"
+msgstr "Comando de montaje:"
+
+#: GTK3 modern options and integrations
+msgid "Navigation and Clicks"
+msgstr "Navegación y clics"
+
+#: GTK3 modern options and integrations
+msgid "Navigation history"
+msgstr "Historial de navegación"
+
+#: GTK3 modern options and integrations
+msgid "Never resize automatically"
+msgstr "Nunca redimensionar automáticamente"
+
+#: GTK3 modern options and integrations
+msgid "New windows inherit the view, icon size and details from the window that opened them."
+msgstr "Las ventanas nuevas heredan la vista, el tamaño de los iconos y los detalles de la ventana que las abrió."
+
+#: GTK3 modern options and integrations
+msgid "New, As User..."
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "No icons"
+msgstr "Sin iconos"
+
+#: GTK3 modern options and integrations
+msgid "No paired windows are currently open."
+msgstr "No hay ventanas emparejadas abiertas."
+
+#: GTK3 modern options and integrations
+msgid "No running ROX Desktop instance was found."
+msgstr "No se encontró ninguna instancia de ROX Desktop en ejecución."
+
+#: GTK3 modern options and integrations
+msgid "Open Paired Windows"
+msgstr "Abrir ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "Open ROX File Search"
+msgstr "Abrir el buscador de archivos ROX"
+
+#: GTK3 modern options and integrations
+msgid "Open a terminal with the grave (`) key"
+msgstr "Abrir una terminal con la tecla grave (`)"
+
+#: GTK3 modern options and integrations
+msgid "Open directories after hovering during a drag"
+msgstr "Abrir directorios al mantener un elemento encima durante el arrastre"
+
+#: GTK3 modern options and integrations
+msgid "Open directories in a new window with button 1"
+msgstr "Abrir directorios en una ventana nueva con el botón 1"
+
+#: GTK3 modern options and integrations
+msgid "Open directories with a single click"
+msgstr "Abrir directorios con un solo clic"
+
+#: GTK3 modern options and integrations
+msgid "Open every item with a single click"
+msgstr "Abrir todos los elementos con un solo clic"
+
+#: GTK3 modern options and integrations
+msgid "Open two ROX-Filer windows side by side"
+msgstr "Abrir dos ventanas de ROX-Filer una junto a la otra"
+
+#: GTK3 modern options and integrations
+msgid "Open two filer windows when a normal ROX-Filer process starts."
+msgstr "Abrir dos ventanas cuando se inicie un proceso normal de ROX-Filer."
+
+#: GTK3 modern options and integrations
+msgid "Opening items"
+msgstr "Apertura de elementos"
+
+#: GTK3 modern options and integrations
+msgid "Override window-manager control of classic pinboards and panels"
+msgstr "Anular el control del gestor de ventanas sobre pinboards y paneles clásicos"
+
+#: GTK3 modern options and integrations
+msgid "Paired Windows"
+msgstr "Ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "Paired windows are disabled in Options."
+msgstr "Las ventanas emparejadas están desactivadas en Opciones."
+
+#: GTK3 modern options and integrations
+msgid "Percentage of the available space assigned to the first window."
+msgstr "Porcentaje del espacio disponible asignado a la primera ventana."
+
+#: GTK3 modern options and integrations
+msgid "Place capitalised names first"
+msgstr "Colocar primero los nombres con mayúscula inicial"
+
+#: GTK3 modern options and integrations
+msgid "Primary-button drag copies immediately"
+msgstr "Arrastrar con el botón principal copia inmediatamente"
+
+#: GTK3 modern options and integrations
+msgid "Primary-button drag shows an action menu"
+msgstr "Arrastrar con el botón principal muestra un menú de acciones"
+
+#: GTK3 modern options and integrations
+msgid "Program used by Open Terminal Here and Run in Terminal."
+msgstr "Programa utilizado por Abrir terminal aquí y Ejecutar en terminal."
+
+#: GTK3 modern options and integrations
+msgid "ROX Desktop tools"
+msgstr "Herramientas de ROX Desktop"
+
+#: GTK3 modern options and integrations
+msgid "ROX File Search"
+msgstr "Buscador de archivos ROX"
+
+#: GTK3 modern options and integrations
+msgid "ROX File Search is a separate GTK3 process. It follows the system GTK theme and can search one or several selected directories without increasing the normal memory use of ROX-Filer."
+msgstr "Buscador de archivos ROX es un proceso GTK3 separado. Respeta el tema GTK del sistema y puede buscar en uno o varios directorios seleccionados sin aumentar el uso normal de memoria de ROX-Filer."
+
+#: GTK3 modern options and integrations
+msgid "ROX File Search is not installed or is not in PATH."
+msgstr "Buscador de archivos ROX no está instalado o no se encuentra en PATH."
+
+#: GTK3 modern options and integrations
+msgid "ROX-Filer GTK3 project"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "Read classic SendTo entries from ROX configuration directories. This is disabled by default."
+msgstr "Leer entradas clásicas de SendTo desde los directorios de configuración de ROX. Está desactivado de forma predeterminada."
+
+#: GTK3 modern options and integrations
+msgid "Realign Paired Windows"
+msgstr "Realinear ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "Realign Windows"
+msgstr "Realinear ventanas"
+
+#: GTK3 modern options and integrations
+msgid "Remember the last two directories"
+msgstr "Recordar los dos últimos directorios"
+
+#: GTK3 modern options and integrations
+msgid "Replace when the source is newer"
+msgstr "Reemplazar cuando el origen sea más nuevo"
+
+#: GTK3 modern options and integrations
+msgid "Resize after changing icon size, details or view type."
+msgstr "Redimensionar después de cambiar el tamaño de los iconos, los detalles o el tipo de vista."
+
+#: GTK3 modern options and integrations
+msgid "Resize after changing the view"
+msgstr "Redimensionar después de cambiar la vista"
+
+#: GTK3 modern options and integrations
+msgid "Resize whenever useful"
+msgstr "Redimensionar cuando resulte útil"
+
+#: GTK3 modern options and integrations
+msgid "Same as the current window"
+msgstr "Igual que la ventana actual"
+
+#: GTK3 modern options and integrations
+msgid "Same as the default view"
+msgstr "Igual que la vista predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Same directory as the first window"
+msgstr "Mismo directorio que la primera ventana"
+
+#: GTK3 modern options and integrations
+msgid "Search"
+msgstr "Buscar"
+
+#: GTK3 modern options and integrations
+msgid "Search in Selected Folders..."
+msgstr "Buscar en las carpetas seleccionadas..."
+
+#: GTK3 modern options and integrations
+msgid "Search in This Folder..."
+msgstr "Buscar en esta carpeta..."
+
+#: GTK3 modern options and integrations
+msgid "Search in the current folder"
+msgstr "Buscar en la carpeta actual"
+
+#: GTK3 modern options and integrations
+msgid "Second window"
+msgstr "Segunda ventana"
+
+#: GTK3 modern options and integrations
+msgid "Select one or more folders to search."
+msgstr "Seleccione una o más carpetas para buscar."
+
+#: GTK3 modern options and integrations
+msgid "Select the optional buttons to display. Partitions remains a permanent toolbar action."
+msgstr "Seleccione los botones opcionales que se mostrarán. Particiones permanece como acción fija de la barra."
+
+#: GTK3 modern options and integrations
+msgid "Show Search in This Folder in contextual menus"
+msgstr "Mostrar Buscar en esta carpeta en los menús contextuales"
+
+#: GTK3 modern options and integrations
+msgid "Show directories first"
+msgstr "Mostrar primero los directorios"
+
+#: GTK3 modern options and integrations
+msgid "Show extended-attribute emblems"
+msgstr "Mostrar emblemas de atributos extendidos"
+
+#: GTK3 modern options and integrations
+msgid "Show hidden files by default"
+msgstr "Mostrar archivos ocultos de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Show image thumbnails by default"
+msgstr "Mostrar miniaturas de imágenes de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Show installed .desktop applications in application menus"
+msgstr "Mostrar aplicaciones .desktop instaladas en los menús de aplicaciones"
+
+#: GTK3 modern options and integrations
+msgid "Show item and selection totals"
+msgstr "Mostrar totales de elementos y selección"
+
+#: GTK3 modern options and integrations
+msgid "Show the File submenu directly on right-click"
+msgstr "Mostrar directamente el submenú Archivo al hacer clic derecho"
+
+#: GTK3 modern options and integrations
+msgid "Show the complete type description"
+msgstr "Mostrar la descripción completa del tipo"
+
+#: GTK3 modern options and integrations
+msgid "Single-click files, folders and applications. Hold Control to select without opening."
+msgstr "Abrir archivos, carpetas y aplicaciones con un solo clic. Mantenga Control para seleccionar sin abrir."
+
+#: GTK3 modern options and integrations
+msgid "Small"
+msgstr "Pequeños"
+
+#: GTK3 modern options and integrations
+msgid "Small icons"
+msgstr "Iconos pequeños"
+
+#: GTK3 modern options and integrations
+msgid "Start automatically with paired windows"
+msgstr "Iniciar automáticamente con ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "Start copy operations without an extra confirmation"
+msgstr "Iniciar copias sin una confirmación adicional"
+
+#: GTK3 modern options and integrations
+msgid "Start link operations without an extra confirmation"
+msgstr "Crear enlaces sin una confirmación adicional"
+
+#: GTK3 modern options and integrations
+msgid "Start mount operations without an extra confirmation"
+msgstr "Iniciar montajes sin una confirmación adicional"
+
+#: GTK3 modern options and integrations
+msgid "Start move operations without an extra confirmation"
+msgstr "Iniciar movimientos sin una confirmación adicional"
+
+#: GTK3 modern options and integrations
+msgid "Start permanent deletion without an extra confirmation"
+msgstr "Iniciar eliminación permanente sin una confirmación adicional"
+
+#: GTK3 modern options and integrations
+msgid "Stay on the selected filesystem by default"
+msgstr "Permanecer en el sistema de archivos seleccionado de forma predeterminada"
+
+#: GTK3 modern options and integrations
+msgid "Terminal emulator:"
+msgstr "Emulador de terminal:"
+
+#: GTK3 modern options and integrations
+msgid "The cache follows the Freedesktop location under ~/.cache/thumbnails/normal."
+msgstr "La caché usa la ubicación estándar de Freedesktop en ~/.cache/thumbnails/normal."
+
+#: GTK3 modern options and integrations
+msgid "The clipboard does not contain a file list."
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "These buttons manage the desktop started with ROX-Filer --desktop. The classic pinboard remains separate."
+msgstr "Estos botones administran el escritorio iniciado con ROX-Filer --desktop. El pinboard clásico permanece separado."
+
+#: GTK3 modern options and integrations
+msgid "This mode takes priority over the previous option: normal directories open with one click, while files and AppDirs require a double click."
+msgstr "Este modo tiene prioridad sobre la opción anterior: los directorios normales se abren con un clic, mientras que los archivos y AppDirs requieren doble clic."
+
+#: GTK3 modern options and integrations
+msgid "Thumbnail cache"
+msgstr "Caché de miniaturas"
+
+#: GTK3 modern options and integrations
+msgid "Thumbnails are generated in the background. Until a preview is ready, ROX-Filer displays the normal MIME icon."
+msgstr "Las miniaturas se generan en segundo plano. Hasta que la vista previa esté lista, ROX-Filer muestra el icono MIME normal."
+
+#: GTK3 modern options and integrations
+msgid "Toolbar defines the minimum window width"
+msgstr "La barra define el ancho mínimo de la ventana"
+
+#: GTK3 modern options and integrations
+msgid "Toolbar style:"
+msgstr "Estilo de la barra:"
+
+#: GTK3 modern options and integrations
+msgid "Top and bottom"
+msgstr "Arriba y abajo"
+
+#: GTK3 modern options and integrations
+msgid "Treat classic panels as docks"
+msgstr "Tratar los paneles clásicos como docks"
+
+#: GTK3 modern options and integrations
+msgid "Try `ROX-Filer --help' for more information.\n"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "Try `ROX-Filer -h' for more information.\n"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "Two filer windows"
+msgstr "Dos ventanas del gestor"
+
+#: GTK3 modern options and integrations
+msgid "Unable to create the paired windows."
+msgstr "No se pudieron crear las ventanas emparejadas."
+
+#: GTK3 modern options and integrations
+msgid "Unable to start ROX File Search: %s"
+msgstr "No se pudo iniciar Buscador de archivos ROX: %s"
+
+#: GTK3 modern options and integrations
+msgid "Unmount command:"
+msgstr "Comando de desmontaje:"
+
+#: GTK3 modern options and integrations
+msgid "Use brief operation messages"
+msgstr "Usar mensajes breves de operación"
+
+#: GTK3 modern options and integrations
+msgid "Use compact title-bar indicators"
+msgstr "Usar indicadores compactos en la barra de título"
+
+#: GTK3 modern options and integrations
+msgid "Use one window for each directory"
+msgstr "Usar una ventana para cada directorio"
+
+#: GTK3 modern options and integrations
+msgid "Use short indicators for scanning, hidden items and thumbnails."
+msgstr "Usar indicadores cortos para el escaneo, los elementos ocultos y las miniaturas."
+
+#: GTK3 modern options and integrations
+msgid "Use small automatic icons after:"
+msgstr "Usar iconos pequeños automáticamente después de:"
+
+#: GTK3 modern options and integrations
+msgid "Use the primary mouse button for a new window and the middle button to reuse the current one."
+msgstr "Usar el botón principal para una ventana nueva y el botón central para reutilizar la actual."
+
+#: GTK3 modern options and integrations
+msgid "Used when Custom directory is selected above."
+msgstr "Se utiliza cuando se selecciona Directorio personalizado."
+
+#: GTK3 modern options and integrations
+msgid "View"
+msgstr "Vista"
+
+#: GTK3 modern options and integrations
+msgid "Wallpaper"
+msgstr "Fondo de escritorio"
+
+#: GTK3 modern options and integrations
+msgid "When a directory is already open, reuse its existing filer window instead of opening another copy."
+msgstr "Cuando un directorio ya esté abierto, reutilizar su ventana en lugar de abrir otra copia."
+
+#: GTK3 modern options and integrations
+msgid "Window size is controlled only by the user and window manager."
+msgstr "El tamaño de la ventana lo controlan únicamente el usuario y el gestor de ventanas."
+
+#: GTK3 modern options and integrations
+msgid "_Open"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "folders"
+msgstr "carpetas"
+
+#: GTK3 modern options and integrations
+msgid "open two ROX-Filer windows side by side"
+msgstr ""
+
+#: GTK3 modern options and integrations
+msgid "open two paired filer windows"
+msgstr "abrir dos ventanas emparejadas"
+
+#: GTK3 modern options and integrations
+msgid "realign the current paired windows"
+msgstr "realinear las ventanas emparejadas actuales"
+
+#: GTK3 modern options and integrations
+msgid "refresh the running ROX Desktop"
+msgstr "actualizar el ROX Desktop en ejecución"
+
+msgid "Maximum file size for content search:"
+msgstr "Tamaño máximo de archivo para buscar contenido:"
+
+msgid "Larger files are skipped when searching inside file contents."
+msgstr "Los archivos más grandes se omiten al buscar dentro de su contenido."

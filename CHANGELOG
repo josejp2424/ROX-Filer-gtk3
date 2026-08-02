@@ -1,3 +1,56 @@
+
+Build fix
+---------
+- Include main.h and support.h in filer_pair.c so the paired-window module has declarations for home_dir and pathdup.
+
+2.12-r57 (2026-08-02)
+
+- Reorganised the GTK3 Options window into modern General, Navigation and
+  Clicks, View, Thumbnails, Paired Windows, Search, File Operations, Toolbar,
+  Desktop and Classic Compatibility pages.
+- Added an optional directory-only single-click mode. Files and AppDirs keep
+  the double-click behaviour when this mode is active.
+- Added native paired ROX-Filer windows without wmctrl, xprop, Xdialog or
+  external window-management scripts. The feature supports left/right and
+  top/bottom layouts, configurable split and gap, remembered directories,
+  menu and toolbar actions, and --pair / --pair-realign commands.
+- Added ROX File Search as a separate C/GTK3 binary named rox-find. It follows
+  the active GTK theme and uses the supplied rox-find application icon.
+- Integrated Search in This Folder and Search in Selected Folders into the
+  ROX contextual menu, plus an optional Search toolbar action.
+- Added recursive name and glob search, hidden-file, case, type, size,
+  symbolic-link and filesystem controls, optional text-content search with a
+  configurable maximum file size, cancellation and progressively displayed
+  results.
+- Added result actions for Open, Show in ROX-Filer, Open Parent Folder, Copy
+  Path and Move to Trash.
+- Added rox-find.desktop and Arabic, Catalan, German, Spanish, French,
+  Hungarian, Italian, Japanese, Portuguese, Russian and Chinese catalogues.
+- Added the real ROX-Filer --desktop-refresh command. It sends an X11 client
+  message to the already-running ROX Desktop and refreshes desktop files,
+  Trash, devices, work area and icon placement without starting a second
+  desktop process.
+- Made the legacy SendTo directory menu optional and disabled by default. XDG
+  application menus remain available. Native terminal actions are hidden when
+  they do not apply instead of remaining as disabled clutter.
+- Moved thumbnail storage to the Freedesktop cache location under
+  ~/.cache/thumbnails/normal and updated cache purging accordingly.
+- Added configurable Recently Visited history length and optional filtering of
+  directories that no longer exist.
+- Preserved broken symbolic links in normal filer views so accidental target
+  deletion remains visible to the user.
+- Added the rox-find binary, desktop entry, application icons and translations
+  to Debian and portable package output.
+- Improved paired-window layout on small monitor work areas and prevented the
+  normal filer minimum geometry from forcing the paired windows to overlap.
+- Improved ROX File Search shutdown so closing the window cancels an active
+  search safely and exits after its worker finishes.
+- Updated Debian dependency metadata to accept both current t64 GTK/GLib
+  runtime package names and their older compatible names.
+- Fixed a leaked resolved path in filer_close_recursive().
+- Fixed ownership handling for the parent array returned by
+  xdg_mime_list_mime_parents() by using free() instead of g_strfreev().
+
 2.12-r56 (2026-07-31)
 
 - Added application-pet.svg, application-x-sfs.svg and

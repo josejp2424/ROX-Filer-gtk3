@@ -4,7 +4,7 @@
 # Florin Cosma <cosma_florin@yahoo.com>, 2004.
 msgid ""
 msgstr ""
-"Project-Id-Version: ROX-Filer 2.12-r56\n"
+"Project-Id-Version: ROX-Filer 2.12-r57\n"
 "Report-Msgid-Bugs-To: puppylinuxjosejp2424@gmail.com\n"
 "POT-Creation-Date: 2026-07-29 17:41-0300\n"
 "PO-Revision-Date: 2026-07-29 17:41-0300\n"

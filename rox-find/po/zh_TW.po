@@ -1,0 +1,171 @@
+# zh_TW translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: zh_TW\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>搜尋檔案與資料夾</b>"
+
+msgid "About ROX File Search"
+msgstr "關於 ROX 檔案搜尋"
+
+msgid "Advanced options"
+msgstr "進階選項"
+
+msgid "All items"
+msgstr "所有項目"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Case sensitive"
+msgstr "區分大小寫"
+
+msgid "Choose"
+msgstr "選擇"
+
+msgid "Choose Search Folder"
+msgstr "選擇搜尋資料夾"
+
+msgid "Choose…"
+msgstr "選擇…"
+
+msgid "Close"
+msgstr "關閉"
+
+msgid "Content:"
+msgstr "內容："
+
+msgid "Copy Path"
+msgstr "複製路徑"
+
+msgid "Directories only"
+msgstr "僅資料夾"
+
+msgid "Files only"
+msgstr "僅檔案"
+
+msgid "Follow symbolic links"
+msgstr "跟隨符號連結"
+
+msgid "Include hidden items"
+msgstr "包含隱藏項目"
+
+msgid "Include subdirectories"
+msgstr "包含子資料夾"
+
+msgid "Location"
+msgstr "位置"
+
+msgid "Location:"
+msgstr "位置："
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "最大 KB（0 = 無限制）："
+
+msgid "Minimum KB:"
+msgstr "最小 KB："
+
+msgid "Modified"
+msgstr "修改時間"
+
+msgid "Move the selected item to Trash?"
+msgstr "要將選取的項目移到垃圾桶嗎？"
+
+msgid "Move to Trash"
+msgstr "移到垃圾桶"
+
+msgid "Name"
+msgstr "名稱"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "名稱或樣式，例如 *.svg"
+
+msgid "Name:"
+msgstr "名稱："
+
+msgid "Open"
+msgstr "開啟"
+
+msgid "Open Parent Folder"
+msgstr "開啟上層資料夾"
+
+msgid "ROX File Search"
+msgstr "ROX 檔案搜尋"
+
+msgid "Ready"
+msgstr "就緒"
+
+msgid "Search"
+msgstr "搜尋"
+
+msgid "Search file contents"
+msgstr "搜尋檔案內容"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "透過 ROX-Filer 整合搜尋檔案與資料夾。"
+
+msgid "Search stopped — %u results"
+msgstr "搜尋已停止 — %u 個結果"
+
+msgid "Searching…"
+msgstr "搜尋中…"
+
+msgid "Show in ROX-Filer"
+msgstr "在 ROX-Filer 中顯示"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Stay on the selected filesystem"
+msgstr "僅限選取的檔案系統"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "正在停止搜尋…完成後請再次關閉。"
+
+msgid "Symbolic links only"
+msgstr "僅符號連結"
+
+msgid "Text contained in files"
+msgstr "檔案中包含的文字"
+
+msgid "Type"
+msgstr "類型"
+
+msgid "Type:"
+msgstr "類型："
+
+msgid "Unable to move the item to Trash"
+msgstr "無法將項目移到垃圾桶"
+
+msgid "Unable to open the selected item"
+msgstr "無法開啟選取的項目"
+
+msgid "Unknown error"
+msgstr "未知錯誤"
+
+msgid "[FOLDER…]"
+msgstr "[資料夾…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u 個結果"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "搜尋完成 — %u 個結果"
+
+msgid "Maximum file size for content search:"
+msgstr "內容搜尋的檔案大小上限："
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Stopping search…"
+msgstr "正在停止搜尋…"

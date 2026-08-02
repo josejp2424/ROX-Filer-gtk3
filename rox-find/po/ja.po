@@ -1,0 +1,171 @@
+# ja translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: ja\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>ファイルとフォルダーを検索</b>"
+
+msgid "About ROX File Search"
+msgstr "ROX ファイル検索について"
+
+msgid "Advanced options"
+msgstr "詳細オプション"
+
+msgid "All items"
+msgstr "すべての項目"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Case sensitive"
+msgstr "大文字と小文字を区別"
+
+msgid "Choose"
+msgstr "選択"
+
+msgid "Choose Search Folder"
+msgstr "検索フォルダーを選択"
+
+msgid "Choose…"
+msgstr "選択…"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Content:"
+msgstr "内容:"
+
+msgid "Copy Path"
+msgstr "パスをコピー"
+
+msgid "Directories only"
+msgstr "フォルダーのみ"
+
+msgid "Files only"
+msgstr "ファイルのみ"
+
+msgid "Follow symbolic links"
+msgstr "シンボリックリンクをたどる"
+
+msgid "Include hidden items"
+msgstr "隠し項目を含める"
+
+msgid "Include subdirectories"
+msgstr "サブフォルダーを含める"
+
+msgid "Location"
+msgstr "場所"
+
+msgid "Location:"
+msgstr "場所:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "最大 KB (0 = 無制限):"
+
+msgid "Minimum KB:"
+msgstr "最小 KB:"
+
+msgid "Modified"
+msgstr "更新日時"
+
+msgid "Move the selected item to Trash?"
+msgstr "選択した項目をゴミ箱へ移動しますか？"
+
+msgid "Move to Trash"
+msgstr "ゴミ箱へ移動"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "名前またはパターン（例: *.svg）"
+
+msgid "Name:"
+msgstr "名前:"
+
+msgid "Open"
+msgstr "開く"
+
+msgid "Open Parent Folder"
+msgstr "親フォルダーを開く"
+
+msgid "ROX File Search"
+msgstr "ROX ファイル検索"
+
+msgid "Ready"
+msgstr "準備完了"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Search file contents"
+msgstr "ファイル内容を検索"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "ROX-Filer と連携してファイルとフォルダーを検索します。"
+
+msgid "Search stopped — %u results"
+msgstr "検索停止 — %u 件"
+
+msgid "Searching…"
+msgstr "検索中…"
+
+msgid "Show in ROX-Filer"
+msgstr "ROX-Filer で表示"
+
+msgid "Size"
+msgstr "サイズ"
+
+msgid "Stay on the selected filesystem"
+msgstr "選択したファイルシステム内に限定"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "検索を停止中…完了後にもう一度閉じてください。"
+
+msgid "Symbolic links only"
+msgstr "シンボリックリンクのみ"
+
+msgid "Text contained in files"
+msgstr "ファイル内のテキスト"
+
+msgid "Type"
+msgstr "種類"
+
+msgid "Type:"
+msgstr "種類:"
+
+msgid "Unable to move the item to Trash"
+msgstr "項目をゴミ箱へ移動できません"
+
+msgid "Unable to open the selected item"
+msgstr "選択した項目を開けません"
+
+msgid "Unknown error"
+msgstr "不明なエラー"
+
+msgid "[FOLDER…]"
+msgstr "[フォルダー…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u 件"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "検索完了 — %u 件"
+
+msgid "Maximum file size for content search:"
+msgstr "内容検索の最大ファイルサイズ:"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Stopping search…"
+msgstr "検索を停止しています…"

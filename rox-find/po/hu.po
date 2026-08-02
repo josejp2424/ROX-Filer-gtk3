@@ -1,0 +1,173 @@
+# hu translation for ROX File Search.
+msgid ""
+msgstr ""
+"Project-Id-Version: rox-find 1.0.0\n"
+"Language: hu\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "<b>Search for files and folders</b>"
+msgstr "<b>Fájlok és mappák keresése</b>"
+
+msgid "About ROX File Search"
+msgstr "A ROX fájlkereső névjegye"
+
+msgid "Advanced options"
+msgstr "Speciális beállítások"
+
+msgid "All items"
+msgstr "Minden elem"
+
+msgid "Cancel"
+msgstr "Mégse"
+
+msgid "Case sensitive"
+msgstr "Kis- és nagybetű érzékeny"
+
+msgid "Choose"
+msgstr "Kiválasztás"
+
+msgid "Choose Search Folder"
+msgstr "Keresési mappa kiválasztása"
+
+msgid "Choose…"
+msgstr "Kiválasztás…"
+
+msgid "Close"
+msgstr "Bezárás"
+
+msgid "Content:"
+msgstr "Tartalom:"
+
+msgid "Copy Path"
+msgstr "Útvonal másolása"
+
+msgid "Directories only"
+msgstr "Csak mappák"
+
+msgid "Files only"
+msgstr "Csak fájlok"
+
+msgid "Follow symbolic links"
+msgstr "Szimbolikus linkek követése"
+
+msgid "Include hidden items"
+msgstr "Rejtett elemekkel együtt"
+
+msgid "Include subdirectories"
+msgstr "Almappákkal együtt"
+
+msgid "Location"
+msgstr "Hely"
+
+msgid "Location:"
+msgstr "Hely:"
+
+msgid "Maximum KB (0 = unlimited):"
+msgstr "Legnagyobb KB (0 = korlátlan):"
+
+msgid "Minimum KB:"
+msgstr "Legkisebb KB:"
+
+msgid "Modified"
+msgstr "Módosítva"
+
+msgid "Move the selected item to Trash?"
+msgstr "A kijelölt elem a Kukába kerüljön?"
+
+msgid "Move to Trash"
+msgstr "Áthelyezés a Kukába"
+
+msgid "Name"
+msgstr "Név"
+
+msgid "Name or pattern, for example *.svg"
+msgstr "Név vagy minta, például *.svg"
+
+msgid "Name:"
+msgstr "Név:"
+
+msgid "Open"
+msgstr "Megnyitás"
+
+msgid "Open Parent Folder"
+msgstr "Szülőmappa megnyitása"
+
+msgid "ROX File Search"
+msgstr "ROX fájlkereső"
+
+msgid "Ready"
+msgstr "Kész"
+
+msgid "Search"
+msgstr "Keresés"
+
+msgid "Search file contents"
+msgstr "Keresés a fájlok tartalmában"
+
+msgid "Search for files and folders with ROX-Filer integration."
+msgstr "Fájlok és mappák keresése ROX-Filer integrációval."
+
+msgid "Search stopped — %u results"
+msgstr "Keresés leállítva — %u találat"
+
+msgid "Searching…"
+msgstr "Keresés…"
+
+msgid "Show in ROX-Filer"
+msgstr "Megjelenítés a ROX-Filerben"
+
+msgid "Size"
+msgstr "Méret"
+
+msgid "Stay on the selected filesystem"
+msgstr "Maradjon a kijelölt fájlrendszeren"
+
+msgid "Stop"
+msgstr "Leállítás"
+
+msgid "Stopping search… close again when it finishes."
+msgstr "A keresés leállítása… a befejezés után zárja be újra."
+
+msgid "Symbolic links only"
+msgstr "Csak szimbolikus linkek"
+
+msgid "Text contained in files"
+msgstr "A fájlokban található szöveg"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "Type:"
+msgstr "Típus:"
+
+msgid "Unable to move the item to Trash"
+msgstr "Az elem nem helyezhető a Kukába"
+
+msgid "Unable to open the selected item"
+msgstr "A kijelölt elem nem nyitható meg"
+
+msgid "Unknown error"
+msgstr "Ismeretlen hiba"
+
+msgid "[FOLDER…]"
+msgstr "[MAPPA…]"
+
+msgid "%u result"
+msgid_plural "%u results"
+msgstr[0] "%u találat"
+msgstr[1] "%u találat"
+
+msgid "Search complete — %u result"
+msgid_plural "Search complete — %u results"
+msgstr[0] "Keresés kész — %u találat"
+msgstr[1] "Keresés kész — %u találat"
+
+msgid "Maximum file size for content search:"
+msgstr "Tartalomkeresés maximális fájlmérete:"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Stopping search…"
+msgstr "Keresés leállítása…"
